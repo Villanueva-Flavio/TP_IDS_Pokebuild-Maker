@@ -15,8 +15,8 @@ Si se le da click al nombre del usuario que la creo, se irá a su página de per
 
 En la gran mayoría de páginas habrá 2 botones para iniciar sesión y para registrarse, no estarán en las que es necesario haber iniciado sesión para entrar como en las de agregar, editar o borrar los Pokemon y equipos que tenés.
 
-**Links:** 
-Trello: [Ver backlog](https://trello.com/b/MtCIR9PG/intro-al-desarrollo-de-software)
+**Links:** <br>
+Trello: [Ver backlog](https://trello.com/b/MtCIR9PG/intro-al-desarrollo-de-software)<br>
 Miro: [Ver diseños preliminares](https://miro.com/welcomeonboard/d2drOFdpMkF0cmgwbXJzQW1qcTcxU2YwaVAyRVUxTmlyVlZHTmFBMmtVT1E5RklkRnVwY0JNUEpvVmZlNkZSQXwzMDc0NDU3MzY4MjY1OTI1ODkwfDI=?share_link_id=672689342287)
 
 **Paleta de colores:**
@@ -31,11 +31,11 @@ Miro: [Ver diseños preliminares](https://miro.com/welcomeonboard/d2drOFdpMkF0cm
 
 
 **Convenciones:**
-**[ADD]** Commit de adiciones al proyecto
-**[DEL]** Commit donde se remueven cosas
-**[FIX]** Commit de bugfixes
-**[MER]** Commit de merge
+**[ADD]** Commit de adiciones al proyecto<br>
+**[DEL]** Commit donde se remueven cosas<br>
+**[FIX]** Commit de bugfixes<br>
+**[MER]** Commit de merge<br>
 
-Uso de Snake_Case (A confirmar)
+Uso de Snake_Case (A confirmar)<br>
 
 Link público de preview: (A levantar)
