@@ -18,7 +18,7 @@ Si se le da click al nombre del usuario que la creo, se irá a su página de per
 En la gran mayoría de páginas habrá 2 botones para iniciar sesión y para registrarse, no estarán en las que es necesario haber iniciado sesión para entrar como en las de agregar, editar o borrar los Pokemon y equipos que tenés.
 
 **Links:** <br>
-Trello: [Ver backlog](https://trello.com/b/MtCIR9PG/intro-al-desarrollo-de-software)<br>
+Trello: [Ver backlog](https://trello.com/b/MtCIR9PG/copilot-my-beloved)<br>
 Miro: [Ver diseños preliminares](https://miro.com/welcomeonboard/d2drOFdpMkF0cmgwbXJzQW1qcTcxU2YwaVAyRVUxTmlyVlZHTmFBMmtVT1E5RklkRnVwY0JNUEpvVmZlNkZSQXwzMDc0NDU3MzY4MjY1OTI1ODkwfDI=?share_link_id=672689342287)
 
 **Paleta de colores:**
