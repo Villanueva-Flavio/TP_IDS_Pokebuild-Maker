@@ -36,6 +36,6 @@ Miro: [Ver diseños preliminares](https://miro.com/welcomeonboard/d2drOFdpMkF0cm
 **[FIX]** Commit de bugfixes<br>
 **[MER]** Commit de merge<br>
 
-Uso de Snake_Case (A confirmar)<br>
+Uso de Snake_Case obligatorio<br>
 
 Link público de preview: (A levantar)
