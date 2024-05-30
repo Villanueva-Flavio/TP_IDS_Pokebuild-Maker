@@ -1,5 +1,7 @@
 
-# TP-introduccion-al-desarrollo-de-software
+# TP Grupal de Introducción al desarrollo de Software
+
+## Aplicación: Pokebuild Maker
 
 Nuestro objetivo con el proyecto es hacer una página donde cada usuario pueda ingresar los pokemons que tenga disponible con su **nombre**, **nivel** y **habilidades** y, al ingresar la especie de Pokémon, con pokeapi.co mostraremos una imágen del Pokémon y los tipos con los que es bueno o malo en contra.
 
