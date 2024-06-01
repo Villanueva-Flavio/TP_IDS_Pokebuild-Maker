@@ -37,6 +37,7 @@ Miro: [Ver diseños preliminares](https://miro.com/welcomeonboard/d2drOFdpMkF0cm
 **[DEL]** Commit donde se remueven cosas<br>
 **[FIX]** Commit de bugfixes<br>
 **[MER]** Commit de merge<br>
+**[#10]** ID del backlog (Obligatorio)<br>
 
 Uso de Snake_Case obligatorio<br>
 
