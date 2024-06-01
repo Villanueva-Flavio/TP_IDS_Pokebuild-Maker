@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS pokebuildmaker;
+USE pokebuildmaker;
+
 CREATE TABLE POKEMON (
     id INT AUTO_INCREMENT PRIMARY KEY,
     podekex_id INT(4) NOT NULL,
