@@ -1,0 +1,13 @@
+version: '4.3'
+
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: mydatabase
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - ./base_de_datos/init.sql:/docker-entrypoint-initdb.d/init.sql
