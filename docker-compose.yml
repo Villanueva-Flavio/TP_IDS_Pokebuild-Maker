@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: pokebuildmaker
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./base_de_datos/sql/:/docker-entrypoint-initdb.d/
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_NAME: webdb
+      DATABASE_USER: root
+      DATABASE_PASSWORD: 1
