@@ -18,26 +18,21 @@ CREATE TABLE IF NOT EXISTS POKEMON (
     ability_2 VARCHAR(30),
     ability_3 VARCHAR(30),
     ability_4 VARCHAR(30),
+    owner_id INT NOT NULL,
     FOREIGN KEY (owner_id) REFERENCES USER(id)
 );
 
 CREATE TABLE IF NOT EXISTS BUILDS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     build_name VARCHAR(12) NOT NULL,
-    timestamp DATETIME NOT NULL,
     pokemon_id_1 INT NOT NULL,
     pokemon_id_2 INT,
     pokemon_id_3 INT,
     pokemon_id_4 INT,
     pokemon_id_5 INT,
     pokemon_id_6 INT,
+    timestamp DATETIME NOT NULL,
     owner_id INT NOT NULL,
-    FOREIGN KEY (pokemon_id_1) REFERENCES POKEMON(id),
-    FOREIGN KEY (pokemon_id_2) REFERENCES POKEMON(id),
-    FOREIGN KEY (pokemon_id_3) REFERENCES POKEMON(id),
-    FOREIGN KEY (pokemon_id_4) REFERENCES POKEMON(id),
-    FOREIGN KEY (pokemon_id_5) REFERENCES POKEMON(id),
-    FOREIGN KEY (pokemon_id_6) REFERENCES POKEMON(id),
     FOREIGN KEY (owner_id) REFERENCES USER(id)
 );
 
@@ -55,7 +50,7 @@ INSERT INTO USER (username, password, email, profile_picture) VALUES
 ('user11', 'password11', 'email11@gmail.com', 'profile_picture11.png'),
 ('user12', 'password12', 'email12@gmail.com', 'profile_picture12.png');
 
-INSERT INTO POKEMON (podekex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES
+INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES
 (6,   10, 'Charizard', 'Blaze', 'Solar Power', 'None', 'None', 1),
 (25,  10, 'Pikachu', 'Static', 'None', 'None', 'None', 1),
 (1,   10, 'Bulbasaur', 'Overgrow', 'Chlorophyll', 'None', 'None', 1),
@@ -372,7 +367,7 @@ INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id
 ('build80', 8, 71, 72, 73, 74, 75, 76, NOW()),
 
 /* OWNER USER9 */
-/* ('build81', 9, 81, 82, 83, 84, 85, 86, NOW()),
+('build81', 9, 81, 82, 83, 84, 85, 86, NOW()),
 ('build82', 9, 87, 88, 89, 90, 214, 215, NOW()),
 ('build83', 9, 216, 217, NULL, NULL, NULL, NULL, NOW()),
 ('build84', 9, 81, 82, 83, 84, 85, 86, NOW()),
@@ -381,10 +376,10 @@ INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id
 ('build87', 9, 81, 82, 83, 84, 85, 86, NOW()),
 ('build88', 9, 87, 88, 89, 90, 214, 215, NOW()),
 ('build89', 9, 216, 217, NULL, NULL, NULL, NULL, NOW()),
-('build90', 9, 81, 82, 83, 84, 85, 86, NOW()), */
+('build90', 9, 81, 82, 83, 84, 85, 86, NOW()),
 
 /* OWNER USER10 */
-/* ('build91', 10, 91, 92, 93, 94, 95, 96, NOW()),
+('build91', 10, 91, 92, 93, 94, 95, 96, NOW()),
 ('build92', 10, 97, 98, 99, 100, 218, 219, NOW()),
 ('build93', 10, 220, 221, NULL, NULL, NULL, NULL, NOW()),
 ('build94', 10, 91, 92, 93, 94, 95, 96, NOW()),
@@ -393,10 +388,10 @@ INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id
 ('build97', 10, 91, 92, 93, 94, 95, 96, NOW()),
 ('build98', 10, 97, 98, 99, 100, 218, 219, NOW()),
 ('build99', 10, 220, 221, NULL, NULL, NULL, NULL, NOW()),
-('build100', 10, 91, 92, 93, 94, 95, 96, NOW()), */
+('build100', 10, 91, 92, 93, 94, 95, 96, NOW()),
 
 /* OWNER USER11 */
-/* ('build101', 11, 101, 102, 103, 104, 105, 106, NOW()),
+('build101', 11, 101, 102, 103, 104, 105, 106, NOW()),
 ('build102', 11, 107, 108, 109, 110, 222, 223, NOW()),
 ('build103', 11, 224, 225, NULL, NULL, NULL, NULL, NOW()),
 ('build104', 11, 101, 102, 103, 104, 105, 106, NOW()),
@@ -405,10 +400,10 @@ INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id
 ('build107', 11, 101, 102, 103, 104, 105, 106, NOW()),
 ('build108', 11, 107, 108, 109, 110, 222, 223, NOW()),
 ('build109', 11, 224, 225, NULL, NULL, NULL, NULL, NOW()),
-('build110', 11, 101, 102, 103, 104, 105, 106, NOW()), */
+('build110', 11, 101, 102, 103, 104, 105, 106, NOW()),
 
 /* OWNER USER12 */
-/* ('build111', 12, 111, 112, 113, 114, 115, 116, NOW()),
+('build111', 12, 111, 112, 113, 114, 115, 116, NOW()),
 ('build112', 12, 117, 118, 119, 120, 226, 227, NOW()),
 ('build113', 12, 228, 229, NULL, NULL, NULL, NULL, NOW()),
 ('build114', 12, 111, 112, 113, 114, 115, 116, NOW()),
@@ -417,4 +412,4 @@ INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id
 ('build117', 12, 111, 112, 113, 114, 115, 116, NOW()),
 ('build118', 12, 117, 118, 119, 120, 226, 227, NOW()),
 ('build119', 12, 228, 229, NULL, NULL, NULL, NULL, NOW()),
-('build120', 12, 111, 112, 113, 114, 115, 116, NOW()); */
+('build120', 12, 111, 112, 113, 114, 115, 116, NOW());
