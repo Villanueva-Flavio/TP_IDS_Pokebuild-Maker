@@ -1,3 +1,16 @@
+INSERT INTO USER (username, password, email, profile_picture) VALUES
+    ('user1', 'password1', 'email1@gmail.com', 'profile_picture1.png'),
+    ('user2', 'password2', 'email2@gmail.com', 'profile_picture2.png'),
+    ('user3', 'password3', 'email3@gmail.com', 'profile_picture3.png'),
+    ('user4', 'password4', 'email4@gmail.com', 'profile_picture4.png'),
+    ('user5', 'password5', 'email5@gmail.com', 'profile_picture5.png'),
+    ('user6', 'password6', 'email6@gmail.com', 'profile_picture6.png'),
+    ('user7', 'password7', 'email7@gmail.com', 'profile_picture7.png'),
+    ('user8', 'password8', 'email8@gmail.com', 'profile_picture8.png'),
+    ('user9', 'password9', 'email9@gmail.com', 'profile_picture9.png'),
+    ('user10', 'password10', 'email10@gmail.com', 'profile_picture10.png'),
+    ('user11', 'password11', 'email11@gmail.com', 'profile_picture11.png'),
+    ('user12', 'password12', 'email12@gmail.com', 'profile_picture12.png');
 
 INSERT INTO POKEMON (podekex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES
     (6,   10, 'Charizard', 'Blaze', 'Solar Power', 'None', 'None', 1),
@@ -216,20 +229,6 @@ INSERT INTO POKEMON (podekex_id, level, name, ability_1, ability_2, ability_3, a
     (549, 10, 'Lilligant', 'Chlorophyll', 'Own Tempo', 'Leaf Guard', 'None', 8),
     (551, 10, 'Sandile', 'Intimidate', 'Moxie', 'Anger Point', 'None', 8),
     (553, 10, 'Krokorok', 'Intimidate', 'Moxie', 'Anger Point', 'None', 8);
-
-INSERT INTO Users (username, password, email, profile_picture) VALUES
-    ('user1', 'password1', 'email1@gmail.com', 'profile_picture1.png'),
-    ('user2', 'password2', 'email2@gmail.com', 'profile_picture2.png'),
-    ('user3', 'password3', 'email3@gmail.com', 'profile_picture3.png'),
-    ('user4', 'password4', 'email4@gmail.com', 'profile_picture4.png'),
-    ('user5', 'password5', 'email5@gmail.com', 'profile_picture5.png'),
-    ('user6', 'password6', 'email6@gmail.com', 'profile_picture6.png'),
-    ('user7', 'password7', 'email7@gmail.com', 'profile_picture7.png'),
-    ('user8', 'password8', 'email8@gmail.com', 'profile_picture8.png'),
-    ('user9', 'password9', 'email9@gmail.com', 'profile_picture9.png'),
-    ('user10', 'password10', 'email10@gmail.com', 'profile_picture10.png'),
-    ('user11', 'password11', 'email11@gmail.com', 'profile_picture11.png'),
-    ('user12', 'password12', 'email12@gmail.com', 'profile_picture12.png');
 
 INSERT INTO Builds (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES
 
