@@ -4,9 +4,11 @@ services:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: 12345678
-      MYSQL_DATABASE: pokebuild-maker
+      MYSQL_DATABASE: pokebuildmaker
     ports:
       - "4000:4000"
+    volumes:
+      - ./base_de_datos/sql/:/docker-entrypoint-initdb.d/
   web:
     build: .
     ports:
