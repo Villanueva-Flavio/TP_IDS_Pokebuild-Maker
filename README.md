@@ -32,11 +32,12 @@ Miro: [Ver diseños preliminares](https://miro.com/welcomeonboard/d2drOFdpMkF0cm
 |![image](https://github.com/Villanueva-Flavio/TP_IDS_Pokebuild-Maker/assets/78744163/186d5b32-fa94-4c91-911f-995ba16f1cdf) #000000 |![image](https://github.com/Villanueva-Flavio/TP_IDS_Pokebuild-Maker/assets/78744163/316d138c-af41-45e9-8b1d-7c7d1af0c12f) #ffffff |
 
 
-**Convenciones:**
+**Convenciones:**<br>
 **[ADD]** Commit de adiciones al proyecto<br>
 **[DEL]** Commit donde se remueven cosas<br>
 **[FIX]** Commit de bugfixes<br>
 **[MER]** Commit de merge<br>
+**[#10]** ID del backlog (Obligatorio)<br>
 
 Uso de Snake_Case obligatorio<br>
 
