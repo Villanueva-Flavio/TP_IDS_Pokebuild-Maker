@@ -18,8 +18,7 @@ CREATE TABLE POKEMON (
     ability_2 VARCHAR(30),
     ability_3 VARCHAR(30),
     ability_4 VARCHAR(30),
-    owner_id INT NOT NULL,
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES USER(id)
+    owner_id INT FOREIGN KEY REFERENCES(USER.id)
 );
 
 INSERT INTO USER (username, password, email, profile_picture) VALUES
