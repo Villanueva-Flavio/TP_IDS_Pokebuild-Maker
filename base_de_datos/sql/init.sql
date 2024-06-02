@@ -11,7 +11,7 @@ CREATE TABLE USER (
 
 CREATE TABLE POKEMON (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    podekex_id INT(4) NOT NULL,
+    pokedex_id INT(4) NOT NULL,
     level INT(3) NOT NULL,
     name VARCHAR(12),
     ability_1 VARCHAR(30) NOT NULL,
@@ -19,6 +19,26 @@ CREATE TABLE POKEMON (
     ability_3 VARCHAR(30),
     ability_4 VARCHAR(30),
     owner_id INT FOREIGN KEY REFERENCES(USER.id)
+);
+
+CREATE TABLE IF NOT EXISTS BUILDS (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    build_name VARCHAR(12) NOT NULL,
+    timestamp DATETIME NOT NULL,
+    pokemon_id_1 INT NOT NULL,
+    pokemon_id_2 INT,
+    pokemon_id_3 INT,
+    pokemon_id_4 INT,
+    pokemon_id_5 INT,
+    pokemon_id_6 INT,
+    owner_id INT NOT NULL,
+    FOREIGN KEY (pokemon_id_1) REFERENCES POKEMON(id),
+    FOREIGN KEY (pokemon_id_2) REFERENCES POKEMON(id),
+    FOREIGN KEY (pokemon_id_3) REFERENCES POKEMON(id),
+    FOREIGN KEY (pokemon_id_4) REFERENCES POKEMON(id),
+    FOREIGN KEY (pokemon_id_5) REFERENCES POKEMON(id),
+    FOREIGN KEY (pokemon_id_6) REFERENCES POKEMON(id),
+    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES USER(id)
 );
 
 INSERT INTO USER (username, password, email, profile_picture) VALUES
