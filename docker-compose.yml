@@ -3,7 +3,7 @@ services:
   db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 1
       MYSQL_DATABASE: pokebuildmaker
     ports:
       - "4000:4000"
@@ -19,4 +19,4 @@ services:
       DATABASE_HOST: db
       DATABASE_NAME: webdb
       DATABASE_USER: root
-      DATABASE_PASSWORD: 12345678
+      DATABASE_PASSWORD: 1
