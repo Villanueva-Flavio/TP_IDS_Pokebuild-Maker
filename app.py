@@ -1,13 +1,11 @@
-from flask import Flask, jsonify, request, render_template, url_for
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
+from flask import Flask
+
 PORT = 5000
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return 'Hello World!\n'
 
-
-
-if __name__=="__main__":
-    app.run(debug=True, port=PORT)
+if __name__ == "__main__":
+    app.run(debug=True, host='0.0.0.0', port=PORT)

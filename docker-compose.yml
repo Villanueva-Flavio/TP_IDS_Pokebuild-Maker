@@ -1,6 +1,7 @@
 version: '3'
 services:
   db:
+    container_name: pokebuild-db
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: 1
@@ -11,7 +12,7 @@ services:
       - ./base_de_datos/sql/:/docker-entrypoint-initdb.d/
 
   api:
-    container_name: api
+    container_name: pokebuild-api
     ports:
       - "5000:5000"
     depends_on:
