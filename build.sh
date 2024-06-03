@@ -1,0 +1,1 @@
+sudo screen -dmS POKEBUILD-BUILDING docker-compose up --build
