@@ -9,10 +9,10 @@ services:
     ports:
       - "4000:4000"
     volumes:
-      - ./base_de_datos/sql/:/docker-entrypoint-initdb.d/
+      - ./Database/:/docker-entrypoint-initdb.d/
 
-  api:
-    container_name: pokebuild-api
+  backend:
+    container_name: pokebuild-backend
     ports:
       - "5000:5000"
     depends_on:
