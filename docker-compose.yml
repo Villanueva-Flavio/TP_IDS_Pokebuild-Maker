@@ -10,6 +10,7 @@ services:
       - "4000:4000"
     volumes:
       - ./Database/:/docker-entrypoint-initdb.d/
+    restart: always
 
   backend:
     container_name: pokebuild-backend
@@ -25,3 +26,6 @@ services:
       DATABASE_NAME: apidb
       DATABASE_USER: root
       DATABASE_PASSWORD: 1
+    volumes: 
+      - ./app/:/app/
+    restart: always
