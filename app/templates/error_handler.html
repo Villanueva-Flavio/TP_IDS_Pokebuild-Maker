@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+<!-- 
+    Cuando haya un error, se mostrara esta pagina.
+    Después deberiamos hacer un base.html y extenderlo.
+    Y luego agregar un boton en esta pagina que te lleve a inicio(?) 
+-->
+</head>
+<body>
+    <!-- 
+    La excepción que se levantó, 
+    por ejemplo, si tenés un try-except:
+    try:
+        ...
+    except Exception as e:
+        error_title = type(e).__name__
+    -->
+    <h1>{{ error_title }}</h1>
+    <!-- El mensaje de error que vos le ponés: -->
+    <p>{{ error_message }}</p>
+</body>
+</html>
