@@ -17,29 +17,6 @@ def get_pokemons():
             pokemons.append(pokemon_dict)
     return jsonify(pokemons)
 
-@api_blueprint.route('/api/build/<id>', methods = ['GET'])
-def get_user(id):
-    with engine.connect() as connection:
-        result = connection.execute(text(f"SELECT * FROM BUILDS WHERE id = {id}"))
-        build = []
-        for row in result:
-            build_dict = dict(row)
-            build.append(build_dict)
-    return jsonify(build)
-
-
-
-@api_blueprint.route('/api/builds', methods=['GET'])
-def get_builds():
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT * FROM BUILDS"))
-        builds = []
-        for row in result:
-            builds_dict = dict(row)
-            builds.append(builds_dict)
-    return jsonify(builds)
-
-
 @api_blueprint.route('/api/pokemon/<int:pokemon_id>', methods=['GET'])
 def get_pokemon_by_id(pokemon_id):
     try:
@@ -54,6 +31,26 @@ def get_pokemon_by_id(pokemon_id):
         error_message = "Pokemon not found"
         return redirect(url_for('error', error_title=error_title, error_message=error_message))
 
+@api_blueprint.route('/api/builds', methods=['GET'])
+def get_builds():
+    with engine.connect() as connection:
+        result = connection.execute(text("SELECT * FROM BUILDS"))
+        builds = []
+        for row in result:
+            builds_dict = dict(row)
+            builds.append(builds_dict)
+    return jsonify(builds)
+
+@api_blueprint.route('/api/build/<id>', methods = ['GET'])
+def get_build(id):
+    with engine.connect() as connection:
+        result = connection.execute(text(f"SELECT * FROM BUILDS WHERE id = {id}"))
+        build = []
+        for row in result:
+            build_dict = dict(row)
+            build.append(build_dict)
+    return jsonify(build)
+
 @api_blueprint.route('/error/<error_title>/<error_message>', methods=['GET'])
 def error(error_title, error_message):
     return render_template('error_handler.html',error_title=error_title ,error_message=error_message)
@@ -61,5 +58,3 @@ def error(error_title, error_message):
 @api_blueprint.route('/api', methods=['GET'])
 def api_route():
     return 'Hello world from API!'
-
-
