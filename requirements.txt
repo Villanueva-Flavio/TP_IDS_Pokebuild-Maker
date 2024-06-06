@@ -3,4 +3,4 @@ SQLAlchemy==1.4.32
 Flask-SQLAlchemy==2.5.1
 mysqlclient==2.1.0
 Werkzeug==2.0.3
-mysql-connector-python==8.0.33 
+mysql-connector-python==8.0.33
