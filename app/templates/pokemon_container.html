@@ -1,17 +1,24 @@
 <link rel="stylesheet" href='../static/css/pokemon_container.css'>
 
 <h1>CREATE A NEW BUILD</h1>
-<div class="container_searchbar">
-    <input type="text" placeholder="Search Pokémon">
-</div>
+
+<!-- build name -->
+<form action="" class="container_searchbar">
+    <label for="">BUILD NAME</label>
+    <input type="text">
+</form>
+
 <div class="pokemon_container">
-    <img src="../static/images/bebe_meme.jpg">
+    <img class="img_pokemon" src="../static/images/bebe_meme.jpg">
     <form action="" class="form_pokemon">
+        <!-- nombre de pokemon -->
         <label for="">NAME</label>
         <input type="text">
+        <!-- nivel del pokemon -->
         <label for="">LVL</label>
         <input type="text">
         <br>
+        <!-- seleccionar pokemon -->
         <label for="">POKEMON</label>
         <select name="" id="">
             <option value="">pepe</option>
@@ -19,6 +26,7 @@
             <option value="">ash</option>
             <option value="">ace</option>
         </select>
+        <!-- habilidades del pokemon -->
         <label for="">HABILITIES</label>
         <select name="" id="">
             <option value="">piña fuerte</option>
@@ -26,9 +34,6 @@
             <option value="">molinete</option>
             <option value="">guardia</option>
         </select>
-
-
-
 
     </form>
 </div>

@@ -1,3 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.img_pokemon{
+    height: 200px;
+    width: 200px;
+}
+.pokemon_container{
+    border: black solid 5px;
+    display: flex;
+    font-size: 25px;
+}
+
+.container_searchbar input{
+    height: 30px;
+    background-color: lightblue;
+}
+
+
+select{
+    height: 30px;
+    width: 100px;
+    font-size: 20px;
+}
+
 h1{
     height: 50px;
     text-align: center;
