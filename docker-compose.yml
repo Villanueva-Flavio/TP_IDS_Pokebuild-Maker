@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: 1
       MYSQL_DATABASE: pokebuildmaker
     ports:
-      - "4000:4000"
+      - "4000:3306"
     volumes:
       - ./Database/:/docker-entrypoint-initdb.d/
     restart: always
