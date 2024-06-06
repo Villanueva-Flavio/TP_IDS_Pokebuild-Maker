@@ -7,6 +7,16 @@ api_blueprint = Blueprint('api', __name__)
 # uso el puerto 3306 para MySQL ya que es el puerto interno de MySQL en el contenedor
 engine = create_engine('mysql+mysqlconnector://root:1@pokebuild-db:3306/pokebuildmaker')
 
+@api_blueprint.route('/api/pokemons', methods=['GET'])
+def get_pokemons():
+    with engine.connect() as connection:
+        result = connection.execute(text("SELECT * FROM POKEMON"))
+        pokemons = []
+        for row in result:
+            pokemon_dict = dict(row)
+            pokemons.append(pokemon_dict)
+    return jsonify(pokemons)
+
 @api_blueprint.route('/build/<id>', methods = ['GET'])
 def get_user(id):
     with engine.connect() as connection:
