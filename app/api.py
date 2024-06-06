@@ -17,15 +17,7 @@ def get_user(id):
             build.append(build_dict)
     return jsonify(build)
 
-@api_blueprint.route('/api/pokemons', methods=['GET'])
-def get_pokemons():
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT * FROM POKEMON"))
-        pokemons = []
-        for row in result:
-            pokemon_dict = dict(row)
-            pokemons.append(pokemon_dict)
-    return jsonify(pokemons)
+
 
 @api_blueprint.route('/api/builds', methods=['GET'])
 def get_builds():
