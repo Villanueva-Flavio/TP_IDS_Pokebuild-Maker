@@ -1,81 +1,79 @@
 from sqlalchemy.exc import SQLAlchemyError
-from flask import jsonify, Blueprint, redirect, url_for, render_template
+from flask import jsonify, Blueprint
 from sqlalchemy import create_engine, text
 
-api_blueprint = Blueprint('api', __name__)
+POKEMONS_ROUTE = '/api/pokemons'
+POKEMONS_CMD = "SELECT * FROM POKEMON"
+POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>'
+POKEMON_ID_CMD = "SELECT * FROM POKEMON WHERE ID = "
 
-# uso el puerto 3306 para MySQL ya que es el puerto interno de MySQL en el contenedor
+BUILDS_ROUTE = '/api/builds'
+BUILDS_CMD = "SELECT * FROM BUILDS"
+BUILD_ID_ROUTE = '/api/build/<build_id>'
+BUILD_ID_CMD = "SELECT * FROM BUILDS WHERE ID = "
+
+USERS_ROUTE = '/api/users_profiles'
+USERS_CMD = "SELECT username, email, profile_picture FROM USER"
+USER_ID_ROUTE = '/api/user_profile/<user_id>'
+USER_ID_CMD = "SELECT username, email, profile_picture FROM USER WHERE ID = "
+
+api_blueprint = Blueprint('api', __name__)
 engine = create_engine('mysql+mysqlconnector://root:1@pokebuild-db:3306/pokebuildmaker')
 
-@api_blueprint.route('/api/pokemons', methods=['GET'])
+# GET endpoint for POKEMONS
+@api_blueprint.route(POKEMONS_ROUTE, methods=['GET'])
 def get_pokemons():
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT * FROM POKEMON"))
-        pokemons = []
-        for row in result:
-            pokemon_dict = dict(row)
-            pokemons.append(pokemon_dict)
-    return jsonify(pokemons)
+    return get_data(POKEMONS_CMD)
 
-@api_blueprint.route('/api/pokemon/<int:pokemon_id>', methods=['GET'])
+# GET endpoint for POKEMON by ID
+@api_blueprint.route(POKEMON_ID_ROUTE, methods=['GET'])
 def get_pokemon_by_id(pokemon_id):
-    try:
-        with engine.connect() as connection:
-            get_pokemon_query = text("SELECT * FROM POKEMON WHERE id = :id")
-            result = connection.execute(get_pokemon_query, id=pokemon_id)
-            pokemon = result.fetchone()
-            pokemon_dict = dict(pokemon)
-            return jsonify(pokemon_dict)
-    except Exception as e:
-        error_title = type(e).__name__
-        error_message = "Pokemon not found"
-        return redirect(url_for('error', error_title=error_title, error_message=error_message))
+    return get_data(POKEMON_ID_CMD + pokemon_id)
 
-@api_blueprint.route('/api/builds', methods=['GET'])
+# GET endpoint for BUILDS
+@api_blueprint.route(BUILDS_ROUTE, methods=['GET'])
 def get_builds():
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT * FROM BUILDS"))
-        builds = []
-        for row in result:
-            builds_dict = dict(row)
-            builds.append(builds_dict)
-    return jsonify(builds)
+    return get_data(BUILDS_CMD)
 
-@api_blueprint.route('/api/build/<id>', methods = ['GET'])
-def get_build(id):
-    with engine.connect() as connection:
-        result = connection.execute(text(f"SELECT * FROM BUILDS WHERE id = {id}"))
-        build = []
-        for row in result:
-            build_dict = dict(row)
-            build.append(build_dict)
-    return jsonify(build)
+# GET endpoint for BUILD by ID
+@api_blueprint.route(BUILD_ID_ROUTE, methods=['GET'])
+def get_build_by_id(build_id):
+    return get_data(BUILD_ID_CMD + build_id)
 
-@api_blueprint.route('/api/users_profiles', methods=['GET'])
+# GET endpoint for USERS
+@api_blueprint.route(USERS_ROUTE, methods=['GET'])
 def get_users_profiles():
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT username, email, profile_picture FROM USER"))
-        users = []
-        for row in result:
-            user_dict = dict(row)
-            users.append(user_dict)
-    return jsonify(users)
+    return get_data(USERS_CMD)
 
-@api_blueprint.route('/api/user_profile/<int:user_id>', methods=['GET'])
-def get_user_profile_by_id(user_id):
+# GET endpoint for USER by ID
+@api_blueprint.route(USER_ID_ROUTE, methods=['GET'])
+def get_user_profile(user_id):
+    return get_data(USER_ID_CMD + user_id)
+
+# GET endpoint for HOME
+@api_blueprint.route('/api', methods=['GET'])
+def api_home():
+    endpoints = {
+        "pokemons": "/api/pokemons",
+        "builds": "/api/builds",
+        "users_profiles": "/api/users_profiles"
+    }
+    return jsonify(endpoints)
+
+def get_data(query):
     try:
         with engine.connect() as connection:
-            get_user_query = text("SELECT username, email, profile_picture FROM USER WHERE id = :id")
-            result = connection.execute(get_user_query, id=user_id)
-            user = result.fetchone()
-            user_dict = dict(user)
-            return jsonify(user_dict)
-    
-    except Exception as e:
-        error_title = type(e).__name__
-        error_message = "User not found"
-        return redirect(url_for('error', error_title=error_title, error_message=error_message))
+            result = connection.execute(text(query))
+            data = []
+            for row in result:
+                data_dict = dict(row)
+                data.append(data_dict)
 
-@api_blueprint.route('/api', methods=['GET'])
-def api_route():
-    return 'Hello world from API!'
+        if len(data) == 1:
+            return jsonify(data[0])
+        else:
+            return jsonify(data)
+        
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
