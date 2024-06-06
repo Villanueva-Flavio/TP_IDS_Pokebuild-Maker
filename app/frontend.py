@@ -10,3 +10,8 @@ def index():
 @frontend_blueprint.route('/pop-up-test')
 def pop_up_test():
     return render_template('pop-up-test.html')
+
+@frontend_blueprint.route('/build_list_container')
+def build_list_container():
+    lista=[1,2,3,4,5,6,7,8,9] #Actualmente hay una lista, pero en el futuro tiene que haber algo que me permita iterar con los build_container. Esta en proceso.
+    return render_template("build_list_container.html",lista=lista)

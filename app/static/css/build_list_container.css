@@ -1,0 +1,19 @@
+#container {
+    display: flex;
+    justify-content:space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-right: 150px;
+    margin-top: 100px;
+    margin-bottom: 40px;
+    max-height: calc(100vh - 140px);
+    overflow:scroll
+}
+
+.rectangle {
+    width: 1500px;
+    height: 150px;
+    margin: 40px;
+    background-color: black;
+}
