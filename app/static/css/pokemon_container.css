@@ -1,32 +1,48 @@
+/* paleta de colores Darkmode
+    #28ffbd
+    #e500ff
+    #5e00ff
+    #2f006f
+    #000000
+    #ffffff
+*/
+
 *{
-    margin: 0;
+    margin: 5px;
     padding: 0;
 }
+
+
+h1{
+    font-size: 50px;
+    text-align: center;
+}
+
+
+.container_build_name{
+    text-align: center;
+    font-size: 30px;  
+}
+.container_build_name input{
+    height: 30px;
+}
+
 
 .img_pokemon{
     height: 200px;
     width: 200px;
 }
 .pokemon_container{
-    border: black solid 5px;
     display: flex;
+    width: 800px;
     font-size: 25px;
+    border: #5e00ff solid 5px;
+    background-color: #28ffbd;
 }
-
-.container_searchbar input{
-    height: 30px;
-    background-color: lightblue;
-}
-
 
 select{
     height: 30px;
-    width: 100px;
+    width: 120px;
     font-size: 20px;
 }
 
-h1{
-    height: 50px;
-    text-align: center;
-    color: red;
-}
