@@ -3,9 +3,8 @@ services:
   db:
     container_name: pokebuild-db
     image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: 1
-      MYSQL_DATABASE: pokebuildmaker
+    env_file:
+      - ./app/.env
     ports:
       - "4000:3306"
     volumes:
@@ -21,11 +20,8 @@ services:
     build: 
       dockerfile: Dockerfile
       context: .
-    environment:
-      DATABASE_HOST: db
-      DATABASE_NAME: apidb
-      DATABASE_USER: root
-      DATABASE_PASSWORD: 1
+    env_file:
+      - ./app/.env
     volumes: 
       - ./app/:/app/
     restart: always

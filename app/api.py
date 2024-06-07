@@ -1,54 +1,65 @@
 from sqlalchemy.exc import SQLAlchemyError
 from flask import jsonify, Blueprint
 from sqlalchemy import create_engine, text
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
 
 POKEMONS_ROUTE = '/api/pokemons'
-POKEMONS_CMD = "SELECT * FROM POKEMON"
+POKEMONS_QUERY = "SELECT * FROM POKEMON"
 POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>'
-POKEMON_ID_CMD = "SELECT * FROM POKEMON WHERE ID = "
+POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
 
 BUILDS_ROUTE = '/api/builds'
-BUILDS_CMD = "SELECT * FROM BUILDS"
+BUILDS_QUERY = "SELECT * FROM BUILDS"
 BUILD_ID_ROUTE = '/api/build/<build_id>'
-BUILD_ID_CMD = "SELECT * FROM BUILDS WHERE ID = "
+BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
 
 USERS_ROUTE = '/api/users_profiles'
-USERS_CMD = "SELECT username, email, profile_picture FROM USER"
+USERS_QUERY = "SELECT username, email, profile_picture FROM USER"
 USER_ID_ROUTE = '/api/user_profile/<user_id>'
-USER_ID_CMD = "SELECT username, email, profile_picture FROM USER WHERE ID = "
+USER_ID_QUERY = "SELECT username, email, profile_picture FROM USER WHERE ID = "
 
 api_blueprint = Blueprint('api', __name__)
-engine = create_engine('mysql+mysqlconnector://root:1@pokebuild-db:3306/pokebuildmaker')
+db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+engine = create_engine(db_url)
 
 # GET endpoint for POKEMONS
 @api_blueprint.route(POKEMONS_ROUTE, methods=['GET'])
 def get_pokemons():
-    return get_data(POKEMONS_CMD)
+    return get_data(POKEMONS_QUERY)
 
 # GET endpoint for POKEMON by ID
 @api_blueprint.route(POKEMON_ID_ROUTE, methods=['GET'])
 def get_pokemon_by_id(pokemon_id):
-    return get_data(POKEMON_ID_CMD + pokemon_id)
+    return get_data(POKEMON_ID_QUERY + pokemon_id)
 
 # GET endpoint for BUILDS
 @api_blueprint.route(BUILDS_ROUTE, methods=['GET'])
 def get_builds():
-    return get_data(BUILDS_CMD)
+    return get_data(BUILDS_QUERY)
 
 # GET endpoint for BUILD by ID
 @api_blueprint.route(BUILD_ID_ROUTE, methods=['GET'])
 def get_build_by_id(build_id):
-    return get_data(BUILD_ID_CMD + build_id)
+    return get_data(BUILD_ID_QUERY + build_id)
 
 # GET endpoint for USERS
 @api_blueprint.route(USERS_ROUTE, methods=['GET'])
 def get_users_profiles():
-    return get_data(USERS_CMD)
+    return get_data(USERS_QUERY)
 
 # GET endpoint for USER by ID
 @api_blueprint.route(USER_ID_ROUTE, methods=['GET'])
 def get_user_profile(user_id):
-    return get_data(USER_ID_CMD + user_id)
+    return get_data(USER_ID_QUERY + user_id)
 
 # GET endpoint for HOME
 @api_blueprint.route('/api', methods=['GET'])
