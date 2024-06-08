@@ -10,6 +10,13 @@
 *{
     margin: 5px;
     padding: 0;
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    /* Color del fondo de la pagina */
+    background-color: #000000;
+    /* Color de las letras */
+    color: white;
 }
 
 
@@ -17,14 +24,20 @@ h1{
     font-size: 50px;
     text-align: center;
 }
-
+        /* Con el flex-wrap agrupo las card en 3 para abilitarlo le ponemos display flex */
+.container_all_pokemon{  
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
 .container_build_name{
     text-align: center;
-    font-size: 30px;  
+    font-size: 30px; 
 }
 .container_build_name input{
     height: 30px;
+    font-size: 20px;
 }
 
 
@@ -36,8 +49,10 @@ h1{
     display: flex;
     width: 800px;
     font-size: 25px;
-    border: #5e00ff solid 5px;
-    background-color: #28ffbd;
+    border: #5e00ff solid 10px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px;
 }
 
 select{
@@ -45,4 +60,17 @@ select{
     width: 120px;
     font-size: 20px;
 }
+    /* en margin en auto centra todo el contenido al medio */
+.form_pokemon {
+    margin: auto;
+}   
 
+
+.btn_nav{
+    text-align: center;
+}
+.btn {
+    font-size: 20px;
+    height: 50px;
+    width: 100px;
+}
