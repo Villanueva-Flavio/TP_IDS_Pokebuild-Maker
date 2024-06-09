@@ -44,3 +44,11 @@
 .register-button {
     background: linear-gradient(145deg, #3399ff, #0073e6);
 }
+
+.save-button {
+    background: linear-gradient(145deg, #00cc00, #009900);
+}
+
+.cancel-button {
+    background: linear-gradient(145deg, #ff3333, #cc0000);
+}
