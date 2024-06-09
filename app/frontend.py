@@ -10,3 +10,7 @@ def index():
 @frontend_blueprint.route('/pop-up-test')
 def pop_up_test():
     return render_template('pop-up-test.html')
+
+@frontend_blueprint.route('/login_register')
+def login_register():
+    return render_template('login_register.html')
