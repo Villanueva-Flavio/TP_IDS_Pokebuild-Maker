@@ -1,0 +1,5 @@
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/build_list_container.css') }}">
+{% for item in lista %}
+    {% include 'build_container.html' %}
+{% endfor %}
