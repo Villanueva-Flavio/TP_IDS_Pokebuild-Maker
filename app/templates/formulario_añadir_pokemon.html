@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_añadir_pokemon.css')}}">
+</head>
+<body>
+    <div id="formulario">
+        <div id="Submit" class="cuadrado">
+            <h1>ADD A NEW POKEMON</h1>
+        </div>
+        <form action="{{ url_for('frontend.formulario_añadir_pokemon')}}" method="post">
+            <div class="" id="nombre_nivel">
+                <div id="usuario" class="cuadrado contenedor nombre_nivel_contenedor">
+                    <div class="">
+                        <label for="poke_name" id="name">Name:</label>
+                        <input type="text" id="poke_name" name="pname" placeholder="Name" class="poke_name_especie">
+                        <label for="poke_LVL" id="level">LVL:</label>
+                        <input type="text" id="poke_LVL" name="pLVL" placeholder="000" class="caja input_personalizado">
+                    </div>                
+                    <div id="abilities" class="contenedor habilidades_contenedor">
+                        <h1 id="abilities_texto">Abiities</h1>
+                        <div class="fila">
+                            <input list="habilidades" id="poke_habilidad_1" name="phabilidad_1" placeholder="1" class="abilities_elegir">
+                            <input list="habilidades" id="poke_habilidad_2" name="phabilidad_2" placeholder="2" class="abilities_elegir">
+                        </div>
+                        <div class="fila">
+                            <input list="habilidades" id="poke_habilidad_3" name="phabilidad_3" placeholder="3" class="abilities_elegir_inferiores">
+                            <input list="habilidades" id="poke_habilidad_4" name="phabilidad_4" placeholder="4" class="abilities_elegir_inferiores">
+                        </div>
+                        <datalist id="habilidades">
+                            <option value="atack">attack</option>
+                            <option value="super">super</option>
+                            <option value="shield">shield</option>
+                            <option value="support">support</option>
+                        </datalist>
+                    </div>
+                </div>
+                <div id="datos_pokemon_caja" class="cuadrado">
+                    <div id="imagen_poke" class="">
+                        <input list="Especie_pokemon" id="pokemon_imagen_cuadrado" name="ppokemon" placeholder="Pokemon" class="poke_name_especie">
+                        <datalist id="Especie_pokemon">
+                            <option value="Pikachu">Pikachu</option>
+                            <option value="Charizad">Charizad</option>
+                        </datalist>
+                        <img src="{{ url_for('static', filename='images/Logo.png')}}" id="pokemon_imagen">
+                    </div>
+                    <div id="tipos_datos_poke" class="">
+                        Type
+                        <div class="" id="special">
+                            <img src="{{ url_for('static', filename='images/tipos_pokemon/grass.png')}}" class=" tipo_imagen tipo_pokemon posibles_tipo">
+                            <img src="{{ url_for('static', filename='images/tipos_pokemon/steel.png')}}" class=" tipo_imagen tipo_pokemon posibles_tipo">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="cuadrado contenedor">
+                <div class=" against ">
+                    <div class="against_texto">Good against: </div>
+                    <div class="">
+                        <img src="{{ url_for('static', filename='images/tipos_pokemon/water.png')}}" class=" tipo_imagen tipo_pokemon_Good_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/ground.png')}}" class=" tipo_imagen tipo_pokemon_Good_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/rock.png')}}" class=" tipo_imagen tipo_pokemon_Good_Against">
+                    </div>
+                </div>
+                <br>
+                <div class="against " >
+                    <div class="against_texto ">Bad against: </div>
+                    <div class=" bad_against" >
+                        <img src="{{ url_for('static', filename='images/tipos_pokemon/fire.png')}}" class="tipo_imagen tipo_pokemon_Bad_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/grass.png')}}" class="tipo_imagen tipo_pokemon_Bad_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/psychic.png')}}" class="tipo_imagen tipo_pokemon_Bad_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/bug.png')}}" class="tipo_imagen tipo_pokemon_Bad_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/dragon.png')}}" class="tipo_imagen tipo_pokemon_Bad_Against"><img src="{{ url_for('static', filename='images/tipos_pokemon/steel.png')}}" class="tipo_imagen tipo_pokemon_Bad_Against">
+                    </div>
+                </div>
+                <datalist id="tipos">
+                    <option value="">tipo_1</option>
+                    <option value="">tipo_2</option>
+                    <option value="">tipo_3</option>
+                </datalist>
+            </div>
+            
+            <div class="boton">
+                <button type="submit" class=" caja cuadrado" >Save</button>
+                <button class=" caja cuadrado" type="reset">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+
+</body>
+</html>
