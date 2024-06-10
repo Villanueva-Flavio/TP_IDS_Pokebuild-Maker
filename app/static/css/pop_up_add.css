@@ -1,17 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 #popup_open {
-    display: inline-block;
     background-image: url("/static/images/Pokeball.png");
     background-size: cover;
     background-position: center;
     border: none;
-    border-radius: 50px;
+    border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
-    height: 100px;
-    width: 100px;
+    height: 15vh;
+    width: 15vh;
     filter: grayscale(100%);
+    position:sticky;
+    bottom: 5vh;
+    margin-left: 90%;
 }
 
 @keyframes shake {
@@ -161,4 +163,12 @@
 .container:has(.add-build:hover) .add-pokemon {
     clip-path: polygon(0 0, 30% 0%, 10% 100%, 0% 100%);
     transition: ease-in-out 0.5s;
+}
+
+@media (max-aspect-ratio: 1/1){
+    #popup_open{
+        height: 10vh;
+        width: 10vh;
+        margin-left: 0;
+    }
 }
