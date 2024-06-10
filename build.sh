@@ -1,0 +1,1 @@
+screen -mS POKEBUILD-BUILDING docker-compose up --build
