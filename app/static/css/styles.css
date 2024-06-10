@@ -1,3 +1,54 @@
-body{
-    background-color: black;
+*{
+    margin: 5px;
+    padding: 0;
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    /* Color del fondo de la pagina */
+    background-color: #000000;
+    /* Color de las letras */
+    color: white;
+}
+.button-container {
+    display: flex;
+}
+
+.pokemon-button {
+    padding: 8px 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    /*
+    */
+    background: linear-gradient(145deg, #ff0000, #f08030);
+    border: 2px solid #000000;
+    border-radius: 8px;
+    text-shadow: 2px 2px #000000;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+    margin-right: 10px
+}
+
+.pokemon-button:active {
+    transform: scale(0.95);
+}
+
+.pokemon-button:hover {
+    background: linear-gradient(145deg, #f08030, #ff0000);
+}
+
+.login-button {
+    background: linear-gradient(145deg, #ffcc00, #ff9900);
+}
+
+.register-button {
+    background: linear-gradient(145deg, #3399ff, #0073e6);
+}
+
+.save-button {
+    background: linear-gradient(145deg, #00cc00, #009900);
+}
+
+.cancel-button {
+    background: linear-gradient(145deg, #ff3333, #cc0000);
 }

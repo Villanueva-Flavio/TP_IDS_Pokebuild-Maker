@@ -17,3 +17,8 @@ def build_list_container():
     # llamar a api con las builds y sus pokemons
     lista=[1,2,3,4,5,6,7,8,9] #Quitar lista
     return render_template("build_list_container.html",lista=lista)
+
+
+@frontend_blueprint.route('/login_register')
+def login_register():
+    return render_template('login_register.html')
