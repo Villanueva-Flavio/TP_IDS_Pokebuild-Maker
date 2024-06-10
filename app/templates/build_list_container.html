@@ -1,17 +1,5 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rectángulos Negros</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/build_list_container.css') }}">
-</head>
-<body>
-    <div id="container">
-        <u>
-            {% for _ in lista %}
-                <div class="rectangle">  </div> <!--Por ahora son rectangulos negros. Tengo que cambiarlos a por los que se hagan en el build_container -->
-            {% endfor %}
-        </u>
-    </div>
-</body>
-</html>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/build_list_container.css') }}">
+{% for item in lista %}
+    {% include 'build_container.html' %}
+{% endfor %}

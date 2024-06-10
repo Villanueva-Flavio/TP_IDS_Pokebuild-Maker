@@ -13,5 +13,7 @@ def pop_up_test():
 
 @frontend_blueprint.route('/build_list_container')
 def build_list_container():
-    lista=[1,2,3,4,5,6,7,8,9] #Actualmente hay una lista, pero en el futuro tiene que haber algo que me permita iterar con los build_container. Esta en proceso.
+    # requests de fotos de pokemons
+    # llamar a api con las builds y sus pokemons
+    lista=[1,2,3,4,5,6,7,8,9] #Quitar lista
     return render_template("build_list_container.html",lista=lista)
