@@ -4,8 +4,8 @@ import requests
 frontend_blueprint = Blueprint('frontend', __name__)
 
 def fetch_data():
-    builds = requests.get('http://192.168.0.8:5000/api/builds/').json()
-    pokemons = requests.get('http://192.168.0.8:5000/api/pokemons/').json()
+    builds = requests.get('http://pokebuild-backend:5000/api/builds/').json()
+    pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
     return builds, pokemons
 
 def get_pokemon_id(build):
