@@ -3,44 +3,47 @@ import requests
 
 frontend_blueprint = Blueprint('frontend', __name__)
 
-@frontend_blueprint.route('/')
-@frontend_blueprint.route('/home')
-
-@frontend_blueprint.route('/home/')
-def index():
+def fetch_data():
     builds = requests.get('http://192.168.0.8:5000/api/builds/').json()
     pokemons = requests.get('http://192.168.0.8:5000/api/pokemons/').json()
-    #pokemon_dict = {pokemon['id']: pokemon for pokemon in pokemons}
-    #pokemon dict but its only owner and pokedex
-    
+    return builds, pokemons
+
+def get_pokemon_id(build):
+    return [
+        build.get(f'pokemon_id_{j+1}', -1) if build.get(f'pokemon_id_{j+1}') is not None else -1
+        for j in range(6)
+    ]
+
+def get_pokedex_id(pokemon_list, pokemons):
+    return [
+        '000' if pokemon_id == -1 else str(pokemons[pokemon_id - 1]['pokedex_id']).zfill(3)
+        for pokemon_id in pokemon_list
+    ]
+
+def get_build_dict(builds, pokemons):
     build_dict = {}
-
-    for i in range(len(builds)):
-        id1 = int(builds[i]['pokemon_id_1'])
-        try:
-            print(pokemons[id1])
-            #print(id1)
-            print("\n")
-        except IndexError as e:
-            print(f"Error encontrado en la base de datos, iteracion {i}: indexError {e}")
-
-
-
-            
-        build_dict[builds[i]['id']] = {
-            'owner_id': builds[i]['owner_id'],
-            'build_name': builds[i]['build_name'],
-            'timestamp': builds[i]['timestamp'],
-            'pokemon_id_1': builds[i]['pokemon_id_1']
-            #'pokemon_id_2': builds[i]['pokemon_id_2'],
-            #'pokemon_id_3': builds[i]['pokemon_id_3'],
-            #'pokemon_id_4': builds[i]['pokemon_id_4'],
-            #'pokemon_id_5': builds[i]['pokemon_id_5'],
-            #'pokemon_id_6': builds[i]['pokemon_id_6']
+    for build in builds:
+        result = get_pokedex_id(get_pokemon_id(build), pokemons)
+        build_row = {
+            'owner_id': build['owner_id'],
+            'build_name': build['build_name'],
+            'timestamp': build['timestamp']
         }
-    
-    return render_template('home.html')
 
+        for j in range(6):
+            build_row[f'pokemon_id_{j+1}'] = result[j]
+        build_dict[build['id']] = build_row
+
+    return build_dict
+
+
+@frontend_blueprint.route('/')
+@frontend_blueprint.route('/home')
+@frontend_blueprint.route('/home/')
+def index():
+    builds, pokemons = fetch_data()
+    build_dict = get_build_dict(builds, pokemons)
+    return render_template('home.html', build_dict=build_dict)
 
 @frontend_blueprint.route('/pop-up-test')
 def pop_up_test():
@@ -48,11 +51,7 @@ def pop_up_test():
 
 @frontend_blueprint.route('/build_list_container')
 def build_list_container():
-    # requests de fotos de pokemons
-    # llamar a api con las builds y sus pokemons
-    lista=[1,2,3,4,5,6,7,8,9] #Quitar lista
-    return render_template("build_list_container.html",lista=lista)
-
+    return render_template("build_list_container.html")
 
 @frontend_blueprint.route('/login_register')
 def login_register():
