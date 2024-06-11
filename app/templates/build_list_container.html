@@ -1,6 +1,15 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/build_list_container.css') }}">
-{% set lista = [1,2,3,4,5,6,7,8,9] %}
-{% for item in lista %}
+<!-- Get from /api/builds -->
+<!-- background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/937.png); -->
+<!-- Add pokedexid where pokemon.id = build.pokemon_id -->
+
+<style>
+    
+    
+</style>
+
+
+{% for item in data %}
     {% include 'build_container.html' %}
 {% endfor %}

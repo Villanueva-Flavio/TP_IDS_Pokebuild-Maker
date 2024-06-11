@@ -12,19 +12,19 @@ DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
 
-POKEMONS_ROUTE = '/api/pokemons'
+POKEMONS_ROUTE = '/api/pokemons/'
 POKEMONS_QUERY = "SELECT * FROM POKEMON"
-POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>'
+POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>/'
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
 
-BUILDS_ROUTE = '/api/builds'
+BUILDS_ROUTE = '/api/builds/'
 BUILDS_QUERY = "SELECT * FROM BUILDS"
-BUILD_ID_ROUTE = '/api/build/<build_id>'
+BUILD_ID_ROUTE = '/api/build/<build_id>/'
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
 
-USERS_ROUTE = '/api/users_profiles'
+USERS_ROUTE = '/api/users_profiles/'
 USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u;"
-USER_ID_ROUTE = '/api/user_profile/<user_id>'
+USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 
 api_blueprint = Blueprint('api', __name__)

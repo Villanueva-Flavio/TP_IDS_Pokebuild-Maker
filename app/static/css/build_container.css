@@ -98,37 +98,31 @@
 
 .pokemon1{
     clip-path: polygon(0 0, 18% 0, 8% 100%, 0% 100%);
-    background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/130.png);
     background-position: 0 0;
 }
 
 .pokemon2{
     clip-path: polygon(18% 0, 36% 0%, 26% 100%, 8% 100%);
-    background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/094.png);
     background-position: 18% 0;
 }
 
 .pokemon3{
     clip-path: polygon(36% 0, 54% 0, 44% 100%, 26% 100%);
-    background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/037.png);
     background-position: 39% 0;
 }
 
 .pokemon4{
     clip-path: polygon(54% 0, 73% 0, 63% 100%, 44% 100%);
-    background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/001.png);
     background-position: 60% 0;
 }
 
 .pokemon5{
     clip-path: polygon(73% 0, 92% 0, 82% 100%, 63% 100%);
-    background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/150.png);
     background-position: 82% 0;
 }
 
 .pokemon6{
     clip-path: polygon(92% 0, 100% 0, 100% 100%, 82% 100%);
-    background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/937.png);
     background-position: 102% 0;
 }
 
