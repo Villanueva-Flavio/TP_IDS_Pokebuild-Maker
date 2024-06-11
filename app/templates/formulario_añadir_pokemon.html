@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_añadir_pokemon.css')}}">
 </head>
 <body>
+
     <div id="formulario">
         <div id="Submit" class="cuadrado">
             <h1>ADD A NEW POKEMON</h1>
@@ -33,10 +34,7 @@
                             <input list="habilidades" id="poke_habilidad_4" name="phabilidad_4" placeholder="4" class="abilities_elegir_inferiores">
                         </div>
                         <datalist id="habilidades">
-                            <option value="atack">attack</option>
-                            <option value="super">super</option>
-                            <option value="shield">shield</option>
-                            <option value="support">support</option>
+                                <!--Donde van las habilidades-->
                         </datalist>
                     </div>
                 </div>
@@ -44,8 +42,7 @@
                     <div id="imagen_poke" class="">
                         <input list="Especie_pokemon" id="pokemon_imagen_cuadrado" name="ppokemon" placeholder="Pokemon" class="poke_name_especie">
                         <datalist id="Especie_pokemon">
-                            <option value="Pikachu">Pikachu</option>
-                            <option value="Charizad">Charizad</option>
+                            <!--Donde van las especie de pokemon-->
                         </datalist>
                         <img src="{{ url_for('static', filename='images/Logo.png')}}" id="pokemon_imagen">
                     </div>
@@ -79,14 +76,13 @@
                     <option value="">tipo_3</option>
                 </datalist>
             </div>
-            
             <div class="boton">
                 <button type="submit" class=" caja cuadrado" >Save</button>
                 <button class=" caja cuadrado" type="reset">Cancel</button>
             </div>
         </form>
     </div>
-
+    <script src="{{ url_for('static', filename='js/busqueda_abilidades.js')}}"></script>
 
 </body>
 </html>
