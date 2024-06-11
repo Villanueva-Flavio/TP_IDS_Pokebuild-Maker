@@ -18,11 +18,11 @@ def index():
     for i in range(len(builds)):
         id1 = int(builds[i]['pokemon_id_1'])
         try:
-            print(len(pokemons))
-            print(id1)
+            print(pokemons[id1])
+            #print(id1)
             print("\n")
         except IndexError as e:
-            print(f"Error {i}: {e}")
+            print(f"Error encontrado en la base de datos, iteracion {i}: indexError {e}")
 
 
 

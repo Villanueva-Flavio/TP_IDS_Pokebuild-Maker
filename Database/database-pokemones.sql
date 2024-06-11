@@ -266,22 +266,22 @@ INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, a
 (547, 10, 'Whimsicott', 'Prankster', 'Infiltrator', 'Chlorophyll', 'None', 8),
 (549, 10, 'Lilligant', 'Chlorophyll', 'Own Tempo', 'Leaf Guard', 'None', 8),
 (551, 10, 'Sandile', 'Intimidate', 'Moxie', 'Anger Point', 'None', 8),
-(553, 10, 'Krokorok', 'Intimidate', 'Moxie', 'Anger Point', 'None', 8)
+(553, 10, 'Krokorok', 'Intimidate', 'Moxie', 'Anger Point', 'None', 8),
 (557, 10, 'Dwebble', 'Sturdy', 'Shell Armor', 'Weak Armor', 'None', 8),
-(559, 10, 'Scraggy', 'Shed Skin', 'Moxie', 'Intimidate', 'None', 8),
-(561, 10, 'Sigilyph', 'Wonder Skin', 'Magic Guard', 'Tinted Lens', 'None', 8),
-(563, 10, 'Cofagrigus', 'Mummy', 'None', 'None', 'None', 8),
-(565, 10, 'Carracosta', 'Solid Rock', 'Sturdy', 'Swift Swim', 'None', 8),
-(567, 11, 'Archeops', 'Defeatist', 'None', 'None', 'None', 8),
-(569, 11, 'Garbodor', 'Stench', 'Weak Armor', 'Aftermath', 'None', 8),
-(571, 11, 'Zoroark', 'Illusion', 'None', 'None', 'None', 8),
-(573, 11, 'Cinccino', 'Cute Charm', 'Technician', 'Skill Link', 'None', 8),
-(575, 11, 'Gothorita', 'Frisk', 'Competitive', 'Shadow Tag', 'None', 8),
-(577, 11, 'Solosis', 'Overcoat', 'Magic Guard', 'Regenerator', 'None', 8),
-(579, 11, 'Reuniclus', 'Overcoat', 'Magic Guard', 'Regenerator', 'None', 8),
-(581, 12, 'Swanna', 'Keen Eye', 'Big Pecks', 'Hydration', 'None', 8),
-(583, 12, 'Vanilluxe', 'Ice Body', 'Snow Warning', 'Weak Armor', 'None', 8),
-(585, 12, 'Deerling', 'Chlorophyll', 'Sap Sipper', 'Serene Grace', 'None', 8);
+(559, 10, 'Scraggy', 'Shed Skin', 'Moxie', 'Intimidate', 'None', 10),
+(561, 10, 'Sigilyph', 'Wonder Skin', 'Magic Guard', 'Tinted Lens', 'None', 10),
+(563, 10, 'Cofagrigus', 'Mummy', 'None', 'None', 'None', 10),
+(565, 10, 'Carracosta', 'Solid Rock', 'Sturdy', 'Swift Swim', 'None', 10),
+(567, 10, 'Archeops', 'Defeatist', 'None', 'None', 'None', 11),
+(569, 10, 'Garbodor', 'Stench', 'Weak Armor', 'Aftermath', 'None', 11),
+(571, 10, 'Zoroark', 'Illusion', 'None', 'None', 'None', 11),
+(573, 10, 'Cinccino', 'Cute Charm', 'Technician', 'Skill Link', 'None', 11),
+(575, 10, 'Gothorita', 'Frisk', 'Competitive', 'Shadow Tag', 'None', 11),
+(577, 10, 'Solosis', 'Overcoat', 'Magic Guard', 'Regenerator', 'None', 11),
+(579, 10, 'Reuniclus', 'Overcoat', 'Magic Guard', 'Regenerator', 'None', 11),
+(581, 10, 'Swanna', 'Keen Eye', 'Big Pecks', 'Hydration', 'None', 12),
+(583, 10, 'Vanilluxe', 'Ice Body', 'Snow Warning', 'Weak Armor', 'None', 12),
+(585, 10, 'Deerling', 'Chlorophyll', 'Sap Sipper', 'Serene Grace', 'None', 12);
 
 INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES
 
