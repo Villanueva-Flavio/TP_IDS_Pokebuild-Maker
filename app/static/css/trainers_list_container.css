@@ -1,0 +1,62 @@
+#todo{
+    margin-top: 10px
+}
+#container{
+    margin-top: 30px;
+    margin-left: 85px;
+    margin-right: 35px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y:auto;
+    max-height: calc(100vh - 200px);
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.rectangle{
+
+    border: 5px solid black;
+    height: 270px;
+    width: 752px;
+    margin: 10px 30px;
+}
+*{
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+}
+#meet_all_trainers{
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+}
+.search-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+#searchBar {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    width: 372px;
+    text-align: center;
+    font-size: 20px;
+
+}
+#searchBar_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
