@@ -6,6 +6,12 @@
     width: 70%;
     margin-left: 5%;
     overflow-y:scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #6a00ff #202020;
+}
+
+#container::-webkit-scrollbar {
+    width: 10px;
 }
 
 .whitespace{
