@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS POKEMON (
 
 CREATE TABLE IF NOT EXISTS BUILDS (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    build_name VARCHAR(12) NOT NULL,
+    build_name VARCHAR(32) NOT NULL,
     pokemon_id_1 INT NOT NULL,
     pokemon_id_2 INT,
     pokemon_id_3 INT,
@@ -285,7 +285,7 @@ INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, a
 
 INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES
 
-('build1', 1, 1, 2, 3, 4, 5, 6, NOW()),
+('123456789012345678906789012', 1, 1, 2, 3, 4, 5, 6, NOW()),
 ('build2', 1, 7, 8, 9, 10, 182, 183, NOW()),
 ('build3', 1, 184, 185, 1, 3, 5, 7, NOW()),
 ('build4', 1, 2, 4, 6, 8, 10, 182, NOW()),

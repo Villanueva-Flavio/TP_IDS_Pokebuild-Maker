@@ -1,7 +1,7 @@
 .build-container{
     display: flex;
-    width: 1000px;
-    height: 200px;
+    width: 1200px;
+    height: 250px;
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
     margin-left: 20px;
     margin-top: 75px;
@@ -9,14 +9,21 @@
     position: relative;
     -webkit-box-reflect: below 2px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(70%, transparent), to(rgba(255, 255, 255, 0.75)));
     border-radius: 5px;
+    transition: ease-in-out 0.5s;
+}
+
+.build-container:hover{
+    box-shadow: 0 0 30px 5px #2f006f;
+    transition: ease-in-out 0.5s;
+    transform: translate(20px, 0px) scale(1.05);
 }
 
 .build-name-container{
     font-family: "Tiny5", sans-serif;
     top: 0;
     margin-top: 0px;
-    margin-left: 10px;
-    font-size: 3em;
+    margin-left: 20px;
+    font-size: 3.5em;
     position: absolute;
     color: white;
 }
@@ -26,12 +33,12 @@
     flex-direction: column;
     margin: 10px;
     height: 100%;
-    width: 200px;
+    width: 250px;
 }
 
 .profile-pic{
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
     margin: 10px;
     bottom: 0;
     left: 0;
@@ -42,8 +49,8 @@
 
 .profile-name{
     font-family: "Tiny5", sans-serif;
-    font-size: 1.4em;
-    width: 140px;
+    font-size: 1.5em;
+    width: 180px;
     height: 30px;
     position: absolute;
     background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,1));
@@ -61,10 +68,10 @@
 .pokemon-container{
     position: relative;
     display: flex;
-    margin-top: 49px;
+    margin-top: 60px;
     margin-left: -45px;
-    height: 70%;
-    width: 800px;
+    height: 100%;
+    width: 950px;
 }
 
 .pokemon-container:hover .pokemon {
@@ -73,7 +80,7 @@
 
 .pokemon1, .pokemon2, .pokemon3, .pokemon4, .pokemon5, .pokemon6{
     position: absolute;
-    height: 140px;
+    height: 175px;
     width: 100%;
     transition: 0.5s;
     background-size: contain;
@@ -153,4 +160,73 @@
 .pokemon6:hover{
     clip-path: polygon(87% 0, 105% 0, 105% 100%, 77% 100%);
     background-position: 100% 0;
+}
+
+@media (max-aspect-ratio: 1/1){
+    .build-container{
+        width: 90vw;
+        margin-left: 5%;
+        overflow: hidden;
+    }
+
+    .build-container:hover{
+        transform: translate(0px, 0px) scale(1.05);
+    }
+
+    .build-name-container{
+        font-size: 2.5em;
+    }
+
+    .profile-container{
+        width: 50vw;
+        height: 200px;
+    }
+
+    .profile-pic{
+        width: 150px;
+        height: 150px;
+        top: 10%;
+    }
+
+    .profile-name{
+        width: 150px;
+        height: 30px;
+        top: 72.5%;
+    }
+
+    .pokemon-container{
+        position: absolute;
+        width: 70%;
+        left: 220px;
+        height: 200px;
+    }
+
+    .pokemon1, .pokemon2, .pokemon3, .pokemon4, .pokemon5, .pokemon6{
+        height: 150px;
+        background-size: 35%;
+    }
+
+    .pokemon1{
+        clip-path: polygon(0 0, 18% 0, 8% 100%, 0% 100%);
+    }
+
+    .pokemon2{
+        clip-path: polygon(18% 0, 36% 0%, 26% 100%, 8% 100%);
+    }
+
+    .pokemon3{
+        clip-path: polygon(36% 0, 54% 0, 44% 100%, 26% 100%);
+    }
+
+    .pokemon4{
+        clip-path: polygon(54% 0, 73% 0, 63% 100%, 44% 100%);
+    }
+
+    .pokemon5{
+        clip-path: polygon(73% 0, 92% 0, 82% 100%, 63% 100%);
+    }
+
+    .pokemon6{
+        clip-path: polygon(92% 0, 100% 0, 100% 100%, 82% 100%);
+    }
 }

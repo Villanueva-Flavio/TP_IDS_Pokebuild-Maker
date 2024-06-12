@@ -12,8 +12,8 @@
     width: 15vh;
     filter: grayscale(100%);
     position:sticky;
-    bottom: 5vh;
-    margin-left: 90%;
+    margin-left: 80%;
+    margin-top: 75vh;
 }
 
 @keyframes shake {
@@ -169,6 +169,7 @@
     #popup_open{
         height: 10vh;
         width: 10vh;
-        margin-left: 0;
+        margin-left: 2vh;
+        margin-top: 2vh;
     }
 }

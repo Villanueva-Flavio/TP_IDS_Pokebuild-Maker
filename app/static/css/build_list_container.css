@@ -1,19 +1,23 @@
 #container {
-    display: flex;
-    justify-content:space-evenly;
+    position: absolute;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-right: 150px;
-    margin-top: 100px;
-    margin-bottom: 40px;
-    max-height: calc(100vh - 140px);
-    overflow:scroll
+    top: 0;
+    max-height: 100%;
+    width: 70%;
+    margin-left: 5%;
+    overflow-y:scroll;
 }
 
-.rectangle {
-    width: 1500px;
-    height: 150px;
-    margin: 40px;
-    background-color: black;
+.whitespace{
+    display: none;
+}
+
+@media (max-aspect-ratio: 1/1) {
+    #container {
+        width: 99vw;
+        margin-left: -2%;
+        overflow-x: hidden;
+        padding-top: 20%;
+        height: 80vh;
+    }
 }
