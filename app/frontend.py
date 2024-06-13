@@ -55,6 +55,33 @@ def get_info_pokemons(pokemons): #pokemons es un json
     return info_dic
 
 
+def get_pokemon_name_by_id(pokedex_id):
+    response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokedex_id}')
+    if response.status_code == 200:
+        pokemon_data = response.json()  # Aquí se corrige el uso de json()
+        return pokemon_data['name']
+    else:
+        return None
+
+
+def get_user_pokemons(user_id):
+    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_dict = []
+    for pokemon in user_pokemons:
+        especie_pokemon= get_pokemon_name_by_id(pokemon['pokedex_id'])
+        build_row = {
+            'name': pokemon['name'],
+            'especie': especie_pokemon,
+            'level': pokemon['level'],
+            'ability_1': pokemon['ability_1'],
+            'ability_2': pokemon['ability_2'],
+            'ability_3': pokemon['ability_3'],
+            'ability_4':pokemon['ability_4']
+        }
+        pokemons_dict.append(build_row)
+    return pokemons_dict
+
+
 @frontend_blueprint.route('/')
 @frontend_blueprint.route('/home')
 @frontend_blueprint.route('/home/')
@@ -77,8 +104,11 @@ def login_register():
 
 @frontend_blueprint.route('/pokemon_container/')
 def pokemon_container():
-    user_id = 9 #quitar para despues
-    pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
-    asd = get_info_pokemons(pokemons)
-    print(asd)
-    return render_template('pokemon_container.html', pokemons=asd)
+    # user_id = 9 #quitar para despues
+    # pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    # asd = get_info_pokemons(pokemons)
+    # print(asd)
+    return render_template('pokemon_container.html') #, pokemons=asd
+    #pokemons_dic = get_user_pokemons(user_id)
+    #print(pokemons_dic)
+    #return render_template('pokemon_container.html', pokemons=pokemons_dic)
