@@ -1,11 +1,4 @@
-*{
-    /*     margin: 5px;
-        padding: 0;
-        font-family: "Tiny5", sans-serif;
-        font-weight: 400;
-        font-style: normal; */
-        /* Color del fondo de la pagina */
-        /* Color de las letras */
+    *{
         color: white;
     }
     .button-container {
@@ -17,8 +10,6 @@
         font-size: 20px;
         font-weight: bold;
         color: #ffffff;
-        /*
-        */
         background: linear-gradient(145deg, #ff0000, #f08030);
         border: 2px solid #000000;
         border-radius: 8px;

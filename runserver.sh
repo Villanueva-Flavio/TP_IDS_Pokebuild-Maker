@@ -1,1 +1,0 @@
-screen -dmS POKEBUILD docker-compose up
