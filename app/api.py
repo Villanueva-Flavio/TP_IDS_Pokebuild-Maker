@@ -102,7 +102,6 @@ def get_pokemon_moves(pokemon_id):
         return jsonify({'error': 'Pokemon not found'}), 404
 
 @api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
-
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -111,3 +110,38 @@ def get_all_pokemons():
     for pokemon in pokemons:
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
+
+@api_blueprint.route('/api/types/<pokemon_id>/', methods=['GET'])
+def get_pokemon_types(pokemon_id):
+    pokemon_id = pokemon_id.lower()
+    url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        types = data['types']
+        pokemon_type = set()
+        good_against = set()
+        bad_against = set()
+
+        for slot in types:
+            pokemon_type.add(slot['type']['name'])
+            coverage = slot['type']['url']
+            coverage_response = requests.get(coverage)
+
+            if coverage_response.status_code == 200:
+                types_data = coverage_response.json()
+
+                for damage_from in types_data['damage_relations']['double_damage_from']:
+                    bad_against.add(damage_from['name'])
+                for damage_to in types_data['damage_relations']['double_damage_to']:
+                    good_against.add(damage_to['name'])
+
+        return jsonify({
+            'pokemon_type': list(pokemon_type),
+            'good_against': list(good_against),
+            'bad_against': list(bad_against)
+        })
+    
+    else:
+        return jsonify({'error': 'Pokemon not found'}), 400
