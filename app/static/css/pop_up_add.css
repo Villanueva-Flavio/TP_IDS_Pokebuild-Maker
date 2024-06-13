@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+#popup_open {
+    background-image: url("/static/images/Pokeball.png");
+    background-size: cover;
+    background-position: center;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 15vh;
+    width: 15vh;
+    filter: grayscale(100%);
+    position:sticky;
+    bottom: 5vh;
+    margin-left: 90%;
+}
+
+@keyframes shake {
+    0%, 100% {transform: translate(0px, 0px);}
+    10%, 30%, 50% {transform: translate(10px, 2px);}
+    20%, 40%, 60% {transform: translate(-10px, -2px);}
+    70%, 100% {transform: translate(0px, 0px);}
+}
+
+#popup_open:hover {
+    filter: grayscale(0%);
+    box-shadow: 0 0px 15px rgba(255, 255, 0, 1);
+    animation: shake 0.5s;
+}
+
+#popup_open:active {
+    transform: translateY(1px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+#overlay {
+    opacity: 0;
+    transition: opacity 0.5s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    display: none;
+}
+
+#popup {
+    opacity: 0;
+    transition: opacity 0.5s;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    width: 100%;
+    height: 300px;
+}
+
+.container{
+    position: relative;
+    width: 100%;
+}
+
+.add-pokemon, .add-build{
+    position: absolute;
+    height: 300px;
+    width: 100%;
+    right: 0;
+    top: 0;
+    background-repeat: no-repeat;
+    background-color: #202124;
+    overflow: hidden;
+    filter: grayscale(100%);
+    font-family: 'Tektur', sans-serif;
+}
+
+.add-pokemon:hover, .add-build:hover{
+    transition: ease-in-out 0.5s;
+    filter: grayscale(0%);
+}
+
+.text-add-pokemon{
+    font-size: 3em;
+    font-family: 'Tektur', sans-serif;
+    color: transparent;
+    margin-top: 220px;
+    margin-left: 10px;
+    background: url("/static/images/text-background.gif");
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.text-add-build{
+    font-size: 3em;
+    font-family: 'Tektur', sans-serif;
+    color: transparent;
+    margin-top: 220px;
+    margin-right: 10px;
+    text-align: right;
+    background: url("/static/images/text-background.gif");
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.add-pokemon{
+    left: 0;
+    top: 0;
+    background-image: url("/static/images/Gengar.png");
+    clip-path: polygon(0 0, 59.5% 0%, 39.5% 100%, 0% 100%);
+    background-size: 20vw;
+    background-position: left;
+}
+
+.add-build{
+    background-image: url("/static/images/Team.png");
+    clip-path: polygon(60.5% 0, 100% 0%, 100% 100%, 40.5% 100%);
+    background-position: right;
+}
+
+#popup_close{
+    position: absolute;
+    bottom: -40px;
+    right: 10px;
+    cursor: pointer;
+    height: 30px;
+    width: 80px;
+    z-index: 9999;
+    border-radius: 5px;
+    background-color: transparent;
+    color: white;
+    border: none;
+    box-shadow: 0 0 15px rgba(255, 20, 20, 1);
+    transition: 0.5s ease-in-out;
+}
+
+#popup_close:hover{
+    background-color: red;
+    transition: 0.5s ease-in-out;
+    box-shadow: 0 0 35px rgba(255, 20, 20, 1);
+}
+
+.add-pokemon:hover{
+    clip-path: polygon(0 0, 89% 0%, 69% 100%, 0% 100%);
+}
+
+.add-pokemon:hover + .add-build{
+    clip-path: polygon(90% 0, 100% 0%, 100% 100%, 70% 100%); 
+    transition: ease-in-out 0.5s;
+}
+
+.add-build:hover {
+    clip-path: polygon(31% 0, 100% 0%, 100% 100%, 11% 100%);
+}
+
+.container:has(.add-build:hover) .add-pokemon {
+    clip-path: polygon(0 0, 30% 0%, 10% 100%, 0% 100%);
+    transition: ease-in-out 0.5s;
+}
+
+@media (max-aspect-ratio: 1/1){
+    #popup_open{
+        height: 10vh;
+        width: 10vh;
+        margin-left: 0;
+    }
+}
