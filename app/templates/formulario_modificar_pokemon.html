@@ -14,19 +14,20 @@
         <div id="Submit" class="cuadrado">
             <h1>MODIFY YOUR POKEMONS</h1>
         </div>
-        <form action="{{ url_for('frontend.formulario_añadir_pokemon')}}" method="post">
+        <form action="{{ url_for('frontend.formulario_modificar_pokemon', user_id=user_id) }}" method="post">
             <div class="" id="nombre_nivel">
                 <div id="usuario" class="cuadrado contenedor nombre_nivel_contenedor">
                     <div class="">
                         <label for="poke_name" id="name">Name:</label>
-                        <input list="pokemons" id="poke_name" name="pname" placeholder="Name" class="poke_name_especie">
-                        <datalist id="pokemons">
-                            <option value="pokemon_1">pokemon_1</option>
-                            <option value="pokemon_2">pokemon_2</option>
-                        </datalist>
+                        <select  id="poke_name" name="pname" placeholder="Name" class="">
+                            <option class="poke_name_especie" value="" disabled selected>Selecciona un Pokémon</option>
+                                {% for pokemon in pokemons %}
+                                    <option value="{{ pokemon.name }}" data-pokedex-id="{{ pokemon.especie }}" data-level="{{ pokemon.level }}" data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" data-ability-4="{{ pokemon.ability_4 }}">{{ pokemon.name }}</option>
+                                {% endfor %}
+                        </select>
                         <label for="poke_LVL" id="level">LVL:</label>
                         <input type="text" id="poke_LVL" name="pLVL" placeholder="000" class="caja input_personalizado">
-                    </div>                
+                    </div>  
                     <div id="abilities" class="contenedor habilidades_contenedor">
                         <h1 id="abilities_texto">Abiities</h1>
                         <div class="fila">

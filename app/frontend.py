@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 import requests
 
 frontend_blueprint = Blueprint('frontend', __name__)
@@ -57,6 +57,35 @@ def build_list_container():
 def login_register():
     return render_template('login_register.html')
 
-@frontend_blueprint.route('/formulario_añadir_pokemon')
-def add_pokemon():
-    return render_template('formulario_añadir_pokemon.html')
+
+def get_pokemon_name_by_id(pokedex_id):
+    response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokedex_id}')
+    if response.status_code == 200:
+        pokemon_data = response.json()  # Aquí se corrige el uso de json()
+        return pokemon_data['name']
+    else:
+        return None
+
+def get_user_pokemons(user_id):
+    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_dict = []
+    for pokemon in user_pokemons:
+        especie_pokemon= get_pokemon_name_by_id(pokemon['pokedex_id'])
+        build_row = {
+            'name': pokemon['name'],
+            'especie': especie_pokemon,
+            'level': pokemon['level'],
+            'ability_1': pokemon['ability_1'],
+            'ability_2': pokemon['ability_2'],
+            'ability_3': pokemon['ability_3'],
+            'ability_4':pokemon['ability_4']
+        }
+        pokemons_dict.append(build_row)
+    return pokemons_dict
+
+@frontend_blueprint.route('/formulario_modificar_pokemon/<user_id>', methods=['GET','POST'])
+def formulario_modificar_pokemon(user_id):
+    if request.method == 'POST':
+        return render_template('home.html')
+    pokemons_dict = get_user_pokemons(user_id)
+    return render_template('formulario_modificar_pokemon.html', pokemons = pokemons_dict)
