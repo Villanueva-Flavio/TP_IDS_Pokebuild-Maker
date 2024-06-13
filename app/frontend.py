@@ -37,6 +37,24 @@ def get_build_dict(builds, pokemons):
     return build_dict
 
 
+def get_info_pokemons(pokemons): #pokemons es un json
+    info_dic = {}
+    i = 0 #debe tener abilidades, lvl, name -- claves('ability_1', 'ability_2', 'ability_3', 'ability_4', 'level', 'name')
+    for pokemon in pokemons: #cada pokemon representa un diccionario
+        info = {
+            'ability_1' : pokemon['ability_1'],
+            'ability_2' : pokemon['ability_2'],
+            'ability_3' : pokemon['ability_3'],
+            'ability_4' : pokemon['ability_4'],
+            'id' : pokemon['id'],
+            'level' : pokemon['level'],
+            'name' : pokemon['name']
+            }
+        info_dic[i] = info
+        i=i+1 
+    return info_dic
+
+
 @frontend_blueprint.route('/')
 @frontend_blueprint.route('/home')
 @frontend_blueprint.route('/home/')
@@ -61,4 +79,6 @@ def login_register():
 def pokemon_container():
     user_id = 9 #quitar para despues
     pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
-    return render_template('pokemon_container.html', pokemons=pokemons)
+    asd = get_info_pokemons(pokemons)
+    print(asd)
+    return render_template('pokemon_container.html', pokemons=asd)

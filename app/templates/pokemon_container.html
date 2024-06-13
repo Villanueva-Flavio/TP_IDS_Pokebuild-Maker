@@ -5,6 +5,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
 
+    <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
+
+    <script>let name = 0</script>
 <body>
     <h1>CREATE A NEW BUILD</h1>
 
@@ -23,21 +26,18 @@
                 <form action="{{url_for('frontend.pokemon_container')}}" class="form_pokemon" method="post">
                     <!-- seleccionar pokemon -->                
                     <label for="">POKEMON</label>
-                    <select name="" id="">
-                        <option value="">name1</option>
-                        <option value="">name2</option>
-                        <option value="">name3</option>
-                        <option value="">name4</option>
-                    </select>                
-                    <!-- nombre de pokemon -->
+                    <select name="" id="editable-select" onchange="get_pokemon_data(name)">
+                        
+                        {%for i in pokemons.keys()%}
+                            {%set pokemon = pokemons[i]%}    
+                            <option value="">{{pokemon['name']}}</option>
+                            <!-- <script>var name = {{pokemon['id']}}</script> -->
+                            <script>name = {{pokemon['id']}};</script>
+                        {%endfor%}    
+                    </select>
+                    
                     <br>
-                    <label for="">NAME: 
-                        {%for pokemon in pokemons%}
-                            <li>{{pokemon.name}}</li>
-                        {%endfor%}
-                    </label>
-                    <br>
-                    <label for="">LVL: {{var_lvl}}</label>
+                    <label for="">LVL: </label>
                     <br>
                     <label for="">ABS: {{ab1}} - {{ab2}} - {{ab3}} - {{ab4}}</label>
                 </form>
@@ -199,3 +199,21 @@
     </div>
 
 </body>
+
+<script>
+    // const name = document.getElementById('editable-select')
+    function get_pokemon_data(name){
+        fetch('http://pokebuild-backend:5000/api/pokemon/${name}').then(response => {
+            if(!response.ok){
+                throw new Error('Error de respuesta de la api');
+            }
+            console.log(response.json());
+            return response.json();
+        });
+    }
+
+</script>
+
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
+<script>$('#editable-select').editableSelect();</script>

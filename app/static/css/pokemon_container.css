@@ -7,6 +7,14 @@
     #ffffff
 */
 
+.es-visible{
+    color: #000000;
+}
+
+#editable-select{
+    color: white;
+}
+
 body{
     margin: 5px;
     padding: 0;
