@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 import requests
 
 frontend_blueprint = Blueprint('frontend', __name__)
@@ -56,3 +56,14 @@ def build_list_container():
 @frontend_blueprint.route('/login_register')
 def login_register():
     return render_template('login_register.html')
+
+@frontend_blueprint.route('/formulario_añadir_pokemon', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
+def formulario_añadir_pokemon():
+    if request.method == "POST":
+        return render_template("home.html")  
+    return render_template("formulario_añadir_pokemon.html")
+
+@frontend_blueprint.route('/searchbar_testing')
+def test():
+    pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
+    return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
