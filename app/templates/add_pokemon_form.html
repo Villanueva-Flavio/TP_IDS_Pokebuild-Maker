@@ -6,7 +6,7 @@
     <meta http-equiv="refresh" content="">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/formulario_añadir_pokemon.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_pokemon_form.css')}}">
 </head>
 <body>
 
@@ -14,7 +14,7 @@
         <div id="Submit" class="cuadrado">
             <h1>ADD A NEW POKEMON</h1>
         </div>
-        <form action="{{ url_for('frontend.formulario_añadir_pokemon')}}" method="post">
+        <form action="{{ url_for('frontend.add_pokemon_form')}}" method="post">
             <div class="" id="nombre_nivel">
                 <div id="usuario" class="cuadrado contenedor nombre_nivel_contenedor">
                     <div class="">
@@ -77,8 +77,8 @@
                 </datalist>
             </div>
             <div class="boton">
-                <button type="submit" class=" caja cuadrado" >Save</button>
-                <button class=" caja cuadrado" type="reset">Cancel</button>
+                <button type="submit" class=" caja cuadrado" onclick="location.href='/home'">Save</button> <!-- Qutiar href -->
+                <button class=" caja cuadrado" type="reset" onclick="location.href='/home'">Cancel</button>
             </div>
         </form>
     </div>
