@@ -13,11 +13,13 @@ DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
 
 POKEMONS_ROUTE = '/api/pokemons/'
-POKEMONS_QUERY = "SELECT * FROM POKEMON"
+POKEMONS_QUERY = "SELECT * FROM POKEMON" #imp
 POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>/'
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
+POKEMONS_BY_USER_ROUTE = '/api/pokemons_by_user/<user_id>'
+POKEMONS_BY_USER_QUERY = "SELECT * FROM POKEMON WHERE owner_id = "
 
-BUILDS_ROUTE = '/api/builds/'
+BUILDS_ROUTE = '/api/builds/' #imp
 BUILDS_QUERY = "SELECT * FROM BUILDS"
 BUILD_ID_ROUTE = '/api/build/<build_id>/'
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
@@ -60,6 +62,11 @@ def get_users_profiles():
 @api_blueprint.route(USER_ID_ROUTE, methods=['GET'])
 def get_user_profile(user_id):
     return get_data(USER_ID_QUERY + user_id)
+
+# GET endpoint for pokemon by user_id
+@api_blueprint.route(POKEMONS_BY_USER_ROUTE, methods=['GET'])
+def get_pokemon_by_user(user_id):
+    return get_data(POKEMONS_BY_USER_QUERY + user_id)
 
 # GET endpoint for HOME
 @api_blueprint.route('/api', methods=['GET'])

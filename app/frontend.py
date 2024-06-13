@@ -56,3 +56,9 @@ def build_list_container():
 @frontend_blueprint.route('/login_register')
 def login_register():
     return render_template('login_register.html')
+
+@frontend_blueprint.route('/pokemon_container/')
+def pokemon_container():
+    user_id = 9 #quitar para despues
+    pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    return render_template('pokemon_container.html', pokemons=pokemons)

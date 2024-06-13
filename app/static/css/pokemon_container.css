@@ -7,7 +7,7 @@
     #ffffff
 */
 
-*{
+body{
     margin: 5px;
     padding: 0;
     font-family: "Tiny5", sans-serif;
@@ -24,7 +24,7 @@ h1{
     font-size: 50px;
     text-align: center;
 }
-        /* Con el flex-wrap agrupo las card en 3 para abilitarlo le ponemos display flex */
+    /* Con el flex-wrap agrupo las card en 3 para abilitarlo le ponemos display flex */
 .container_all_pokemon{  
     display:flex;
     justify-content: center;
