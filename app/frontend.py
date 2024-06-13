@@ -63,3 +63,7 @@ def formulario_añadir_pokemon():
         return render_template("home.html")  
     return render_template("formulario_añadir_pokemon.html")
 
+@frontend_blueprint.route('/searchbar_testing')
+def test():
+    pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
+    return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])

@@ -1,7 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from flask import jsonify, Blueprint
 from sqlalchemy import create_engine, text
-import os
+import os, requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -88,3 +88,26 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
+    
+@api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
+def get_pokemon_moves(pokemon_id):
+    pokemon_id = pokemon_id.lower()
+    url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        moves = [move['move']['name'] for move in data['moves']]
+        return jsonify({'moves': moves})
+    else:
+        return jsonify({'error': 'Pokemon not found'}), 404
+
+@api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
+
+def get_all_pokemons():
+    url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
+    response = requests.get(url)
+    data = response.json()
+    pokemons = [{'name': pokemon['name'], 'id': pokemon['url'].split('/')[-2]} for pokemon in data['results']]
+    for pokemon in pokemons:
+        pokemon['name'] = pokemon['name'].capitalize()
+    return jsonify({'pokemons': pokemons})
