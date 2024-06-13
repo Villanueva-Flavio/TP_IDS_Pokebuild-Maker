@@ -56,3 +56,7 @@ def build_list_container():
 @frontend_blueprint.route('/login_register')
 def login_register():
     return render_template('login_register.html')
+
+@frontend_blueprint.route('/formulario_añadir_pokemon')
+def add_pokemon():
+    return render_template('formulario_añadir_pokemon.html')
