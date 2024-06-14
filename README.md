@@ -3,6 +3,12 @@
 
 ### Aplicacion: Pokebuild maker
 
+### Estado: En Proceso
+![gif](https://github.com/Villanueva-Flavio/TP_IDS_Pokebuild-Maker/assets/78744163/440ad541-99c1-4a19-a6c0-082df28d2999)
+
+
+Por favor para la versión final aguarde mientras seguimos sufriendo con el desarrollo.
+
 #### Descripcion:
 
 > Pokebuild maker es un sitio web hecho para aquellos fanáticos de Pokemon que quieran calcular o mostrar sus equipos de los juegos de pokemon. El mismo te permitirá hacer pública el equipo creado y tus pokemons en posesión. En el caso de los pokemons, especificando: Qué pokemon es, Nombre opcional, nivel, y hasta 4 habilidades como los juegos suelen permitir. En el caso de los equipos (builds), se especifica: Los (hasta) 6 pokemons que conforman el equipo
