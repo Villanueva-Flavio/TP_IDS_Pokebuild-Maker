@@ -1,8 +1,0 @@
-<select id="editable-select" class="pokemon_searchbar">
-    {% for pokemon in pokemons %}
-        <option id="{{ pokemon.id }}">{{ pokemon.name }}</option>
-    {% endfor %}
-</select>
-<script>
-    $('#editable-select').editableSelect();
-</script>
