@@ -1,39 +1,53 @@
-// Obtener referencias a los elementos del DOM
-
 const pokemonInput = document.getElementById('pokemon_imagen_cuadrado');
-const movimientosList = document.getElementById('habilidades');
+const tipoImagenes = document.querySelectorAll('.posibles_tipo');
 
-// Manejar el evento de cambio en el campo de entrada del Pokémon
+function actualizarImagenesTipos(tipos) {
+    tipoImagenes.forEach((imagen, index) => {
+
+        if (tipos[index]) {
+            imagen.src = `static/images/tipos_pokemon/${tipos[index]}.png`;
+            imagen.style.display = 'inline-block';
+            
+        } else {
+            imagen.style.display = 'none';
+        }
+    });
+}
+
 pokemonInput.addEventListener('change', async () => {
-    const pokemonNombre = pokemonInput.value;
-    const movimientos = await obtenerMovimientosPokemon(pokemonNombre);
-    
-    // Limpiar el datalist de movimientos
+    const pokemonNombre = pokemonInput.value.toLowerCase();
+    const { movimientos, tipos } = await obtenerDatosPokemon(pokemonNombre);
+    const movimientosList = document.getElementById('habilidades');
     movimientosList.innerHTML = '';
 
-    // Llenar el datalist de movimientos con los movimientos obtenidos
     movimientos.forEach(movimiento => {
         const option = document.createElement('option');
         option.value = movimiento;
         movimientosList.appendChild(option);
     });
+
+    actualizarImagenesTipos(tipos);
 });
 
-// Función para obtener los movimientos de un Pokémon desde la PokeAPI
-async function obtenerMovimientosPokemon(pokemonNombre) {
-    const url = `https://pokeapi.co/api/v2/pokemon/${pokemonNombre.toLowerCase()}`;
+async function obtenerDatosPokemon(pokemonNombre) {
+    const url = `https://pokeapi.co/api/v2/pokemon/${pokemonNombre}`;
+
     try {
         const respuesta = await fetch(url);
+
         if (respuesta.ok) {
             const datosPokemon = await respuesta.json();
             const movimientos = datosPokemon.moves.map(movimiento => movimiento.move.name);
-            return movimientos;
+            const tipos = datosPokemon.types.map(type => type.type.name);
+            return { movimientos, tipos };
+
         } else {
             console.error(`Error: No se pudo obtener la información del Pokémon ${pokemonNombre}. Código de estado: ${respuesta.status}`);
-            return [];
+            return { movimientos: [], tipos: [] };
         }
+
     } catch (error) {
-        console.error("Error al obtener los movimientos del Pokémon:", error);
-        return [];
+        console.error("Error al obtener los datos del Pokémon:", error);
+        return { movimientos: [], tipos: [] };
     }
 }

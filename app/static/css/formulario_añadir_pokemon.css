@@ -166,3 +166,7 @@ h1{
     margin-left: 20px;
     margin-bottom: 10px;
 }
+
+.posibles_tipo {
+    display: none;
+}
