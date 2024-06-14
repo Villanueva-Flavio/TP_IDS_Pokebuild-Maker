@@ -106,4 +106,4 @@ Podremos tambien visualizar una estadística general de todos los usuarios con l
  1. `/api/pokemon/id`
     > Este endpoint te devolverá un pokemon específico cargado en la base de datos donde `id` está relacionado a la tabla, con el patrón de datos de `/api/pokemons` pero siendo un solo pokemon
  1. `/api/build/id`
-    > Este endpoint te devolverá una build específica cargada en la base de datos donde `id` está relacionado a la tabla, con el patrón de datos de `/api/builds` pero siendo un solo pokemon
+    > Este endpoint te devolverá una build específica cargada en la base de datos donde `id` está relacionado a la tabla, con el patrón de datos de `/api/builds` pero siendo una sola build
