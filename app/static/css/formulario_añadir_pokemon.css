@@ -108,9 +108,12 @@ h1{
     margin-top: 35px;
     margin-left: 20px;
 }
-.bad_against{ /*Hace que las img de bad against esten al mismo nivel que las de good*/
+/*Hace que las img de bad against esten al mismo nivel que las de good*/
+/*
+.bad_against{ 
     margin-left: 20px;
 }
+*/
 .boton{ /*Los botones*/
     margin-left: 1335px;
 }
