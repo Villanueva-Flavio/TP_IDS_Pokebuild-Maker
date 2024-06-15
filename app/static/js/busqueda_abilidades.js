@@ -1,4 +1,4 @@
-const pokemonInput = document.getElementById('pokemon_imagen_cuadrado');
+const pokemonInput = document.getElementById('pokemon_especie');
 const tipoImagenes = document.querySelectorAll('.posibles_tipo');
 const goodAgainstContainer = document.querySelector('.good_against div');
 const badAgainstContainer = document.querySelector('.bad_against div');
