@@ -15,10 +15,8 @@ function actualizarImagenesTipos(tipos) {
 }
 
 function actualizarGoodAgainst(goodAgainst) {
-    // Limpiar contenedor
     goodAgainstContainer.innerHTML = '';
 
-    // Agregar nuevas imágenes
     goodAgainst.forEach(tipo => {
         const img = document.createElement('img');
         img.src = `static/images/tipos_pokemon/${tipo}.png`;
@@ -28,10 +26,8 @@ function actualizarGoodAgainst(goodAgainst) {
 }
 
 function actualizarBadAgainst(badAgainst) {
-    // Limpiar contenedor
     badAgainstContainer.innerHTML = '';
 
-    // Agregar nuevas imágenes
     badAgainst.forEach(tipo => {
         const img = document.createElement('img');
         img.src = `static/images/tipos_pokemon/${tipo}.png`;
