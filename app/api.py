@@ -118,11 +118,11 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
+# POST endpoint for adding a new BUILD
 @api_blueprint.route('/add_build', methods=['POST'])
 def add_build():
     data = request.json
     build_name = data['build_name']
-    description = data['description']
     owner_id = data['owner_id']
     pokemon_id_1 = data['pokemon_id_1']
     pokemon_id_2 = data['pokemon_id_2']
@@ -131,10 +131,23 @@ def add_build():
     pokemon_id_5 = data['pokemon_id_5']
     pokemon_id_6 = data['pokemon_id_6']
     timestamp = data['timestamp']
-    build_post_query = f"INSERT INTO BUILDS (build_name, description, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES ('{build_name}','{description}', '{owner_id}', '{pokemon_id_1}', '{pokemon_id_2}', '{pokemon_id_3}', '{pokemon_id_4}', '{pokemon_id_5}', '{pokemon_id_6}', '{timestamp}')"
+    build_post_query = """
+            INSERT INTO BUILDS (name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp)
+            VALUES (:build_name, :owner_id, :pokemon_id_1, :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, :pokemon_id_5, :pokemon_id_6, :timestamp)
+        """
     try:
         with engine.connect() as connection:
-            connection.execute(text(build_post_query))
+            connection.execute(text(build_post_query), {
+                'build_name': build_name,
+                'owner_id': owner_id,
+                'pokemon_id_1': pokemon_id_1,
+                'pokemon_id_2': pokemon_id_2,
+                'pokemon_id_3': pokemon_id_3,
+                'pokemon_id_4': pokemon_id_4,
+                'pokemon_id_5': pokemon_id_5,
+                'pokemon_id_6': pokemon_id_6,
+                'timestamp': timestamp
+            })
         return jsonify({'Message': 'Build added successfully'})
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
