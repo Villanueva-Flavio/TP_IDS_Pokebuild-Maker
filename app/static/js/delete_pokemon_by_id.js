@@ -7,11 +7,23 @@ function delete_pokemon_by_id(){
         method: 'POST'
     })
     .then(response => {
+        if (!response.ok) {
+            console.log('Network response was not ok');
+        }
         return response.json();
     })
     .then(result => {
+        // Eliminar el pokemon de la lista de opciones
+        const optionToRemove = document.querySelector(`option[value="${pokemon_id}"]`);
+        if (optionToRemove) {
+            optionToRemove.remove();
+        }
+        
         console.log('Pokemon deleted successfully');
     })
+    .catch(error => {
+        console.error('Failed to delete pokemon:', error);
+    });
 }
 
 document.getElementById('delete_pokemon_btn')
