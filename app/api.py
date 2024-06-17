@@ -30,7 +30,9 @@ USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 
-REGISTER = '/api/register/'
+REGISTER_ROUTE = '/api/register/'
+LOGIN_ROUTE = '/api/login/'
+
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -142,13 +144,13 @@ def add_build():
     timestamp = data_build.get('timestamp', '')
 
     if not build_name:
-        return jsonify({'Error': 'build_name must not be empty'})
+        return jsonify({'error': 'build_name must not be empty'})
     if owner_id is None:
-        return jsonify({'Error': 'owner_id must not be None'})
+        return jsonify({'error': 'owner_id must not be None'})
     if pokemon_id_1 is None:
-        return jsonify({'Error': 'pokemon_id_1 must not be None'})
+        return jsonify({'error': 'pokemon_id_1 must not be None'})
     if timestamp is None:
-        return jsonify({'Error': 'timestamp must not be None'})
+        return jsonify({'error': 'timestamp must not be None'})
     
     add_build_query = """
             INSERT INTO BUILDS 
@@ -174,17 +176,17 @@ def add_build():
                 'pokemon_id_6': pokemon_id_6,
                 'timestamp': timestamp
             })
-        return jsonify({'Message': 'Build added successfully'})
+        return jsonify({'message': 'Build added successfully'})
     
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        return jsonify({'Error': error})
+        return jsonify({'error': error})
     
     except Exception as e:
-        return jsonify({'Error': str(e)})
+        return jsonify({'error': str(e)})
 
 # REGISTER user in the database
-@api_blueprint.route(REGISTER, methods=['POST'])
+@api_blueprint.route(REGISTER_ROUTE, methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
@@ -218,8 +220,8 @@ def register():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# LOGIN user, check if email and password are correct
-@api_blueprint.route('/api/login', methods=['POST'])
+# LOGIN user, checks if email and password are correct
+@api_blueprint.route(LOGIN_ROUTE, methods=['POST'])
 def login():
     data = request.json
     email = data.get('email')
