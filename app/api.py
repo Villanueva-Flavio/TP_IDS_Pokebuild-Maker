@@ -182,7 +182,8 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
-    
+
+# REGISTER user in the database
 @api_blueprint.route(REGISTER, methods=['POST'])
 def register():
     data = request.json
@@ -216,3 +217,34 @@ def register():
         return jsonify({'error': error})
     except Exception as e:
         return jsonify({'error': str(e)})
+
+# LOGIN user, check if email and password are correct
+@api_blueprint.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'})
+
+    try:
+        check_login_query = "SELECT id, username, password FROM USER WHERE email = :email"
+        with engine.connect() as connection:
+            result = connection.execute(text(check_login_query), {'email': email})
+            user = result.fetchone()
+        
+        if user:
+            user_id, username, hashed_password = user
+            if check_password_hash(hashed_password, password):
+                return jsonify({"message": "Login successful", "user_id": user_id, "username": username})
+            else:
+                return jsonify({"error": "Invalid password"})
+        else:
+            return jsonify({"error": "Email not found"})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
