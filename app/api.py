@@ -139,3 +139,5 @@ def add_build():
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'Error': error})
+    except Exception as e:
+        return jsonify({'Error': str(e)})
