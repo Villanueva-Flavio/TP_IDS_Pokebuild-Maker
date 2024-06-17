@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
-from flask import jsonify, Blueprint
+from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
+from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from dotenv import load_dotenv
 
@@ -28,6 +29,9 @@ USERS_ROUTE = '/api/users_profiles/'
 USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u;"
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
+
+REGISTER_ROUTE = '/api/register/'
+LOGIN_ROUTE = '/api/login/'
 
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -109,7 +113,6 @@ def get_pokemon_moves(pokemon_id):
         return jsonify({'error': 'Pokemon not found'}), 404
 
 @api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
-
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -118,3 +121,132 @@ def get_all_pokemons():
     for pokemon in pokemons:
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
+
+def id_must_be_an_integer(id, field_name):
+    try:
+        id_int = int(id)
+        return id_int
+    except (ValueError, TypeError):
+        raise ValueError(f"{field_name} must be an integer")
+
+# POST endpoint for adding a new BUILD
+@api_blueprint.route(BUILDS_ROUTE, methods=['POST'])
+def add_build():
+    data_build = request.json
+    build_name = data_build.get('build_name', '')
+    owner_id = id_must_be_an_integer(data_build.get('owner_id'), 'owner_id')
+    pokemon_id_1 = id_must_be_an_integer(data_build.get('pokemon_id_1'), 'pokemon_id_1')
+    pokemon_id_2 = id_must_be_an_integer(data_build.get('pokemon_id_2'), 'pokemon_id_2')
+    pokemon_id_3 = id_must_be_an_integer(data_build.get('pokemon_id_3'), 'pokemon_id_3')
+    pokemon_id_4 = id_must_be_an_integer(data_build.get('pokemon_id_4'), 'pokemon_id_4')
+    pokemon_id_5 = id_must_be_an_integer(data_build.get('pokemon_id_5'), 'pokemon_id_5')
+    pokemon_id_6 = id_must_be_an_integer(data_build.get('pokemon_id_6'), 'pokemon_id_6')
+    timestamp = data_build.get('timestamp', '')
+
+    if not build_name:
+        return jsonify({'error': 'build_name must not be empty'})
+    if owner_id is None:
+        return jsonify({'error': 'owner_id must not be None'})
+    if pokemon_id_1 is None:
+        return jsonify({'error': 'pokemon_id_1 must not be None'})
+    if timestamp is None:
+        return jsonify({'error': 'timestamp must not be None'})
+    
+    add_build_query = """
+            INSERT INTO BUILDS 
+            (build_name, owner_id, pokemon_id_1, pokemon_id_2, 
+            pokemon_id_3, pokemon_id_4, pokemon_id_5, 
+            pokemon_id_6, timestamp)
+            VALUES 
+            (:build_name, :owner_id, :pokemon_id_1, 
+            :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, 
+            :pokemon_id_5, :pokemon_id_6, :timestamp)
+        """
+    
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(add_build_query), {
+                'build_name': build_name,
+                'owner_id': owner_id,
+                'pokemon_id_1': pokemon_id_1,
+                'pokemon_id_2': pokemon_id_2,
+                'pokemon_id_3': pokemon_id_3,
+                'pokemon_id_4': pokemon_id_4,
+                'pokemon_id_5': pokemon_id_5,
+                'pokemon_id_6': pokemon_id_6,
+                'timestamp': timestamp
+            })
+        return jsonify({'message': 'Build added successfully'})
+    
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+    
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+# REGISTER user in the database
+@api_blueprint.route(REGISTER_ROUTE, methods=['POST'])
+def register():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    profile_picture = data.get('profile_picture')
+
+    if not username or not password or not email or not profile_picture:
+        return jsonify({'error': 'Username, password, email and profile_picture are required'})
+    
+    add_user_query = """
+        INSERT INTO USER (username, password, email, profile_picture)
+        VALUES (:username, :password, :email, :profile_picture)
+    """
+
+    hashed_password = generate_password_hash(password)
+
+    try:
+        with engine.connect() as connection:
+            connection.execute(add_user_query), {
+                'username': username,
+                'password': hashed_password,
+                'email': email,
+                'profile_picture': profile_picture
+            }
+        return jsonify({"message": "User registered successfully"})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+# LOGIN user, checks if email and password are correct
+@api_blueprint.route(LOGIN_ROUTE, methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'})
+
+    try:
+        check_login_query = "SELECT id, username, password FROM USER WHERE email = :email"
+        with engine.connect() as connection:
+            result = connection.execute(text(check_login_query), {'email': email})
+            user = result.fetchone()
+        
+        if user:
+            user_id, username, hashed_password = user
+            if check_password_hash(hashed_password, password):
+                return jsonify({"message": "Login successful", "user_id": user_id, "username": username})
+            else:
+                return jsonify({"error": "Invalid password"})
+        else:
+            return jsonify({"error": "Email not found"})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
