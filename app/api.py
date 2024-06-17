@@ -29,6 +29,7 @@ USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 
+REGISTER = '/api/register/'
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -181,17 +182,22 @@ def add_build():
     except Exception as e:
         return jsonify({'Error': str(e)})
     
-@api_blueprint.route('/api/register', methods=['POST'])
+@api_blueprint.route(REGISTER, methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
     profile_picture = data.get('profile_picture')
+
+    if not username or not password or not email or not profile_picture:
+        return jsonify({'error': 'Username, password, and email are required'})
+    
     add_user_query = """
         INSERT INTO USER (username, password, email, profile_picture)
         VALUES (:username, :password, :email, :profile_picture)
     """
+
     try:
         with engine.connect() as connection:
             connection.execute(add_user_query), {
