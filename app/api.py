@@ -118,19 +118,36 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
+def id_must_be_an_integer(id):
+    try:
+        id_int = int(id)
+        return id_int
+    except (ValueError, TypeError):
+        return None
+
 # POST endpoint for adding a new BUILD
 @api_blueprint.route('/add_build', methods=['POST'])
 def add_build():
     data_build = request.json
     build_name = data_build.get('build_name', '')
-    owner_id = data_build.get('owner_id', '')
-    pokemon_id_1 = data_build.get('pokemon_id_1', '')
-    pokemon_id_2 = data_build.get('pokemon_id_2', '')
-    pokemon_id_3 = data_build.get('pokemon_id_3', '')
-    pokemon_id_4 = data_build.get('pokemon_id_4', '')
-    pokemon_id_5 = data_build.get('pokemon_id_5', '')
-    pokemon_id_6 = data_build.get('pokemon_id_6', '')
+    owner_id = id_must_be_an_integer(data_build.get('owner_id'))
+    pokemon_id_1 = id_must_be_an_integer(data_build.get('pokemon_id_1'))
+    pokemon_id_2 = id_must_be_an_integer(data_build.get('pokemon_id_2'))
+    pokemon_id_3 = id_must_be_an_integer(data_build.get('pokemon_id_3'))
+    pokemon_id_4 = id_must_be_an_integer(data_build.get('pokemon_id_4'))
+    pokemon_id_5 = id_must_be_an_integer(data_build.get('pokemon_id_5'))
+    pokemon_id_6 = id_must_be_an_integer(data_build.get('pokemon_id_6'))
     timestamp = data_build.get('timestamp', '')
+
+    if owner_id is None:
+        return jsonify({'Error': 'owner_id must not be None'})
+    if pokemon_id_1 is None:
+        return jsonify({'Error': 'pokemon_id_1 must not be None'})
+    if build_name is None:
+        return jsonify({'Error': 'build_name must not be None'})
+    if timestamp is None:
+        return jsonify({'Error': 'timestamp must not be None'})
+    
     build_post_query = """
             INSERT INTO BUILDS 
             (name, owner_id, pokemon_id_1, pokemon_id_2, 
@@ -141,6 +158,7 @@ def add_build():
             :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, 
             :pokemon_id_5, :pokemon_id_6, :timestamp)
         """
+    
     try:
         with engine.connect() as connection:
             connection.execute(text(build_post_query), {
@@ -155,8 +173,10 @@ def add_build():
                 'timestamp': timestamp
             })
         return jsonify({'Message': 'Build added successfully'})
+    
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'Error': error})
+    
     except Exception as e:
         return jsonify({'Error': str(e)})
