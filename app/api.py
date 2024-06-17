@@ -1,5 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
-from flask import jsonify, Blueprint
+from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 import os, requests
 from dotenv import load_dotenv
@@ -120,7 +120,7 @@ def get_all_pokemons():
 
 @api_blueprint.route('/add_build', methods=['POST'])
 def add_build():
-    data = requests.json
+    data = request.json
     build_name = data['build_name']
     description = data['description']
     owner_id = data['owner_id']
@@ -131,7 +131,7 @@ def add_build():
     pokemon_id_5 = data['pokemon_id_5']
     pokemon_id_6 = data['pokemon_id_6']
     timestamp = data['timestamp']
-    build_post_query = f"INSERT INTO BUILDS (name, description, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES ('{name}', '{description}', '{owner_id}', '{pokemon_id_1}', '{pokemon_id_2}', '{pokemon_id_3}', '{pokemon_id_4}', '{pokemon_id_5}', '{pokemon_id_6}', '{timestamp}')"
+    build_post_query = f"INSERT INTO BUILDS (build_name, description, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES ('{build_name}','{description}', '{owner_id}', '{pokemon_id_1}', '{pokemon_id_2}', '{pokemon_id_3}', '{pokemon_id_4}', '{pokemon_id_5}', '{pokemon_id_6}', '{timestamp}')"
     try:
         with engine.connect() as connection:
             connection.execute(text(build_post_query))
