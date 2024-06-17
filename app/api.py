@@ -226,3 +226,23 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+    
+
+@api_blueprint.route('/api/edit_profile_picture/int:<user_id>', methods=['POST'])
+def edit_profile_picture(user_id):
+    data_user = requests.json
+    new_profile_picture = data_user.get('profile_picture')
+
+    if not new_profile_picture:
+        return jsonify({'error': 'Missing required field (profile_picture)'})
+    
+    try:
+        with engine.connect() as connection:
+            edit_profile_query = "UPDATE USER SET profile_picture WHERE id"
+            connection.execute(edit_profile_query, (new_profile_picture, user_id))
+
+        return jsonify({'message': 'Profile picture updated successfully'})
+   
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
