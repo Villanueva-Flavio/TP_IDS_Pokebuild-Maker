@@ -121,19 +121,25 @@ def get_all_pokemons():
 # POST endpoint for adding a new BUILD
 @api_blueprint.route('/add_build', methods=['POST'])
 def add_build():
-    data = request.json
-    build_name = data['build_name']
-    owner_id = data['owner_id']
-    pokemon_id_1 = data['pokemon_id_1']
-    pokemon_id_2 = data['pokemon_id_2']
-    pokemon_id_3 = data['pokemon_id_3']
-    pokemon_id_4 = data['pokemon_id_4']
-    pokemon_id_5 = data['pokemon_id_5']
-    pokemon_id_6 = data['pokemon_id_6']
-    timestamp = data['timestamp']
+    data_build = request.json
+    build_name = data_build.get('build_name', '')
+    owner_id = data_build.get('owner_id', '')
+    pokemon_id_1 = data_build.get('pokemon_id_1', '')
+    pokemon_id_2 = data_build.get('pokemon_id_2', '')
+    pokemon_id_3 = data_build.get('pokemon_id_3', '')
+    pokemon_id_4 = data_build.get('pokemon_id_4', '')
+    pokemon_id_5 = data_build.get('pokemon_id_5', '')
+    pokemon_id_6 = data_build.get('pokemon_id_6', '')
+    timestamp = data_build.get('timestamp', '')
     build_post_query = """
-            INSERT INTO BUILDS (name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp)
-            VALUES (:build_name, :owner_id, :pokemon_id_1, :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, :pokemon_id_5, :pokemon_id_6, :timestamp)
+            INSERT INTO BUILDS 
+            (name, owner_id, pokemon_id_1, pokemon_id_2, 
+            pokemon_id_3, pokemon_id_4, pokemon_id_5, 
+            pokemon_id_6, timestamp)
+            VALUES 
+            (:build_name, :owner_id, :pokemon_id_1, 
+            :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, 
+            :pokemon_id_5, :pokemon_id_6, :timestamp)
         """
     try:
         with engine.connect() as connection:
