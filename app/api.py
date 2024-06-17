@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
+from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from dotenv import load_dotenv
 
@@ -198,11 +199,13 @@ def register():
         VALUES (:username, :password, :email, :profile_picture)
     """
 
+    hashed_password = generate_password_hash(password)
+
     try:
         with engine.connect() as connection:
             connection.execute(add_user_query), {
                 'username': username,
-                'password': password,
+                'password': hashed_password,
                 'email': email,
                 'profile_picture': profile_picture
             }
