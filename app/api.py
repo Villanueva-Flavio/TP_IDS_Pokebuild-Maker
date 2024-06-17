@@ -191,7 +191,7 @@ def register():
     profile_picture = data.get('profile_picture')
 
     if not username or not password or not email or not profile_picture:
-        return jsonify({'error': 'Username, password, and email are required'})
+        return jsonify({'error': 'Username, password, email and profile_picture are required'})
     
     add_user_query = """
         INSERT INTO USER (username, password, email, profile_picture)
