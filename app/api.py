@@ -118,39 +118,39 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
-def id_must_be_an_integer(id):
+def id_must_be_an_integer(id, field_name):
     try:
         id_int = int(id)
         return id_int
     except (ValueError, TypeError):
-        return None
+        raise ValueError(f"{field_name} must be an integer")
 
 # POST endpoint for adding a new BUILD
-@api_blueprint.route('/add_build', methods=['POST'])
+@api_blueprint.route(BUILDS_ROUTE, methods=['POST'])
 def add_build():
     data_build = request.json
     build_name = data_build.get('build_name', '')
-    owner_id = id_must_be_an_integer(data_build.get('owner_id'))
-    pokemon_id_1 = id_must_be_an_integer(data_build.get('pokemon_id_1'))
-    pokemon_id_2 = id_must_be_an_integer(data_build.get('pokemon_id_2'))
-    pokemon_id_3 = id_must_be_an_integer(data_build.get('pokemon_id_3'))
-    pokemon_id_4 = id_must_be_an_integer(data_build.get('pokemon_id_4'))
-    pokemon_id_5 = id_must_be_an_integer(data_build.get('pokemon_id_5'))
-    pokemon_id_6 = id_must_be_an_integer(data_build.get('pokemon_id_6'))
+    owner_id = id_must_be_an_integer(data_build.get('owner_id'), 'owner_id')
+    pokemon_id_1 = id_must_be_an_integer(data_build.get('pokemon_id_1'), 'pokemon_id_1')
+    pokemon_id_2 = id_must_be_an_integer(data_build.get('pokemon_id_2'), 'pokemon_id_2')
+    pokemon_id_3 = id_must_be_an_integer(data_build.get('pokemon_id_3'), 'pokemon_id_3')
+    pokemon_id_4 = id_must_be_an_integer(data_build.get('pokemon_id_4'), 'pokemon_id_4')
+    pokemon_id_5 = id_must_be_an_integer(data_build.get('pokemon_id_5'), 'pokemon_id_5')
+    pokemon_id_6 = id_must_be_an_integer(data_build.get('pokemon_id_6'), 'pokemon_id_6')
     timestamp = data_build.get('timestamp', '')
 
+    if not build_name:
+        return jsonify({'Error': 'build_name must not be empty'})
     if owner_id is None:
         return jsonify({'Error': 'owner_id must not be None'})
     if pokemon_id_1 is None:
         return jsonify({'Error': 'pokemon_id_1 must not be None'})
-    if build_name is None:
-        return jsonify({'Error': 'build_name must not be None'})
     if timestamp is None:
         return jsonify({'Error': 'timestamp must not be None'})
     
-    build_post_query = """
+    add_build_query = """
             INSERT INTO BUILDS 
-            (name, owner_id, pokemon_id_1, pokemon_id_2, 
+            (build_name, owner_id, pokemon_id_1, pokemon_id_2, 
             pokemon_id_3, pokemon_id_4, pokemon_id_5, 
             pokemon_id_6, timestamp)
             VALUES 
@@ -161,7 +161,7 @@ def add_build():
     
     try:
         with engine.connect() as connection:
-            connection.execute(text(build_post_query), {
+            connection.execute(text(add_build_query), {
                 'build_name': build_name,
                 'owner_id': owner_id,
                 'pokemon_id_1': pokemon_id_1,
