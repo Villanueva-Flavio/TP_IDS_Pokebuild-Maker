@@ -7,6 +7,7 @@
     <!-- Estilo del container de seleccion -->
     <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
 
+<body>
 
     <h1>CREATE A NEW BUILD</h1>
 
@@ -17,34 +18,42 @@
 </form>
 
     <div class="container_all_pokemon">
-        <!-- Pokemons -->
+        
         <div class="pokemon_container">
-            <img class="img_pokemon" src="../static/images/Logo.png">
-            <form action="" class="form_pokemon">
+            <!-- seleccion de pokemon -->
+            <div class="search_container">
+                <select name="" id="select-pokemon">
+                    <option value="">atack</option>
+                </select>
+            </div>
+            <!-- Datos del pokemon -->
+            <div class="datos_container">
+                <!-- imagen del pokemon -->
+                <div class="img_container">
+                    <img class="img_pokemon" src="../static/images/Logo.png">
+                </div>
+                <!-- Informacion del pokemon -->
+                <div class="info_container">
+                    <label for="" class="name">NAME: </label>
+                    <label for="" class="level">LVL: </label>
+                    <label for="" class="ab1">ABILITY 1: </label>
+                    <label for="" class="ab2">ABILITY 2: </label>
+                    <label for="" class="ab3">ABILITY 3: </label>
+                    <label for="" class="ab4">ABILITY 4: </label>
+                </div>
+            </div>
+
+            <div id="select-pokemon">
+
+            
                 <!-- nombre de pokemon -->
                 <label for="">NAME</label>
-                <input type="text">
                 <!-- nivel del pokemon -->
                 <label for="">LVL</label>
-                <input type="text">
                 <br>
-                <!-- seleccionar pokemon -->
-                <label for="">POKEMON</label>
-                <select name="" id="">
-                    <option value="">name1</option>
-                    <option value="">name2</option>
-                    <option value="">name3</option>
-                    <option value="">name4</option>
-                </select>
                 <!-- habilidades del pokemon -->
                 <label for="">ABILITIES</label>
-                <select name="" id="">
-                    <option value="">atack</option>
-                    <option value="">super</option>
-                    <option value="">shield</option>
-                    <option value="">support</option>
-                </select>
-            </form>
+            </div>
         </div>
 
         <!-- Pokemons -->
