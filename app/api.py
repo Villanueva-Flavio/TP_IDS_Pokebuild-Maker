@@ -246,3 +246,21 @@ def edit_profile_picture(user_id):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
+    
+@api_blueprint.route('/api/edit_password/int:<user_id>', methods=['POST'])
+def edit_password(user_id):
+    data_user = requests.json 
+    new_password = data_user.get('password')
+
+    if not new_password:
+        return jsonify({'error': 'Missing required field (password)'})
+    
+    try:
+        with engine.connect() as connection:
+                edit_password_query = "UPDATE USER SET password WHERE id"
+                connection.execute(edit_password_query, (new_password, user_id))
+        return jsonify({'message': 'Password update successfully'})
+    
+    except SQLAlchemyError as e:
+        error = str(e, __dict__['orig'])
+        return jsonify({'error': error})
