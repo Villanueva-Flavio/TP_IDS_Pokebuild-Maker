@@ -180,3 +180,30 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+    
+@api_blueprint.route('/api/register', methods=['POST'])
+def register():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    profile_picture = data.get('profile_picture')
+    add_user_query = """
+        INSERT INTO USER (username, password, email, profile_picture)
+        VALUES (:username, :password, :email, :profile_picture)
+    """
+    try:
+        with engine.connect() as connection:
+            connection.execute(add_user_query), {
+                'username': username,
+                'password': password,
+                'email': email,
+                'profile_picture': profile_picture
+            }
+        return jsonify({"message": "User registered successfully"})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+    except Exception as e:
+        return jsonify({'error': str(e)})
