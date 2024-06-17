@@ -125,6 +125,52 @@ def id_must_be_an_integer(id, field_name):
     except (ValueError, TypeError):
         raise ValueError(f"{field_name} must be an integer")
 
+ #POST endpoint for adding a new USER   
+@api_blueprint.route('/api/add_user', methods=['POST'])
+def add_user():
+    data_user = requests.json
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+    
+    try:
+        with engine.connect() as connection:
+            add_user_query = "INSERT INTO USER (username, password, email, profile_picture) VALUES"
+        connection.execute(add_user_query, (username, password, email, profile_picture))
+
+        return jsonify({'message':'User added successfully'})
+   
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+    return jsonify({'error': error})
+   
+#POST endpoint for modify an existing USER
+@api_blueprint.route('/api/mod_user/<user_id>', methods=['POST'])
+def mod_user(user_id):
+    data_user = requests.json
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+    
+    try:
+        with engine.connect() as connection:
+            mod_user_query = "UPDATE USER SET username, password, email, profile_picture WHERE id"
+            connection.execute(mod_user_query, (username, password, email, profile_picture, user_id))
+
+        return jsonify({'message': f'User with id {user_id} modified successfully'})
+   
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
 # POST endpoint for adding a new BUILD
 @api_blueprint.route(BUILDS_ROUTE, methods=['POST'])
 def add_build():
