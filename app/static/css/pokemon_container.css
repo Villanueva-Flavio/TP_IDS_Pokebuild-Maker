@@ -24,7 +24,7 @@ body{
     /* Color del fondo de la pagina */
     background-color: #000000;
     /* Color de las letras */
-    color: white;
+    color: #28ffbd;
 }
 
 
@@ -44,7 +44,6 @@ h1{
     font-size: 30px; 
 }
 .container_build_name input{
-    height: 30px;
     font-size: 20px;
 }
 
@@ -52,15 +51,41 @@ h1{
 .img_pokemon{
     height: 200px;
     width: 200px;
+    border: solid blue;
 }
+
 .pokemon_container{
-    display: flex;
     width: 800px;
-    font-size: 25px;
+    font-size: 2.5vh;
     border: #5e00ff solid 10px;
     border-radius: 10px;
     text-align: center;
     margin: 20px;
+}
+
+.search_container{
+    border: solid red ;
+}
+
+.datos_container {
+    border: solid green;
+    display: flex;
+    height: 250px;
+}
+
+.info_container {
+
+    margin: auto;
+    width:  360px;
+    display: flex;
+    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.info_container label{
+
+    width: 100px;
+    margin: 10px;
 }
 
 select{

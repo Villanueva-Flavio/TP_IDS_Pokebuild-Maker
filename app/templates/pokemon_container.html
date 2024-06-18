@@ -21,38 +21,32 @@
         
         <div class="pokemon_container">
             <!-- seleccion de pokemon -->
-            <div class="search_container">
+            <div class="search_container"> 
                 <select name="" id="select-pokemon">
-                    <option value="">atack</option>
-                </select>
+                    <option value="" disabled selected>Seleccione un Pokemon</option>
+                    {%for pokemon in pokemons%}
+                        <option value="{{ pokemon.name }}" data-pokedex-id="{{ pokemon.especie }}" data-level="{{ pokemon.level }}" 
+                        data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" 
+                        data-ability-4="{{ pokemon.ability_4 }}">{{ pokemon.name }}</option>
+                    {%endfor%}
+                </select> 
             </div>
+
             <!-- Datos del pokemon -->
-            <div class="datos_container">
+            <div class="datos_container">    
                 <!-- imagen del pokemon -->
                 <div class="img_container">
                     <img class="img_pokemon" src="../static/images/Logo.png">
                 </div>
-                <!-- Informacion del pokemon -->
-                <div class="info_container">
-                    <label for="" class="name">NAME: </label>
-                    <label for="" class="level">LVL: </label>
-                    <label for="" class="ab1">ABILITY 1: </label>
-                    <label for="" class="ab2">ABILITY 2: </label>
-                    <label for="" class="ab3">ABILITY 3: </label>
-                    <label for="" class="ab4">ABILITY 4: </label>
+                <!-- Informacion del pokemon (vacio porque el texto se agrega en el script)-->
+                <div class="info_container"> 
+                    <label for="" class="name">NAME: </label><br>
+                    <label for="" id="poke_LVL">LVL: </label><br>
+                    <label for="" id="poke_habilidad_1">ABILITY 1: </label><br>
+                    <label for="" id="poke_habilidad_2">ABILITY 2: </label><br>
+                    <label for="" id="poke_habilidad_3">ABILITY 3: </label><br>
+                    <label for="" id="poke_habilidad_4">ABILITY 4: </label>
                 </div>
-            </div>
-
-            <div id="select-pokemon">
-
-            
-                <!-- nombre de pokemon -->
-                <label for="">NAME</label>
-                <!-- nivel del pokemon -->
-                <label for="">LVL</label>
-                <br>
-                <!-- habilidades del pokemon -->
-                <label for="">ABILITIES</label>
             </div>
         </div>
 
@@ -212,7 +206,7 @@
     </div>
 
 </body>
-
+<script src="pokemon_container.js"></script>
 <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
 <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
 <script>$('#editable-select').editableSelect();</script>
