@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="">
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_pokemon.css')}}">
+    <title>Document</title>
+</head>
+<body id="delete_pokemon_body">
+    <form action="{{ url_for('frontend.delete_pokemon', user_id=user_id) }}" id="" method="post">
+        SELECT YOUR POKEMON
+        <select name="" id="">
+            <option  class="poke_name_especie" value="" disabled selected>Selecciona un Pokémon</option>
+                {% for pokemon in pokemons %}
+                    <option value="{{ pokemon.name }}">{{ pokemon.name }}</option>
+                {% endfor %}
+        </select>
+        <button type="submit" class="" >DELETE</button>
+        <button class="" type="reset">CANCEL</button>
+    </form>
+</body>
+</html>

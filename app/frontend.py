@@ -67,3 +67,17 @@ def formulario_añadir_pokemon():
 def test():
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
+
+
+@frontend_blueprint.route('/delete_pokemon/<user_id>')
+def delete_pokemon(user_id):
+    if request.method == 'POST':
+        return render_template('home.html') #tiene que ser cambiado a profile
+    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_dict = []
+    for pokemon in user_pokemons:
+        build_row = {
+            'name': pokemon['name'],
+        }
+        pokemons_dict.append(build_row)
+    return render_template('delete_pokemon.html', pokemons=pokemons_dict)
