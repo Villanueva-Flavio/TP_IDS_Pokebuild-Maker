@@ -57,13 +57,15 @@ def build_list_container():
 def login_register():
     return render_template('login_register.html')
 
-@frontend_blueprint.route('/formulario_añadir_pokemon', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
-def formulario_añadir_pokemon():
+@frontend_blueprint.route('/add_pokemon_form', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
+def add_pokemon_form():
+    pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     if request.method == "POST":
-        return render_template("home.html")  
-    return render_template("formulario_añadir_pokemon.html")
+        return render_template("home.html")
+    return render_template('add_pokemon_form.html', pokemons=pokemons['pokemons'])
 
 @frontend_blueprint.route('/searchbar_testing')
 def test():
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
+

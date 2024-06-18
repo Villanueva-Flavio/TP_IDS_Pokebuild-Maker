@@ -1,0 +1,348 @@
+.select2{
+    height: 40px;
+}
+
+.select2-selection__rendered{
+    padding-top: 5px;
+    width: 75%;
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212;
+    height: 30px;
+    border-radius: 1px;
+}
+
+.select2-selection__clear{
+    display: none;
+}
+
+.select2-container .select2-selection--single {
+    height: auto;
+    background-color: #121212;
+}
+
+.select2-container .select2-selection--single .select2-selection__clear {
+    background-color: #121212;
+    height: auto;
+}
+
+.select2-selection__arrow{
+    background-color: #121212;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #fff transparent transparent transparent;
+}
+
+.select2-results__option{
+    font-family: 'Roboto', sans-serif;
+    background-color: #101010;
+    color: white;
+    height: 40px;
+}
+
+
+
+.select2-container .select2-selection--single .select2-selection__rendered{
+    margin: 2%;
+}
+
+body{
+    background-color: #101010;
+}
+
+.form-container{
+    width: 90vw;
+    height: 80vh;
+    margin-left: 5%;
+    margin-top: 2%;
+    border: 2px solid #2f00f2;
+    border-radius: 5px;
+    position: absolute;
+    box-shadow: 0 0 10px 5px #2f00f2;
+    background-color: #1a1a1a;
+}
+
+.title{
+    font-size: 4em;
+    text-align: center;
+    margin: 10px;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+}
+
+.input-container{
+    display: flex;
+    justify-content: space-between;
+    height: 50%;
+    width: 100% -2px;
+}
+
+.input-left-side{
+    width: 64%;
+    margin-left: 2%;
+    height: 100%;
+    align-items: center;
+    font-size: 2em;
+    font-family: 'Kanit', sans-serif;
+    border: 2px solid #2f00f2;
+    box-shadow: 0 0 10px 5px #2f00f2;
+}
+
+.input-right-side{
+    margin-right: 2%;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border: 2px solid #2f00f2;
+    box-shadow: 0 0 10px 5px #2f00f2;
+    font-family: 'Kanit', sans-serif;
+}
+
+.select-pokemon-container{
+    padding-top: 10%;
+    padding-left: 5%;
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.type-container{
+    margin-left: 5%;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.type-container .img-type{
+    transform: scale(0.75);
+    margin-bottom: -10%;
+}
+
+.counter-container{
+    width: 96%;
+    height: 37%;
+    margin-top: 0.5%;
+    margin-left: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.submit-container{
+    width: 15%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    bottom: -12%;
+    right: 1%;
+}
+
+#cancel, #save{
+    font-family: 'Kanit', sans-serif;
+    width: 40%;
+    height: 80%;
+    background-color: #1f1f1f;
+    color: white;
+    border: 2px solid red;
+    box-shadow: 0 0 10px 5px red;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+}
+
+#cancel:hover, #save:hover{
+    background-color: red;
+    box-shadow: 0 0 10px 10px red;
+    transition: ease-in-out 0.5s;
+}
+
+select{
+    font-family: 'Kanit', sans-serif;
+    width: 40%;
+    height: 60px;
+    background-color: #1f1f1f;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+}
+
+#name{
+    font-family: 'Kanit', sans-serif;
+    width: 70%;
+    height: 60px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #1f1f1f;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+    box-shadow: 0 0 10px 5px #2f00f2;
+    border: none;
+}
+
+#level{
+    font-family: 'Kanit', sans-serif;
+    width: 30%;
+    height: 60px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #1f1f1f;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+    box-shadow: 0 0 10px 5px #2f00f2;
+    border: none;
+}
+
+.data-container{
+    width: 95%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.abilities_container{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.abilities_container p{
+    width: 100%;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: -10%;
+    margin-bottom: -30px;
+    color: white;
+}
+
+.select-ability{
+    box-shadow: 0 0 10px 5px #2f00f2;
+    border: none;
+}
+
+.select-pokemon{
+    width: 95%;
+    margin-left: 2.5%;
+    height: 60px;
+    margin-top: 10%;
+    margin-bottom: 5px;
+    background-color: #1f1f1f;
+    color: white;
+    border-radius: 5px;
+    font-family: 'Kanit', sans-serif;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+    box-shadow: 0 0 10px 5px #2f00f2;
+    border: none;
+}
+
+#pokemon-image{
+    position: relative;
+    width: 90%;
+    margin-left: 2.5%;
+    height: 60%;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 12%;
+    box-shadow: 0 0 10px 5px #2f00f2;
+    border: none;
+}
+
+#type-label{
+    font-size: 1.5em;
+    text-align: center;
+    color: white;
+}
+
+.img-type{
+    width: 100%;
+    height: 40%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+#good-label, #bad-label{
+    font-family: 'Kanit', sans-serif;
+    font-size: 40px;
+    text-align: center;
+    width: auto;
+    padding-right: 50px;
+    margin-left: 2.5%;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    width:  20%;
+    color: white;
+    padding-bottom: 2%;
+}
+
+#good, #bad{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+}
+
+#good .img-type, #bad .img-type{
+    width: 225px;
+    height: 177px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: ease-in-out 0.5s;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    transform: scale(0.60);
+    margin-left: -1%;
+    overflow: hidden;
+    padding-bottom: 2%;
+}
+
+#name-label{
+    margin-left: 20px;
+    color: white;
+}
+
+#level-label{
+    margin-left: 20px;
+    color: white;
+}
+
+#empty{
+    display: none;
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="/static/css/add_pokemon_form.css">
+</head>
+<body>
+    <div class="form-container">
+        <div class="title">ADD A NEW POKEMON</div>
+        <div class="input-container">
+            <div class="input-left-side">
+                <div class="data-container">
+                    <p id="name-label">NAME: </p><input type="text" id="name">
+                    <p id="level-label">LVL: </p><input type="number" id="level">
+                </div>
+                <div class="abilities_container">
+                    <p>ABILITIES:</p>
+                    <option id="empty" value=""></option>
+                    {% for i in range(4) %}
+                        <select class="select-ability" id="ability_{{i+1}}"></select>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="input-right-side">
+                <div class="select-pokemon-container">
+                    <select name="pokemon" class="select-pokemon">
+                        {% for pokemon in pokemons %}
+                            <option value="{{pokemon.id}}">{{pokemon.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <img src="/static/images/Logo.png" alt="POKEMON" id="pokemon-image">
+                </div>
+                <div class="type-container">
+                    <p id="type-label">Types: </p>
+                    <img src="/static/images/tipos_pokemon/bug.png" alt="Type1" class="img-type">
+                    <img src="/static/images/tipos_pokemon/bug.png" alt="Type2" class="img-type"><!-- CAMBIAR POR FOR -->
+                </div>
+            </div>
+        </div>
+
+        <div class="counter-container">
+            <div id="good">
+                <p id="good-label">Good against: </p>
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type"> <!-- CAMBIAR POR FOR -->
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+            </div>
+            <div id="bad">
+                <p id="bad-label">Bad against: </p>
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+                <img src="/static/images/tipos_pokemon/bug.png" alt="type" class="img-type">
+            </div>
+        </div>
+        <div class="submit-container">
+            <button id="cancel">CANCEL</button>
+            <button id="save">SAVE</button>
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('.select-pokemon').select2({
+                tags: true,
+                placeholder: "Busca a tu pokemon...",
+                allowClear: true
+            });
+
+            $('.select-ability').select2({
+                tags: true,
+                placeholder: "Elige tu movimiento...",
+                allowClear: true
+            });
+        });
+
+        $('.select-pokemon').on('change', function() {
+
+            var pokemon_id = $(this).val();
+            console.log(pokemon_id);
+            fetch('/api/moves/' + pokemon_id)
+                .then(response => response.json())
+                .then(data => {
+                    var move_list = data['moves'];
+                    console.log(move_list);
+                    $('#ability_1, #ability_2, #ability_3, #ability_4').each(function() {
+                        $(this).empty();
+                        $(this).append('<option value=""></option>');
+                        for(var i = 0; i < move_list.length; i++) {
+                            $(this).append('<option value="' + move_list[i] + '">' + move_list[i] + '</option>');
+                        }
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
