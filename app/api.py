@@ -226,3 +226,20 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+    
+#POST endpoint to delete a user
+@api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'])
+def del_user(user_id):
+    try:
+        with engine.connect() as connection:
+            del_user_query = "DELETE FROM USER WHERE id = :user_id"
+            connection.execute(text(del_user_query), {'user_id': user_id})
+        
+        return jsonify({'message': f'User with ID {user_id} deleted successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
