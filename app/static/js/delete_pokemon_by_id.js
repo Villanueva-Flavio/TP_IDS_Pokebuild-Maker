@@ -1,10 +1,15 @@
-function delete_pokemon_by_id(){
+function delete_pokemon_by_id(event){
+    event.preventDefault();
     const pokemon_selected = document.getElementById('editable-select');
     // El id del pokemon seleccionado
     const pokemon_id = pokemon_selected.value;
     // POKEMON_DELETE_ROUTE
     fetch(`/api/pokemon_delete/${pokemon_id}`, {
-        method: 'POST'
+        method: 'POST',
+        // REQUEST en formato JSON
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -26,5 +31,4 @@ function delete_pokemon_by_id(){
     });
 }
 
-document.getElementById('delete_pokemon_btn')
-.addEventListener('click', delete_pokemon_by_id);
+document.getElementById('delete_pokemon_form').addEventListener('submit', delete_pokemon_by_id);
