@@ -51,14 +51,14 @@ INSERT INTO USER (username, password, email, profile_picture) VALUES
 ('user12', 'password12', 'email12@gmail.com', 'profile_picture12.png');
 
 INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES
-(6,   10, 'Charizard', 'Blaze', 'Solar Power', 'None', 'None', 1),
-(25,  10, 'Pikachu', 'Static', 'None', 'None', 'None', 1),
+(6,   9, 'Charizard', 'Blaze', 'Solar Power', 'None', 'None', 1),
+(25,  13, 'Pikachu', 'Static', 'None', 'None', 'None', 1),
 (1,   10, 'Bulbasaur', 'Overgrow', 'Chlorophyll', 'None', 'None', 1),
-(4,   10, 'Charmander', 'Blaze', 'Solar Power', 'None', 'None', 1),
+(4,   22, 'Charmander', 'Blaze', 'Solar Power', 'None', 'None', 1),
 (7,   10, 'Squirtle', 'Torrent', 'Rain Dish', 'None', 'None', 1),
-(10,  10, 'Caterpie', 'Shield Dust', 'Run Away', 'None', 'None', 1),
+(10,  33, 'Caterpie', 'Shield Dust', 'Run Away', 'None', 'None', 1),
 (13,  10, 'Weedle', 'Shield Dust', 'Run Away', 'None', 'None', 1),
-(16,  10, 'Pidgey', 'Keen Eye', 'Tangled Feet', 'Big Pecks', 'None', 1),
+(16,  14, 'Pidgey', 'Keen Eye', 'Tangled Feet', 'Big Pecks', 'None', 1),
 (19,  10, 'Rattata', 'Run Away', 'Guts', 'Hustle', 'None', 1),
 (23,  10, 'Ekans', 'Intimidate', 'Shed Skin', 'Unnerve', 'None', 1),
 (27,  10, 'Sandshrew', 'Sand Veil', 'Sand Rush', 'None', 'None', 2),

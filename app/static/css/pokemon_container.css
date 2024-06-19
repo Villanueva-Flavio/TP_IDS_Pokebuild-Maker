@@ -11,7 +11,7 @@
     color: #000000;
 }
 
-#editable-select{
+.select-pokemon{
     color: white;
 }
 
@@ -21,9 +21,7 @@ body{
     font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
-    /* Color del fondo de la pagina */
     background-color: #000000;
-    /* Color de las letras */
     color: #28ffbd;
 }
 
@@ -32,8 +30,18 @@ h1{
     font-size: 50px;
     text-align: center;
 }
-    /* Con el flex-wrap agrupo las card en 3 para abilitarlo le ponemos display flex */
+
+#title{
+    margin-top: 3%;
+    font-size: 5em;
+}
+
+.container_build_name{
+    margin-top: 2%
+}
+
 .container_all_pokemon{  
+    margin-top: 5%;
     display:flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -51,10 +59,12 @@ h1{
 .img_pokemon{
     height: 200px;
     width: 200px;
-    border: solid blue;
+    margin-top: 15px;
+    box-shadow: 0 0 20px #5e00ff;
+    margin-right: 20px;
 }
-
-.pokemon_container{
+/* cont_1 */
+.pokemon_container{ 
     width: 800px;
     font-size: 2.5vh;
     border: #5e00ff solid 10px;
@@ -63,12 +73,7 @@ h1{
     margin: 20px;
 }
 
-.search_container{
-    border: solid red ;
-}
-
 .datos_container {
-    border: solid green;
     display: flex;
     height: 250px;
 }
@@ -106,4 +111,15 @@ select{
     font-size: 20px;
     height: 50px;
     width: 100px;
+}
+
+/* SEARCHBAR */
+
+.select2-container{
+    width: 100% !important;
+}
+
+.select2-selection{
+    background-color: black !important;
+    color: white !important;
 }
