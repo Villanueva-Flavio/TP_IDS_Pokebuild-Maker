@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session
+from datetime import timedelta
 import requests
 
 frontend_blueprint = Blueprint('frontend', __name__)
+frontend_blueprint.secret_key = 'Si'
+frontend_blueprint.permanent_session_lifetime = timedelta(days=7)
 
 def fetch_data():
     builds = requests.get('http://pokebuild-backend:5000/api/builds/').json()
@@ -90,6 +93,7 @@ def index():
     build_dict = get_build_dict(builds, pokemons)
     return render_template('home.html', build_dict=build_dict)
 
+
 @frontend_blueprint.route('/pop-up-test')
 def pop_up_test():
     return render_template('pop-up-test.html')
@@ -104,14 +108,10 @@ def login_register():
 
 @frontend_blueprint.route('/add_pokemon_form', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
 def add_pokemon_form():
-    if request.method == "POST":
-        return render_template("home.html")  
-    return render_template("add_pokemon_form.html")
-
-@frontend_blueprint.route('/searchbar_testing')
-def searchbar_testing():
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
-    return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
+    if request.method == "POST":
+        return render_template("home.html")
+    return render_template('add_pokemon_form.html', pokemons=pokemons['pokemons'])
 
 @frontend_blueprint.route('/pokemon_container/')
 def pokemon_container():
