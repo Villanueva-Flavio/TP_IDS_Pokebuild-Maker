@@ -59,61 +59,29 @@ $(document).ready(function() {
         allowClear: true
     });
 
-    // Función para procesar los datos basados en el elemento que cambió
-    function procesar_datos(selectedOption, container) {
-        console.log('hola');
+    function procesar_datos() {
+        var selectedOption = this.options[this.selectedIndex];
         if (selectedOption.value !== "") {
             var name = $(selectedOption).attr('data-name');
             var lvl = $(selectedOption).attr('data-level');
-            container.find('.name').html(name);
-            container.find('.poke_LVL').html('LVL: ' + lvl);
+            $('.name').html(name);
+            $('.poke_LVL').html('LVL: ' + lvl);
             for (var i = 1; i <= 4; i++) {
-                container.find('.poke_habilidad_' + i).html($(selectedOption).attr('data-ability-' + i));
+                $('.poke_habilidad_' + i).html($(selectedOption).attr('data-ability-' + i));
             }
-            // container.find('.img_pokemon').val(selectedOption.getAttribute('data-pokedex-id'));
+            // document.getElementsByClassName('img_pokemon').value = selectedOption.getAttribute('data-pokedex-id');
         } else {
-            container.find('.poke_LVL').html("");
+            $('.poke_LVL').html("");
             for (var i = 1; i <= 4; i++) {
-                container.find('.poke_habilidad_' + i).html("");
+                $('.poke_habilidad_' + i).html("");
             }
         }
     }
-
-    // Evento change para cada select de pokemon
-    $('.pokemon_1').change(function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var container = $(this).closest('.pokemon-container');
-        procesar_datos(selectedOption, container);
-    });
-
-    $('.pokemon_2').change(function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var container = $(this).closest('.pokemon-container');
-        procesar_datos(selectedOption, container);
-    });
-
-    $('.pokemon_3').change(function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var container = $(this).closest('.pokemon-container');
-        procesar_datos(selectedOption, container);
-    });
-
-    $('.pokemon_4').change(function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var container = $(this).closest('.pokemon-container');
-        procesar_datos(selectedOption, container);
-    });
-
-    $('.pokemon_5').change(function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var container = $(this).closest('.pokemon-container');
-        procesar_datos(selectedOption, container);
-    });
-
-    $('.pokemon_6').change(function() {
-        var selectedOption = this.options[this.selectedIndex];
-        var container = $(this).closest('.pokemon-container');
-        procesar_datos(selectedOption, container);
-    });
+    $('.pokemon_1').change(procesar_datos);
+    $('.pokemon_2').change(procesar_datos);
+    $('.pokemon_3').change(procesar_datos);
+    $('.pokemon_4').change(procesar_datos);
+    $('.pokemon_5').change(procesar_datos);
+    $('.pokemon_6').change(procesar_datos);
 });
 </script>
