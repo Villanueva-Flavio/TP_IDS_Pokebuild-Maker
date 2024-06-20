@@ -3,6 +3,7 @@ from flask import jsonify, Blueprint
 from sqlalchemy import create_engine, text
 import os, requests
 from dotenv import load_dotenv
+import mysql.connector
 
 load_dotenv()
 
@@ -118,3 +119,84 @@ def get_all_pokemons():
 @api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
 def get_pokemons_by_user(owner_id):
     return get_data(USER_ID_POKEMONS_QUERY + owner_id)
+
+def reorder_nulls_to_end():
+    try:
+        conn = mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME
+        )
+
+        cursor = conn.cursor()
+
+        query = "SELECT * FROM BUILDS"
+        cursor.execute(query)
+        builds = cursor.fetchall()
+
+        updated_builds = []
+
+        for build in builds:
+            pokemon_ids = [build[2], build[3], build[4], build[5], build[6], build[7]]
+            
+            sorted_pokemon_ids = sorted(pokemon_ids, key=lambda x: x is None)
+            
+            updated_build = (
+                build[1],  
+                sorted_pokemon_ids[0],
+                sorted_pokemon_ids[1],
+                sorted_pokemon_ids[2],
+                sorted_pokemon_ids[3],
+                sorted_pokemon_ids[4],
+                sorted_pokemon_ids[5],
+                build[8],
+                build[9]
+            )
+            
+            updated_builds.append(updated_build)
+
+        update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
+        for idx, updated_build in enumerate(updated_builds):
+            cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        print("Tabla BUILDS actualizada exitosamente.")
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+
+
+#DELETE endport for POKEMON by ID
+@api_blueprint.route('/api/delete_pokemon/<int:pokemon_id>', methods=['GET', 'POST'])
+def delete_pokemon(pokemon_id):
+    try:
+        with engine.connect() as connection:
+            with connection.begin():
+
+                delete_pokemon_query = text("DELETE FROM POKEMON WHERE id = :id")
+                connection.execute(delete_pokemon_query, {"id": pokemon_id})
+
+                update_cases = ', '.join([
+                    f"pokemon_id_{i} = CASE WHEN pokemon_id_{i} = :pokemon_id THEN NULL ELSE pokemon_id_{i} END"
+                    for i in range(1, 7)
+                ])
+
+                update_builds_query = text(f"""
+                UPDATE BUILDS
+                SET {update_cases}
+                """)
+                connection.execute(update_builds_query, {"pokemon_id": pokemon_id})
+
+        reorder_nulls_to_end()
+
+        return {"message": f"Pokémon con id {pokemon_id} eliminado exitosamente."}, 200
+
+    except SQLAlchemyError as e:
+        error_message = f"Error al conectarse a la base de datos: {e}"
+        print(error_message)
+        return {"error": error_message}, 500

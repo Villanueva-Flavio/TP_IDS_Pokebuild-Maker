@@ -69,7 +69,7 @@ def test():
     return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
 
 
-@frontend_blueprint.route('/delete_pokemon/<user_id>')
+@frontend_blueprint.route('/delete_pokemon_form/<user_id>')
 def delete_pokemon(user_id):
     if request.method == 'POST':
         return render_template('home.html') #tiene que ser cambiado a profile
@@ -78,6 +78,7 @@ def delete_pokemon(user_id):
     for pokemon in user_pokemons:
         build_row = {
             'name': pokemon['name'],
+            'id': pokemon['id']
         }
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict)
