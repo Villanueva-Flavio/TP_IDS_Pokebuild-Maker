@@ -9,56 +9,57 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="/static/css/add_pokemon_form.css">
 </head>
-<body>
-    <div class="form-container">
-        <div class="title">ADD A NEW POKEMON</div>
-        <div class="input-container">
-            <div class="input-left-side">
-                <div class="data-container">
-                    <p id="name-label">NAME: </p><input type="text" id="name">
-                    <p id="level-label">LVL: </p><input type="number" id="level">
-                </div>
-                <div class="abilities_container">
-                    <p>ABILITIES:</p>
-                    <option id="empty" value=""></option>
-                    {% for i in range(4) %}
-                        <select class="select-ability" id="ability_{{i+1}}"></select>
-                    {% endfor %}
-                </div>
-            </div>
+<body id="body_formulario_añadir_pokemon">
 
-            <div class="input-right-side">
-                <div class="select-pokemon-container">
-                    <select name="pokemon" class="select-pokemon">
+    <div class="formulario">
+        <div id="Submit" >ADD A NEW POKEMON</div>
+        <div id="nombre_nivel" class="input-container">
+            <div id="usuario">
+                    <label for="poke_name" id="name" class="color">NAME: </label>
+                    <input type="text" id="poke_name" name="pname" placeholder="Name" class="color poke_name_especie">
+                    <label for="poke_LVL" id="level" class="color">LVL: </label>
+                    <input type="number" id="poke_LVL" name="pLVL" placeholder="000" class="color caja input_personalizado">
+                    <h1 id="abilities_texto" class="color">Abilities</h1>
+                    <div id="abilities_container">
+                        <option id="empty" value=""></option>
+                        {% for i in range(2) %}
+                            <select class="select-ability abilities_elegir" id="ability_{{i+1}}"></select>
+                        {% endfor %}
+                        {% for x in range(2,4) %}
+                            <select class="select-ability abilities_elegir_inferiores" id="ability_{{x+1}}"></select>
+                        {% endfor %}
+                    </div>
+            </div>
+    
+            <div id="datos_pokemon_caja" class="input-right-side">
+                <div id="imagen_poke_especie" class="select-pokemon-container">
+                    <select id="pokemon_especie" name="pokemon" placeholder="Pokemon" class="select-pokemon poke_name_especie">
                         {% for pokemon in pokemons %}
-                            <option value="{{pokemon.id}}">{{pokemon.name}}</option>
+                            <option class="pokemon_especie" value="{{pokemon.id}}">{{pokemon.name}}</option>
                         {% endfor %}
                     </select>
-                    <img src="/static/images/Logo.png" alt="POKEMON" id="pokemon-image">
+                    <img src="{{ url_for('static', filename='images/Logo.png')}}" alt="POKEMON" id="pokemon-image">
                 </div>
-                <div class="type-container">
-                    <p id="type-label">Types: </p>
-                    <!-- Type Images -->
+                <div id="tipos_datos_poke" class="type-container">
+                    <div class="color">Type</div>
                 </div>
             </div>
         </div>
-
-        <div class="counter-container">
-            <div id="good">
-                <p id="good-label">Good against: </p>
-                <!-- Good Against Images -->
+        <div id="contenedor_all_against">
+            <div class="against" id="good">
+                <div class="against_texto">Good against: </div>
             </div>
-            <div id="bad">
-                <p id="bad-label">Bad against: </p>
-                <!-- Bad Against Images -->
+            <br>
+            <div class="against" id="bad">
+                <div class="against_texto" id="bad_against_texto">Bad against: </div>
             </div>
         </div>
-        <div class="submit-container">
-            <button id="cancel">CANCEL</button>
-            <button id="save">SAVE</button>
+        <div class="boton">
+            <button type="submit" class="caja">Save</button>
+            <button class="caja" type="reset">Cancel</button>
         </div>
-
     </div>
+
     <script>
         $(document).ready(function() {
             $('.select-pokemon').select2({
@@ -111,11 +112,11 @@
                     })
 
                     good_against.forEach(type => {
-                        $('#good').append('<img src="/static/images/tipos_pokemon/' + type + '.png" alt="type" class="img-type">')
+                        $('#good').append('<img src="/static/images/tipos_pokemon/' + type + '.png" alt="type" class="img-type-against">')
                     })
 
                     bad_against.forEach(type => {
-                        $('#bad').append('<img src="/static/images/tipos_pokemon/' + type + '.png" alt="type" class="img-type">')
+                        $('#bad').append('<img src="/static/images/tipos_pokemon/' + type + '.png" alt="type" class="img-type-against">')
                     })
 
                     while (pokemon_id.length < 3) { pokemon_id = '0' + pokemon_id; }
