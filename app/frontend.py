@@ -69,11 +69,11 @@ def test():
     return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
 
 
-@frontend_blueprint.route('/delete_pokemon_form/<user_id>')
-def delete_pokemon(user_id):
+@frontend_blueprint.route('/delete_pokemon_form/<owner_id>')
+def delete_pokemon(owner_id):
     if request.method == 'POST':
         return render_template('home.html') #tiene que ser cambiado a profile
-    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{owner_id}').json()
     pokemons_dict = []
     for pokemon in user_pokemons:
         build_row = {
@@ -81,4 +81,4 @@ def delete_pokemon(user_id):
             'id': pokemon['id']
         }
         pokemons_dict.append(build_row)
-    return render_template('delete_pokemon.html', pokemons=pokemons_dict)
+    return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)

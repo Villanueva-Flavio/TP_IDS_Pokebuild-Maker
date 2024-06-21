@@ -31,6 +31,11 @@ USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FR
 USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
 USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
 
+MOVES_BY_POKEMON_ID = '/api/moves/<pokemon_id>'
+GET_ALL_POKEMONS = '/api/get_all_pokemons'
+
+DELETE_USER_POKEMON = '/api/delete_pokemon/<owner_id>/<pokemon_id>'
+
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -92,8 +97,9 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-    
-@api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
+
+# GET endpoint for POKEMON moves
+@api_blueprint.route(MOVES_BY_POKEMON_ID, methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
     url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
@@ -105,8 +111,7 @@ def get_pokemon_moves(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 404
 
-@api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
-
+@api_blueprint.route(GET_ALL_POKEMONS, methods=['GET'])
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -171,28 +176,27 @@ def reorder_nulls_to_end():
         print(f"Error: {err}")
 
 
-#DELETE endport for POKEMON by ID
-@api_blueprint.route('/api/delete_pokemon/<int:pokemon_id>', methods=['GET', 'POST'])
-def delete_pokemon(pokemon_id):
+@api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'])
+def delete_pokemon(pokemon_id, owner_id):
     try:
         with engine.connect() as connection:
             with connection.begin():
+                # Verificar si el Pokémon pertenece al usuario
+                verify_query = text("SELECT * FROM POKEMON WHERE id = :id AND owner_id = :owner_id")
+                result = connection.execute(verify_query, {"id": pokemon_id, "owner_id": owner_id}).fetchone()
+                
+                if not result:
+                    return {"error": f"Pokemon con id {pokemon_id} no pertenece al usuario con id {owner_id}."}, 404
 
+                # Eliminar el Pokémon
                 delete_pokemon_query = text("DELETE FROM POKEMON WHERE id = :id")
                 connection.execute(delete_pokemon_query, {"id": pokemon_id})
 
-                update_cases = ', '.join([
-                    f"pokemon_id_{i} = CASE WHEN pokemon_id_{i} = :pokemon_id THEN NULL ELSE pokemon_id_{i} END"
-                    for i in range(1, 7)
-                ])
+                # Eliminar filas de la tabla BUILDS
+                delete_builds_query = text("DELETE FROM BUILDS WHERE pokemon_id_1 = :pokemon_id OR pokemon_id_2 = :pokemon_id OR pokemon_id_3 = :pokemon_id OR pokemon_id_4 = :pokemon_id OR pokemon_id_5 = :pokemon_id OR pokemon_id_6 = :pokemon_id")
+                connection.execute(delete_builds_query, {"pokemon_id": pokemon_id})
 
-                update_builds_query = text(f"""
-                UPDATE BUILDS
-                SET {update_cases}
-                """)
-                connection.execute(update_builds_query, {"pokemon_id": pokemon_id})
-
-        reorder_nulls_to_end()
+            #reorder_nulls_to_end()
 
         return {"message": f"Pokémon con id {pokemon_id} eliminado exitosamente."}, 200
 

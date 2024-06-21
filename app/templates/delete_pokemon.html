@@ -3,23 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="">
-    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_pokemon.css')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Tiny5&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_pokemon.css') }}">
     <title>DELETE POKEMON</title>
 </head>
 <body id="delete_pokemon_body">
-    
-    <form action="{{ url_for('frontend.delete_pokemon', user_id=user_id) }}" id="delete_pokemon" class="" method="post">
+    <form action="{{ url_for('frontend.delete_pokemon', owner_id=owner_id) }}" id="delete_pokemon" class="" method="post" data-owner-id="{{ owner_id }}">
         <div id="remove_your_pokemon_text">REMOVE YOUR POKEMON:</div>
         <br>
         <label for="select_delete_pokemon" class="texto_delete_pokemon">SELECT YOUR POKEMON:</label>
-        <select name="select_delete_pokemon" id="select_delete_pokemon"  class="texto_delete_pokemon">
-                {% for pokemon in pokemons %}
-                    <option value="{{ pokemon.id }}" >{{ pokemon.name }}</option>
-                {% endfor %}
+        <select name="select_delete_pokemon" id="select_delete_pokemon" class="texto_delete_pokemon">
+            {% for pokemon in pokemons %}
+                <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
+            {% endfor %}
         </select>
-        <button type="submit" class="texto_delete_pokemon botones_delete_cancel" id="DELETE_delete_pokemon_button" >DELETE</button>
+        <button type="submit" class="texto_delete_pokemon botones_delete_cancel" id="DELETE_delete_pokemon_button">DELETE</button>
         <button class="texto_delete_pokemon botones_delete_cancel" id="CANCEL_delete_pokemon_button" type="reset">CANCEL</button>
     </form>
     <script src="{{ url_for('static', filename='js/delete_pokemon_by_id.js') }}"></script>

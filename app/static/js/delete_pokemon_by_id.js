@@ -1,12 +1,16 @@
-function delete_pokemon_by_id(event){
+function delete_pokemon_by_id(event) {
     event.preventDefault();
-    const pokemon_selected = document.getElementById('editable-select');
-    // El id del pokemon seleccionado
+    
+    const form = document.getElementById('delete_pokemon');
+    const owner_id = form.getAttribute('data-owner-id');
+
+
+    const pokemon_selected = document.getElementById('select_delete_pokemon');
     const pokemon_id = pokemon_selected.value;
-    // POKEMON_DELETE_ROUTE
-    fetch(`/api/pokemon_delete/${pokemon_id}`, {
+    console.log('Owner ID:', owner_id);
+    console.log('Pokemon ID:', pokemon_id);
+    fetch(`/api/delete_pokemon/${owner_id}/${pokemon_id}`, {
         method: 'POST',
-        // REQUEST en formato JSON
         headers: {
             'Content-Type': 'application/json'
         }
@@ -14,6 +18,7 @@ function delete_pokemon_by_id(event){
     .then(response => {
         if (!response.ok) {
             console.log('Network response was not ok');
+            return response.text().then(error => { throw new Error(error); });
         }
         return response.json();
     })
@@ -23,12 +28,11 @@ function delete_pokemon_by_id(event){
         if (optionToRemove) {
             optionToRemove.remove();
         }
-        
-        console.log('Pokemon deleted successfully');
+        console.log('Pokemon deleted successfully:', result.message);
     })
     .catch(error => {
         console.error('Failed to delete pokemon:', error);
     });
 }
 
-document.getElementById('delete_pokemon_form').addEventListener('submit', delete_pokemon_by_id);
+document.getElementById('delete_pokemon').addEventListener('submit', delete_pokemon_by_id);
