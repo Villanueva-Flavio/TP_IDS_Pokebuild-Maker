@@ -58,7 +58,7 @@ def get_info_pokemons(pokemons): #pokemons es un json
 def get_pokemon_name_by_id(pokedex_id):
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokedex_id}')
     if response.status_code == 200:
-        pokemon_data = response.json()  # Aquí se corrige el uso de json()
+        pokemon_data = response.json()
         return pokemon_data['name']
     else:
         return None
@@ -66,12 +66,13 @@ def get_pokemon_name_by_id(pokedex_id):
 
 def get_user_pokemons(user_id):
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    
     pokemons_dict = []
     for pokemon in user_pokemons:
-        especie_pokemon= get_pokemon_name_by_id(pokemon['pokedex_id'])
+        fetched_pokemon = requests.get(f'http://pokebuild-backend:5000/api/pokemon/{pokemon["id"]}').json()
         build_row = {
             'name': pokemon['name'],
-            'especie': especie_pokemon,
+            'especie': fetched_pokemon['pokedex_id'],
             'level': pokemon['level'],
             'ability_1': pokemon['ability_1'],
             'ability_2': pokemon['ability_2'],
@@ -110,5 +111,4 @@ def pokemon_container(user_id):
     # print(asd)
     #return render_template('pokemon_container.html') #, pokemons=asd
     pokemons_dic = get_user_pokemons(user_id)
-    print(pokemons_dic)
     return render_template('pokemon_container.html', pokemons=pokemons_dic)
