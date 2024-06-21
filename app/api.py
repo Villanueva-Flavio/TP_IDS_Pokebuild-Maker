@@ -82,6 +82,7 @@ def api_home():
     }
     return jsonify(endpoints)
 
+# Function to get data from the database and returns it in a json
 def get_data(query):
     try:
         with engine.connect() as connection:
@@ -99,7 +100,8 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-    
+
+# GET endpoint for getting moves of a pokemon
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
@@ -112,7 +114,8 @@ def get_pokemon_moves(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 404
 
-@api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
+# GET endpoint for getting all pokemons in the pokedex
+@api_blueprint.route('/api/get_all_pokemons/', methods=['GET'])
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -122,7 +125,8 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
-def id_must_be_an_integer(id, field_name):
+# Function to check if the id is an integer and returns it as an integer
+def to_int(id, field_name):
     try:
         id_int = int(id)
         return id_int
@@ -134,33 +138,23 @@ def id_must_be_an_integer(id, field_name):
 def add_build():
     data_build = request.json
     build_name = data_build.get('build_name', '')
-    owner_id = id_must_be_an_integer(data_build.get('owner_id'), 'owner_id')
-    pokemon_id_1 = id_must_be_an_integer(data_build.get('pokemon_id_1'), 'pokemon_id_1')
-    pokemon_id_2 = id_must_be_an_integer(data_build.get('pokemon_id_2'), 'pokemon_id_2')
-    pokemon_id_3 = id_must_be_an_integer(data_build.get('pokemon_id_3'), 'pokemon_id_3')
-    pokemon_id_4 = id_must_be_an_integer(data_build.get('pokemon_id_4'), 'pokemon_id_4')
-    pokemon_id_5 = id_must_be_an_integer(data_build.get('pokemon_id_5'), 'pokemon_id_5')
-    pokemon_id_6 = id_must_be_an_integer(data_build.get('pokemon_id_6'), 'pokemon_id_6')
+    owner_id = to_int(data_build.get('owner_id'), 'owner_id')
+    pokemon_id_1 = to_int(data_build.get('pokemon_id_1'), 'pokemon_id_1')
+    pokemon_id_2 = to_int(data_build.get('pokemon_id_2'), 'pokemon_id_2')
+    pokemon_id_3 = to_int(data_build.get('pokemon_id_3'), 'pokemon_id_3')
+    pokemon_id_4 = to_int(data_build.get('pokemon_id_4'), 'pokemon_id_4')
+    pokemon_id_5 = to_int(data_build.get('pokemon_id_5'), 'pokemon_id_5')
+    pokemon_id_6 = to_int(data_build.get('pokemon_id_6'), 'pokemon_id_6')
     timestamp = data_build.get('timestamp', '')
 
-    if not build_name:
-        return jsonify({'error': 'build_name must not be empty'})
-    if owner_id is None:
-        return jsonify({'error': 'owner_id must not be None'})
-    if pokemon_id_1 is None:
-        return jsonify({'error': 'pokemon_id_1 must not be None'})
-    if timestamp is None:
-        return jsonify({'error': 'timestamp must not be None'})
+    if not build_name or not owner_id or not pokemon_id_1 or not timestamp:
+        return jsonify({'error': 'all fields should be complete'})
     
     add_build_query = """
             INSERT INTO BUILDS 
-            (build_name, owner_id, pokemon_id_1, pokemon_id_2, 
-            pokemon_id_3, pokemon_id_4, pokemon_id_5, 
-            pokemon_id_6, timestamp)
+            (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp)
             VALUES 
-            (:build_name, :owner_id, :pokemon_id_1, 
-            :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, 
-            :pokemon_id_5, :pokemon_id_6, :timestamp)
+            (:build_name, :owner_id, :pokemon_id_1, :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, :pokemon_id_5, :pokemon_id_6, :timestamp)
         """
     
     try:
@@ -185,7 +179,6 @@ def add_build():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# REGISTER user in the database
 @api_blueprint.route(REGISTER_ROUTE, methods=['POST'])
 def register():
     data = request.json
@@ -218,7 +211,6 @@ def register():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# LOGIN user, checks if email and password are correct
 @api_blueprint.route(LOGIN_ROUTE, methods=['POST'])
 def login():
     data = request.json
