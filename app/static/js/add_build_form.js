@@ -21,7 +21,6 @@ $(document).ready(function() {
             container.find('.name').html('NAME: ' + $(selectedOption).attr('data-name'));
             container.find('.poke_LVL').html('LVL: ' + $(selectedOption).attr('data-level'));
             container.find('.img_pokemon').attr('src', photo);
-            console.log(photo);
             for (var i = 1; i <= 4; i++) { container.find('.poke_habilidad_' + i).html('ABILITY ' + i + ': ' + $(selectedOption).attr('data-ability-' + i)); }
         }
     }
