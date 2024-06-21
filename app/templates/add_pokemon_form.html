@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="/static/css/add_pokemon_form.css">
+
 </head>
 <body id="body_formulario_añadir_pokemon">
 
@@ -55,7 +56,7 @@
             </div>
         </div>
         <div class="boton">
-            <button type="submit" class="caja">Save</button>
+            <button type="submit" class="caja" id="add_pokemon_btn">Save</button>
             <button class="caja" type="reset">Cancel</button>
         </div>
     </div>
@@ -73,10 +74,10 @@
                 placeholder: "Elige tu movimiento...",
                 allowClear: true
             });
-        });
-
+        var owner_id = "{{ owner_id }}";
+        var pokemon_id;
         $('.select-pokemon').on('change', function() {
-            var pokemon_id = $(this).val();
+            pokemon_id = $(this).val();
 
             console.log(pokemon_id);
             fetch('/api/moves/' + pokemon_id)
@@ -126,6 +127,41 @@
                     $('#pokemon-image').attr('src', pokemon_image_url)
                 })
         });
+        $('#add_pokemon_btn').on('click', function() {
+            var pokemon_name = $('#poke_name').val();
+            var pokemon_level = $('#poke_LVL').val();
+            var pokemon_species = $('#pokemon_especie').val();
+            var pokemon_ability_1 = $('#ability_1').val();
+            var pokemon_ability_2 = $('#ability_2').val();
+            var pokemon_ability_3 = $('#ability_3').val();
+            var pokemon_ability_4 = $('#ability_4').val();
+
+            fetch('/api/add_pokemon', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'name': pokemon_name,
+                    'level': pokemon_level,
+                    'ability_1': pokemon_ability_1,
+                    'ability_2': pokemon_ability_2,
+                    'ability_3': pokemon_ability_3,
+                    'ability_4': pokemon_ability_4,
+                    'pokedex_id': pokemon_id,
+                    'owner_id': owner_id
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor:');
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error al enviar la solicitud:', error);
+            });
+        });
+    });
     </script>
 </body>
 </html>

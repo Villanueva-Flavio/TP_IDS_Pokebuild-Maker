@@ -16,10 +16,9 @@ def get_pokemon_id(build):
 
 def get_pokedex_id(pokemon_list, pokemons):
     return [
-        '000' if pokemon_id == -1 else str(pokemons[pokemon_id - 1]['pokedex_id']).zfill(3)
+        '000' if pokemon_id == -1 or pokemon_id - 1 >= len(pokemons) else str(pokemons[pokemon_id - 1]['pokedex_id']).zfill(3)
         for pokemon_id in pokemon_list
     ]
-
 def get_build_dict(builds, pokemons):
     build_dict = {}
     for build in builds:
@@ -57,12 +56,12 @@ def build_list_container():
 def login_register():
     return render_template('login_register.html')
 
-@frontend_blueprint.route('/add_pokemon_form', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
-def add_pokemon_form():
+@frontend_blueprint.route('/add_pokemon_form/<owner_id>', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
+def add_pokemon_form(owner_id):
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     if request.method == "POST":
         return render_template("home.html")
-    return render_template('add_pokemon_form.html', pokemons=pokemons['pokemons'])
+    return render_template('add_pokemon_form.html', pokemons=pokemons['pokemons'], owner_id=owner_id)
 
 @frontend_blueprint.route('/searchbar_testing')
 def test():

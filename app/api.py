@@ -1,5 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
-from flask import jsonify, Blueprint
+from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 import os, requests
 from dotenv import load_dotenv
@@ -89,6 +89,58 @@ def get_data(query):
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
     
+@api_blueprint.route('/api/add_pokemon', methods=['POST'])
+def add_pokemon():
+    try:
+        pokemon_data = request.get_json()
+
+        if pokemon_data is None:
+            return jsonify({'error': 'Invalid JSON or empty request body'}), 400
+
+        # Verificar la existencia de campos requeridos
+        required_fields = ['pokedex_id', 'level', 'ability_1', 'owner_id']
+        for field in required_fields:
+            if field not in pokemon_data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        # Si todos los campos requeridos están presentes, proceder con el procesamiento
+        pokedex_id = pokemon_data['pokedex_id']
+        level = pokemon_data['level']
+        name = pokemon_data.get('name', None)
+        ability_1 = pokemon_data['ability_1']
+        ability_2 = pokemon_data.get('ability_2', None)
+        ability_3 = pokemon_data.get('ability_3', None)
+        ability_4 = pokemon_data.get('ability_4', None)
+        owner_id = pokemon_data['owner_id']
+
+        # Insertar en la tabla POKEMON
+        with engine.connect() as connection:
+            query = text("INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) "
+                         "VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)")
+            connection.execute(query, {
+                'pokedex_id': pokedex_id,
+                'level': level,
+                'name': name,
+                'ability_1': ability_1,
+                'ability_2': ability_2,
+                'ability_3': ability_3,
+                'ability_4': ability_4,
+                'owner_id': owner_id
+            })
+
+        return jsonify({'message': 'Pokemon added successfully.'}), 200
+
+    except KeyError as e:
+        return jsonify({'error': f'Missing key in JSON: {str(e)}'}), 400
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
@@ -110,6 +162,14 @@ def get_all_pokemons():
     for pokemon in pokemons:
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
+
+# POST endpoint for adding a new pokemon to a user
+@api_blueprint.route('/api/add_pokemon/<owner_id>', methods=['POST'])
+
+# POST endpoint for adding a new pokemon
+@api_blueprint.route('/api/add_pokemon/', methods=['POST'])
+
+
 
 @api_blueprint.route('/api/types/<pokemon_id>/', methods=['GET'])
 def get_pokemon_types(pokemon_id):

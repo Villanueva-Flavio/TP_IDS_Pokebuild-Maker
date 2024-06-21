@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS POKEMON (
 CREATE TABLE IF NOT EXISTS BUILDS (
     id INT AUTO_INCREMENT PRIMARY KEY,
     build_name VARCHAR(12) NOT NULL,
-    pokemon_id_1 INT NOT NULL,
+    pokemon_id_1 INT,
     pokemon_id_2 INT,
     pokemon_id_3 INT,
     pokemon_id_4 INT,
