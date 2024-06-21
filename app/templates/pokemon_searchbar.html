@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <select id="editable-select" class="pokemon_searchbar">
     {% for pokemon in pokemons %}
         <option id="{{ pokemon.id }}">{{ pokemon.name }}</option>
@@ -6,3 +7,15 @@
 <script>
     $('#editable-select').editableSelect();
 </script>
+=======
+<select id="editable-select" class="pokemon_searchbar">
+    {% for pokemon in pokemons %}
+        <option id="{{ pokemon.id }}">{{ pokemon.name }}</option>
+    {% endfor %}
+
+</select>
+
+<button id="delete_pokemon_btn">Delete</button>
+
+<script src="{{ url_for('static', filename='js/delete_pokemon_by_id.js')}}"></script>
+>>>>>>> Frontend-delete_pokemon
