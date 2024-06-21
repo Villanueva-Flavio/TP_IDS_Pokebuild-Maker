@@ -24,8 +24,13 @@ CREATE TABLE IF NOT EXISTS POKEMON (
 
 CREATE TABLE IF NOT EXISTS BUILDS (
     id INT AUTO_INCREMENT PRIMARY KEY,
+<<<<<<< HEAD
     build_name VARCHAR(32) NOT NULL,
     pokemon_id_1 INT NOT NULL,
+=======
+    build_name VARCHAR(12) NOT NULL,
+    pokemon_id_1 INT,
+>>>>>>> Frontend-formulario_añadir_pokemon
     pokemon_id_2 INT,
     pokemon_id_3 INT,
     pokemon_id_4 INT,

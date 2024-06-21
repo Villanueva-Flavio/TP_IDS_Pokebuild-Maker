@@ -17,6 +17,8 @@ POKEMONS_ROUTE = '/api/pokemons/'
 POKEMONS_QUERY = "SELECT * FROM POKEMON" #imp
 POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>/'
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
+POST_POKEMON = '/api/add_pokemon/'
+POST_POKEMON_QUERY = "INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)"
 POKEMONS_BY_USER_ROUTE = '/api/pokemons_by_user/<user_id>'
 POKEMONS_BY_USER_QUERY = "SELECT * FROM POKEMON WHERE owner_id = "
 
@@ -100,8 +102,54 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
+    
+@api_blueprint.route('POST_POKEMON', methods=['POST'])
+def add_pokemon():
+    try:
+        pokemon_data = request.get_json()
 
-# GET endpoint for getting moves of a pokemon
+        if pokemon_data is None:
+            return jsonify({'error': 'Invalid JSON or empty request body'}), 400
+
+        required_fields = ['pokedex_id', 'level', 'ability_1', 'owner_id']
+        for field in required_fields:
+            if field not in pokemon_data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        pokedex_id = pokemon_data['pokedex_id']
+        level = pokemon_data['level']
+        name = pokemon_data.get('name', None)
+        ability_1 = pokemon_data['ability_1']
+        ability_2 = pokemon_data.get('ability_2', None)
+        ability_3 = pokemon_data.get('ability_3', None)
+        ability_4 = pokemon_data.get('ability_4', None)
+        owner_id = pokemon_data['owner_id']
+
+        with engine.connect() as connection:
+            connection.execute(POST_POKEMON_QUERY, {
+                'pokedex_id': pokedex_id,
+                'level': level,
+                'name': name,
+                'ability_1': ability_1,
+                'ability_2': ability_2,
+                'ability_3': ability_3,
+                'ability_4': ability_4,
+                'owner_id': owner_id
+            })
+
+        return jsonify({'message': 'Pokemon added successfully.'}), 200
+
+    except KeyError as e:
+        return jsonify({'error': f'Missing key in JSON: {str(e)}'}), 400
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
@@ -124,6 +172,41 @@ def get_all_pokemons():
     for pokemon in pokemons:
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
+
+@api_blueprint.route('/api/types/<pokemon_id>/', methods=['GET'])
+def get_pokemon_types(pokemon_id):
+    pokemon_id = pokemon_id.lower()
+    url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        types = data['types']
+        pokemon_type = set()
+        good_against = set()
+        bad_against = set()
+
+        for slot in types:
+            pokemon_type.add(slot['type']['name'])
+            coverage = slot['type']['url']
+            coverage_response = requests.get(coverage)
+
+            if coverage_response.status_code == 200:
+                types_data = coverage_response.json()
+
+                for damage_from in types_data['damage_relations']['double_damage_from']:
+                    bad_against.add(damage_from['name'])
+                for damage_to in types_data['damage_relations']['double_damage_to']:
+                    good_against.add(damage_to['name'])
+
+        return jsonify({
+            'pokemon_type': list(pokemon_type),
+            'good_against': list(good_against),
+            'bad_against': list(bad_against)
+        })
+    
+    else:
+        return jsonify({'error': 'Pokemon not found'}), 400
 
 # Function to check if the id is an integer and returns it as an integer
 def to_int(id, field_name):

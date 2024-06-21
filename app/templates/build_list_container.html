@@ -3,3 +3,17 @@
     {% include 'build_container.html' %}
 {% endfor %}
 </div>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/build_list_container.css') }}">
+<!-- Get from /api/builds -->
+<!-- background-image: url(https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/937.png); -->
+<!-- Add pokedexid where pokemon.id = build.pokemon_id -->
+
+<style>
+    
+    
+</style>
+
+{% for key, build in build_dict.items() %}
+    {% include 'build_container.html' %}
+{% endfor %}

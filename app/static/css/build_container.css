@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .build-container{
     display: flex;
     width: 1200px;
@@ -229,4 +230,161 @@
     .pokemon6{
         clip-path: polygon(92% 0, 100% 0, 100% 100%, 82% 100%);
     }
+=======
+.build-container{
+    display: flex;
+    width: 1000px;
+    height: 200px;
+    background: linear-gradient(to bottom, #5e00ff, #2f006f);
+    margin-left: 20px;
+    margin-top: 75px;
+    flex-direction: row;
+    position: relative;
+    -webkit-box-reflect: below 2px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(70%, transparent), to(rgba(255, 255, 255, 0.75)));
+    border-radius: 5px;
+}
+
+.build-name-container{
+    font-family: "Tiny5", sans-serif;
+    top: 0;
+    margin-top: 0px;
+    margin-left: 10px;
+    font-size: 3em;
+    position: absolute;
+    color: white;
+}
+
+.profile-container{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    height: 100%;
+    width: 200px;
+}
+
+.profile-pic{
+    width: 140px;
+    height: 140px;
+    margin: 10px;
+    bottom: 0;
+    left: 0;
+    margin-top: 35px;
+    position: absolute;
+    border-radius: 5px;
+}
+
+.profile-name{
+    font-family: "Tiny5", sans-serif;
+    font-size: 1.4em;
+    width: 140px;
+    height: 30px;
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,1));
+    bottom: 0;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.profile-name p{
+    margin-top: 0px;
+    padding: 0;
+    text-align: center;
+}
+
+.pokemon-container{
+    position: relative;
+    display: flex;
+    margin-top: 49px;
+    margin-left: -45px;
+    height: 70%;
+    width: 800px;
+}
+
+.pokemon-container:hover .pokemon {
+    filter: grayscale(100%);
+}
+
+.pokemon1, .pokemon2, .pokemon3, .pokemon4, .pokemon5, .pokemon6{
+    position: absolute;
+    height: 140px;
+    width: 100%;
+    transition: 0.5s;
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.pokemon1:hover, .pokemon2:hover, .pokemon3:hover, .pokemon4:hover, .pokemon5:hover, .pokemon6:hover{
+    transition: 0.5s;
+    transform: scale(1.1);
+    filter: grayscale(0%);
+    z-index: 1;
+    background-color: black;
+}
+
+.pokemon:hover {
+    filter: none !important;
+}
+
+.pokemon1{
+    clip-path: polygon(0 0, 18% 0, 8% 100%, 0% 100%);
+    background-position: 0 0;
+}
+
+.pokemon2{
+    clip-path: polygon(18% 0, 36% 0%, 26% 100%, 8% 100%);
+    background-position: 18% 0;
+}
+
+.pokemon3{
+    clip-path: polygon(36% 0, 54% 0, 44% 100%, 26% 100%);
+    background-position: 39% 0;
+}
+
+.pokemon4{
+    clip-path: polygon(54% 0, 73% 0, 63% 100%, 44% 100%);
+    background-position: 60% 0;
+}
+
+.pokemon5{
+    clip-path: polygon(73% 0, 92% 0, 82% 100%, 63% 100%);
+    background-position: 82% 0;
+}
+
+.pokemon6{
+    clip-path: polygon(92% 0, 100% 0, 100% 100%, 82% 100%);
+    background-position: 102% 0;
+}
+
+.pokemon1:hover{
+    clip-path: polygon(-5% 0, 23% 0, 13% 100%, -5% 100%);
+}
+
+.pokemon2:hover{
+    clip-path: polygon(18% 0, 36% 0, 26% 100%, 8% 100%);
+    background-position: 16% 0;
+}
+
+.pokemon3:hover{
+    clip-path: polygon(31% 0, 49% 0, 39% 100%, 21% 100%);
+    background-position: 34% 0;
+}
+
+.pokemon4:hover{
+    clip-path: polygon(49% 0, 68% 0, 58% 100%, 39% 100%);
+    background-position: 55% 0;
+}
+
+.pokemon5:hover{
+    clip-path: polygon(68% 0, 87% 0, 77% 100%, 58% 100%);
+    background-position: 75% 0;
+}
+
+.pokemon6:hover{
+    clip-path: polygon(87% 0, 105% 0, 105% 100%, 77% 100%);
+    background-position: 100% 0;
+>>>>>>> Frontend-formulario_añadir_pokemon
 }
