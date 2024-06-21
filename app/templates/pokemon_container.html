@@ -1,13 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a New Build</title>
     <link rel="stylesheet" href='../static/css/pokemon_container.css'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
-
 <body>
     <h1 id="title">CREATE A NEW BUILD</h1>
     <form action="" class="container_build_name">
@@ -46,42 +47,10 @@
     </div>
 
     <div class="btn_nav">
-        <button class="btn">Cancel</button>
+        <button class="btn">Cancel</button> <!-- Usar modulo botones cancel save -->
         <button class="btn">Save</button>
     </div>
+
+    <script src="/static/js/pokemon_container.js"></script>
 </body>
-
-<script>
-$(document).ready(function() {
-    $('.select-pokemon').select2({
-        tags: true,
-        placeholder: "Busca a tu pokemon...",
-        allowClear: true
-    });
-
-    function procesar_datos() {
-        var selectedOption = this.options[this.selectedIndex];
-        if (selectedOption.value !== "") {
-            var name = $(selectedOption).attr('data-name');
-            var lvl = $(selectedOption).attr('data-level');
-            $('.name').html(name);
-            $('.poke_LVL').html('LVL: ' + lvl);
-            for (var i = 1; i <= 4; i++) {
-                $('.poke_habilidad_' + i).html($(selectedOption).attr('data-ability-' + i));
-            }
-            // document.getElementsByClassName('img_pokemon').value = selectedOption.getAttribute('data-pokedex-id');
-        } else {
-            $('.poke_LVL').html("");
-            for (var i = 1; i <= 4; i++) {
-                $('.poke_habilidad_' + i).html("");
-            }
-        }
-    }
-    $('.pokemon_1').change(procesar_datos);
-    $('.pokemon_2').change(procesar_datos);
-    $('.pokemon_3').change(procesar_datos);
-    $('.pokemon_4').change(procesar_datos);
-    $('.pokemon_5').change(procesar_datos);
-    $('.pokemon_6').change(procesar_datos);
-});
-</script>
+</html>

@@ -6,6 +6,7 @@
     #000000
     #ffffff
 */
+@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
 
 .es-visible{
     color: #000000;
@@ -51,10 +52,24 @@ h1{
     text-align: center;
     font-size: 30px; 
 }
+
 .container_build_name input{
     font-size: 20px;
 }
 
+.select2-search__field{
+    background-color: black !important;
+    color: white !important;
+}
+
+.select2-results{
+    background-color: black !important;
+    scrollbar-color: #5e00ff #000000;
+}
+
+.select2-search{
+    background-color: black !important;
+}
 
 .img_pokemon{
     height: 200px;
@@ -63,12 +78,13 @@ h1{
     box-shadow: 0 0 20px #5e00ff;
     margin-right: 20px;
 }
-/* cont_1 */
+
 .pokemon_container{ 
     width: 800px;
     font-size: 2.5vh;
-    border: #5e00ff solid 10px;
-    border-radius: 10px;
+    box-shadow: 0 0 30px #5e00ff;
+    border: 2px solid white;
+    border-radius: 5px;
     text-align: center;
     margin: 20px;
 }
@@ -79,18 +95,16 @@ h1{
 }
 
 .info_container {
-
     margin: auto;
-    width:  360px;
+    width:  90%;
     display: flex;
     justify-content: space-between;
     justify-content: center;
     flex-wrap: wrap;
 }
-.info_container label{
 
-    width: 100px;
-    margin: 10px;
+.info_container label{
+    width: 50%;
 }
 
 select{
@@ -98,7 +112,7 @@ select{
     width: 120px;
     font-size: 20px;
 }
-    /* en margin en auto centra todo el contenido al medio */
+
 .form_pokemon {
     margin: auto;
 }   
@@ -112,8 +126,6 @@ select{
     height: 50px;
     width: 100px;
 }
-
-/* SEARCHBAR */
 
 .select2-container{
     width: 100% !important;
