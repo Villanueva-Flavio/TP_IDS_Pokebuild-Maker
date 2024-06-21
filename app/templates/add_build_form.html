@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a New Build</title>
+    <link rel="stylesheet" href='../static/css/add_build_form.css'>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+    <h1 id="title">CREATE A NEW BUILD</h1>
+    <form action="" class="container_build_name">
+        <label for="">BUILD NAME</label>
+        <input type="text">
+    </form>
+
+    <div class="container_all_pokemon">
+        {% for i in range (6) %}
+            <div class="pokemon_container">
+                <div class="search_container"> 
+                    <select name="" class="select-pokemon pokemon_{{i+1}}">
+                        <option value="">Seleccione un Pokemon</option>
+                        {%for pokemon in pokemons%}
+                            <option value="{{ pokemon.name }}" data-pokedex-id="{{ pokemon.especie }}" data-level='{{ pokemon.level }}'
+                            data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" 
+                            data-ability-4="{{ pokemon.ability_4 }}" data-name="{{pokemon.name}}">{{ pokemon.name }}</option>
+                        {%endfor%}
+                    </select> 
+                </div>
+                <div class="datos_container">    
+                    <div class="img_container">
+                        <img class="img_pokemon" src="../static/images/Logo.png">
+                    </div>
+                    <div class="info_container"> 
+                        <label for="" class="name">NAME: </label><br>
+                        <label for="" class="poke_LVL">LVL: </label><br>
+                        <label for="" class="poke_habilidad_1">ABILITY 1: </label><br>
+                        <label for="" class="poke_habilidad_2">ABILITY 2: </label><br>
+                        <label for="" class="poke_habilidad_3">ABILITY 3: </label><br>
+                        <label for="" class="poke_habilidad_4">ABILITY 4: </label>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="btn_nav">
+        <button class="btn">Cancel</button> <!-- Usar modulo botones cancel save -->
+        <button class="btn">Save</button>
+    </div>
+
+    <script src="/static/js/add_build_form.js"></script>
+</body>
+</html>

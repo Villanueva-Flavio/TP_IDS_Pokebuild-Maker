@@ -40,10 +40,10 @@ def get_build_dict(builds, pokemons):
     return build_dict
 
 
-def get_info_pokemons(pokemons): #pokemons es un json
+def get_info_pokemons(pokemons):
     info_dic = {}
-    i = 0 #debe tener abilidades, lvl, name -- claves('ability_1', 'ability_2', 'ability_3', 'ability_4', 'level', 'name')
-    for pokemon in pokemons: #cada pokemon representa un diccionario
+    i = 0
+    for pokemon in pokemons:
         info = {
             'ability_1' : pokemon['ability_1'],
             'ability_2' : pokemon['ability_2'],
@@ -61,7 +61,7 @@ def get_info_pokemons(pokemons): #pokemons es un json
 def get_pokemon_name_by_id(pokedex_id):
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokedex_id}')
     if response.status_code == 200:
-        pokemon_data = response.json()  # Aquí se corrige el uso de json()
+        pokemon_data = response.json()
         return pokemon_data['name']
     else:
         return None
@@ -71,10 +71,10 @@ def get_user_pokemons(user_id):
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
     pokemons_dict = []
     for pokemon in user_pokemons:
-        especie_pokemon= get_pokemon_name_by_id(pokemon['pokedex_id'])
+        fetched_pokemon = requests.get(f'http://pokebuild-backend:5000/api/pokemon/{pokemon["id"]}').json()
         build_row = {
             'name': pokemon['name'],
-            'especie': especie_pokemon,
+            'especie': fetched_pokemon['pokedex_id'],
             'level': pokemon['level'],
             'ability_1': pokemon['ability_1'],
             'ability_2': pokemon['ability_2'],
@@ -106,20 +106,14 @@ def build_list_container():
 def login_register():
     return render_template('login_register.html')
 
+@frontend_blueprint.route('/add_build_form/<user_id>', methods = ['GET', 'POST'])
+def pokemon_container(user_id): # cambiar user id cuando este el auth
+    pokemons_dic = get_user_pokemons(user_id)
+    return render_template('add_build_form.html', pokemons=pokemons_dic)
+    
 @frontend_blueprint.route('/add_pokemon_form', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
 def add_pokemon_form():
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     if request.method == "POST":
         return render_template("home.html")
     return render_template('add_pokemon_form.html', pokemons=pokemons['pokemons'])
-
-@frontend_blueprint.route('/pokemon_container/')
-def pokemon_container():
-    # user_id = 9 #quitar para despues
-    # pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
-    # asd = get_info_pokemons(pokemons)
-    # print(asd)
-    return render_template('pokemon_container.html') #, pokemons=asd
-    #pokemons_dic = get_user_pokemons(user_id)
-    #print(pokemons_dic)
-    #return render_template('pokemon_container.html', pokemons=pokemons_dic)
