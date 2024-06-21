@@ -16,6 +16,8 @@ POKEMONS_ROUTE = '/api/pokemons/'
 POKEMONS_QUERY = "SELECT * FROM POKEMON"
 POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>/'
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
+POST_POKEMON = '/api/add_pokemon/'
+POST_POKEMON_QUERY = "INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)"
 
 BUILDS_ROUTE = '/api/builds/'
 BUILDS_QUERY = "SELECT * FROM BUILDS"
@@ -89,7 +91,7 @@ def get_data(query):
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
     
-@api_blueprint.route('/api/add_pokemon', methods=['POST'])
+@api_blueprint.route('POST_POKEMON', methods=['POST'])
 def add_pokemon():
     try:
         pokemon_data = request.get_json()
@@ -97,13 +99,11 @@ def add_pokemon():
         if pokemon_data is None:
             return jsonify({'error': 'Invalid JSON or empty request body'}), 400
 
-        # Verificar la existencia de campos requeridos
         required_fields = ['pokedex_id', 'level', 'ability_1', 'owner_id']
         for field in required_fields:
             if field not in pokemon_data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
 
-        # Si todos los campos requeridos están presentes, proceder con el procesamiento
         pokedex_id = pokemon_data['pokedex_id']
         level = pokemon_data['level']
         name = pokemon_data.get('name', None)
@@ -113,11 +113,8 @@ def add_pokemon():
         ability_4 = pokemon_data.get('ability_4', None)
         owner_id = pokemon_data['owner_id']
 
-        # Insertar en la tabla POKEMON
         with engine.connect() as connection:
-            query = text("INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) "
-                         "VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)")
-            connection.execute(query, {
+            connection.execute(POST_POKEMON_QUERY, {
                 'pokedex_id': pokedex_id,
                 'level': level,
                 'name': name,
