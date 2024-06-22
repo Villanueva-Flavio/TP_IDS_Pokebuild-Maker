@@ -35,6 +35,22 @@ def get_build_dict(builds, pokemons):
 
     return build_dict
 
+def get_user_pokemons(user_id):
+    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_dict = []
+    for pokemon in user_pokemons:
+        fetched_pokemon = requests.get(f'http://pokebuild-backend:5000/api/pokemon/{pokemon["id"]}').json()
+        build_row = {
+            'name': pokemon['name'],
+            'especie': fetched_pokemon['pokedex_id'],
+            'level': pokemon['level'],
+            'ability_1': pokemon['ability_1'],
+            'ability_2': pokemon['ability_2'],
+            'ability_3': pokemon['ability_3'],
+            'ability_4':pokemon['ability_4']
+        }
+        pokemons_dict.append(build_row)
+    return pokemons_dict
 
 @frontend_blueprint.route('/')
 @frontend_blueprint.route('/home')
@@ -82,3 +98,8 @@ def delete_pokemon(owner_id):
         }
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
+
+@frontend_blueprint.route('/add_build_form/<user_id>', methods = ['GET', 'POST'])
+def pokemon_container(user_id): # cambiar user id cuando este el auth
+    pokemons_dic = get_user_pokemons(user_id)
+    return render_template('add_build_form.html', pokemons=pokemons_dic)
