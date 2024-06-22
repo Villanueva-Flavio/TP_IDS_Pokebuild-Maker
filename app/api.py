@@ -14,25 +14,30 @@ DB_PORT = os.getenv('DB_PORT')
 DB_NAME = os.getenv('DB_NAME')
 
 POKEMONS_ROUTE = '/api/pokemons/'
-POKEMONS_QUERY = "SELECT * FROM POKEMON" #imp
+POKEMONS_QUERY = "SELECT * FROM POKEMON"
 POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>/'
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
 POST_POKEMON = '/api/add_pokemon/'
-POST_POKEMON_QUERY = "INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)"
-POKEMONS_BY_USER_ROUTE = '/api/pokemons_by_user/<user_id>'
-POKEMONS_BY_USER_QUERY = "SELECT * FROM POKEMON WHERE owner_id = "
+POST_POKEMON_QUERY = """
+INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id)
+VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)
+"""
+DELETE_USER_POKEMON = '/api/delete_pokemon/<owner_id>/<pokemon_id>'
 
-BUILDS_ROUTE = '/api/builds/' #imp
+BUILDS_ROUTE = '/api/builds/'
 BUILDS_QUERY = "SELECT * FROM BUILDS"
 BUILD_ID_ROUTE = '/api/build/<build_id>/'
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
+
+
+USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
+USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
 
 USERS_ROUTE = '/api/users_profiles/'
 USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u;"
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
-
-REGISTER_ROUTE = '/api/register/'
+REGISTER = '/api/register/'
 LOGIN_ROUTE = '/api/login/'
 
 api_blueprint = Blueprint('api', __name__)
@@ -69,11 +74,10 @@ def get_users_profiles():
 def get_user_profile(user_id):
     return get_data(USER_ID_QUERY + user_id)
 
-# GET endpoint for pokemon by user_id
-@api_blueprint.route(POKEMONS_BY_USER_ROUTE, methods=['GET'])
-def get_pokemon_by_user(user_id):
-    return get_data(POKEMONS_BY_USER_QUERY + user_id)
-
+# GET endpoint for POKEMONS by USER
+@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
+def get_pokemons_by_user(owner_id):
+    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
 # GET endpoint for HOME
 @api_blueprint.route('/api', methods=['GET'])
 def api_home():
@@ -84,7 +88,6 @@ def api_home():
     }
     return jsonify(endpoints)
 
-# Function to get data from the database and returns it in a json
 def get_data(query):
     try:
         with engine.connect() as connection:
@@ -103,7 +106,7 @@ def get_data(query):
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
     
-@api_blueprint.route('POST_POKEMON', methods=['POST'])
+@api_blueprint.route(POST_POKEMON, methods=['POST'])
 def add_pokemon():
     try:
         pokemon_data = request.get_json()
@@ -116,25 +119,16 @@ def add_pokemon():
             if field not in pokemon_data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
 
-        pokedex_id = pokemon_data['pokedex_id']
-        level = pokemon_data['level']
-        name = pokemon_data.get('name', None)
-        ability_1 = pokemon_data['ability_1']
-        ability_2 = pokemon_data.get('ability_2', None)
-        ability_3 = pokemon_data.get('ability_3', None)
-        ability_4 = pokemon_data.get('ability_4', None)
-        owner_id = pokemon_data['owner_id']
-
         with engine.connect() as connection:
-            connection.execute(POST_POKEMON_QUERY, {
-                'pokedex_id': pokedex_id,
-                'level': level,
-                'name': name,
-                'ability_1': ability_1,
-                'ability_2': ability_2,
-                'ability_3': ability_3,
-                'ability_4': ability_4,
-                'owner_id': owner_id
+            connection.execute(text(POST_POKEMON_QUERY), {
+                'pokedex_id': pokemon_data['pokedex_id'],
+                'level': pokemon_data['level'],
+                'name': pokemon_data.get('name', None),
+                'ability_1': pokemon_data['ability_1'],
+                'ability_2': pokemon_data.get('ability_2', None),
+                'ability_3': pokemon_data.get('ability_3', None),
+                'ability_4': pokemon_data.get('ability_4', None),
+                'owner_id': pokemon_data['owner_id']
             })
 
         return jsonify({'message': 'Pokemon added successfully.'}), 200
@@ -162,8 +156,7 @@ def get_pokemon_moves(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 404
 
-# GET endpoint for getting all pokemons in the pokedex
-@api_blueprint.route('/api/get_all_pokemons/', methods=['GET'])
+@api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -172,6 +165,10 @@ def get_all_pokemons():
     for pokemon in pokemons:
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
+
+# POST endpoint for adding a new pokemon to a user
+@api_blueprint.route('/api/add_pokemon/<owner_id>', methods=['POST'])
+
 
 @api_blueprint.route('/api/types/<pokemon_id>/', methods=['GET'])
 def get_pokemon_types(pokemon_id):
@@ -208,61 +205,36 @@ def get_pokemon_types(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 400
 
-# Function to check if the id is an integer and returns it as an integer
-def to_int(id, field_name):
-    try:
-        id_int = int(id)
-        return id_int
-    except (ValueError, TypeError):
-        raise ValueError(f"{field_name} must be an integer")
-
-# POST endpoint for adding a new BUILD
-@api_blueprint.route(BUILDS_ROUTE, methods=['POST'])
-def add_build():
-    data_build = request.json
-    build_name = data_build.get('build_name', '')
-    owner_id = to_int(data_build.get('owner_id'), 'owner_id')
-    pokemon_id_1 = to_int(data_build.get('pokemon_id_1'), 'pokemon_id_1')
-    pokemon_id_2 = to_int(data_build.get('pokemon_id_2'), 'pokemon_id_2')
-    pokemon_id_3 = to_int(data_build.get('pokemon_id_3'), 'pokemon_id_3')
-    pokemon_id_4 = to_int(data_build.get('pokemon_id_4'), 'pokemon_id_4')
-    pokemon_id_5 = to_int(data_build.get('pokemon_id_5'), 'pokemon_id_5')
-    pokemon_id_6 = to_int(data_build.get('pokemon_id_6'), 'pokemon_id_6')
-    timestamp = data_build.get('timestamp', '')
-
-    if not build_name or not owner_id or not pokemon_id_1 or not timestamp:
-        return jsonify({'error': 'all fields should be complete'})
-    
-    add_build_query = """
-            INSERT INTO BUILDS 
-            (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp)
-            VALUES 
-            (:build_name, :owner_id, :pokemon_id_1, :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, :pokemon_id_5, :pokemon_id_6, :timestamp)
-        """
-    
+@api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'])
+def delete_pokemon(pokemon_id, owner_id):
     try:
         with engine.connect() as connection:
-            connection.execute(text(add_build_query), {
-                'build_name': build_name,
-                'owner_id': owner_id,
-                'pokemon_id_1': pokemon_id_1,
-                'pokemon_id_2': pokemon_id_2,
-                'pokemon_id_3': pokemon_id_3,
-                'pokemon_id_4': pokemon_id_4,
-                'pokemon_id_5': pokemon_id_5,
-                'pokemon_id_6': pokemon_id_6,
-                'timestamp': timestamp
-            })
-        return jsonify({'message': 'Build added successfully'})
-    
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error})
-    
-    except Exception as e:
-        return jsonify({'error': str(e)})
+            with connection.begin():
+                # Verificar si el Pokémon pertenece al usuario
+                verify_query = text("SELECT * FROM POKEMON WHERE id = :id AND owner_id = :owner_id")
+                result = connection.execute(verify_query, {"id": pokemon_id, "owner_id": owner_id}).fetchone()
+                
+                if not result:
+                    return {"error": f"Pokemon con id {pokemon_id} no pertenece al usuario con id {owner_id}."}, 404
 
-@api_blueprint.route(REGISTER_ROUTE, methods=['POST'])
+                # Eliminar el Pokémon
+                delete_pokemon_query = text("DELETE FROM POKEMON WHERE id = :id")
+                connection.execute(delete_pokemon_query, {"id": pokemon_id})
+
+                # Eliminar filas de la tabla BUILDS
+                delete_builds_query = text("DELETE FROM BUILDS WHERE pokemon_id_1 = :pokemon_id OR pokemon_id_2 = :pokemon_id OR pokemon_id_3 = :pokemon_id OR pokemon_id_4 = :pokemon_id OR pokemon_id_5 = :pokemon_id OR pokemon_id_6 = :pokemon_id")
+                connection.execute(delete_builds_query, {"pokemon_id": pokemon_id})
+
+            #reorder_nulls_to_end()
+
+        return {"message": f"Pokémon con id {pokemon_id} eliminado exitosamente."}, 200
+
+    except SQLAlchemyError as e:
+        error_message = f"Error al conectarse a la base de datos: {e}"
+        print(error_message)
+        return {"error": error_message}, 500
+    
+@api_blueprint.route(REGISTER, methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
@@ -277,12 +249,14 @@ def register():
         INSERT INTO USER (username, password, email, profile_picture)
         VALUES (:username, :password, :email, :profile_picture)
     """
-    
+
+    hashed_password = generate_password_hash(password)
+
     try:
         with engine.connect() as connection:
             connection.execute(add_user_query), {
                 'username': username,
-                'password': password,
+                'password': hashed_password,
                 'email': email,
                 'profile_picture': profile_picture
             }
@@ -293,7 +267,9 @@ def register():
         return jsonify({'error': error})
     except Exception as e:
         return jsonify({'error': str(e)})
+    
 
+# LOGIN user, checks if email and password are correct
 @api_blueprint.route(LOGIN_ROUTE, methods=['POST'])
 def login():
     data = request.json
@@ -302,7 +278,8 @@ def login():
 
     if not email or not password:
         return jsonify({'error': 'Email and password are required'})
-
+    if not is_valid_email(email):
+        return jsonify({'error': 'Invalid email format'})
     try:
         check_login_query = "SELECT id, username, password FROM USER WHERE email = :email"
         with engine.connect() as connection:
@@ -323,3 +300,25 @@ def login():
         return jsonify({'error': error}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+#REGEX -> abc@s.c
+def is_valid_email(email):
+    if not email:
+        return False
+
+    parts = email.split('@')
+    if len(parts) != 2:
+        return False
+    
+    local_part, domain_part = parts
+    if local_part < 3:
+        return False
+    if not domain_part or len(domain_part) < 1:
+        return False
+    if '.' not in domain_part or len(domain_part.split('.')[-1]) < 1:
+        return False
+    # para que no exista un mail: 'hola@.com'
+    if domain_part.startswith('.'):
+        return False
+
+    return True
