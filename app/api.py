@@ -33,6 +33,8 @@ BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
 
 USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
 USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
+USER_ID_BUILDS_ROUTE = "SELECT id, build_name, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp FROM BUILDS WHERE owner_id ="
+
 
 USERS_ROUTE = '/api/users_profiles/'
 USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u;"
@@ -379,3 +381,6 @@ def add_build():
     except Exception as e:
         return jsonify({'Error': str(e)})
     
+@api_blueprint.route('/api/builds_by_user/<owner_id>', methods=['GET'])
+def get_build_by_user(owner_id):
+    return get_data( USER_ID_BUILDS_ROUTE + owner_id)

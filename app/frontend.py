@@ -111,10 +111,34 @@ def get_user_pokemons(user_id):
         pokemons_dict.append(build_row)
     return pokemons_dict
 
+def get_user_builds(user_id):
+    user_builds=requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
+    builds_dict = []
+    for build in user_builds:
+        build_row = {
+            'id': build['id'],
+            'build_name': build['build_name'],
+            'pokemon_id_1': build['pokemon_id_1'],
+            'pokemon_id_2': build['pokemon_id_2'],
+            'pokemon_id_3': build['pokemon_id_3'],
+            'pokemon_id_4': build['pokemon_id_4'],
+            'pokemon_id_5': build['pokemon_id_5'],
+            'pokemon_id_6': build['pokemon_id_6'],
+            'timestamp': build['timestamp']
+        }
+        builds_dict.append(build_row)
+    return builds_dict
+
 @frontend_blueprint.route('/add_build_form/<owner_id>', methods = ['GET', 'POST'])
 def pokemon_container(owner_id): # cambiar user id cuando este el auth
     pokemons_dic = get_user_pokemons(owner_id)
     return render_template('add_build_form.html', pokemons=pokemons_dic, owner_id=owner_id)  
+
+@frontend_blueprint.route('/modify_build_form/<owner_id>', methods = ['GET', 'POST'])
+def sasa(owner_id): # cambiar user id cuando este el auth
+    pokemons_dic = get_user_pokemons(owner_id)
+    builds_dic=get_user_builds(owner_id)
+    return render_template('modify_build_form.html', pokemons=pokemons_dic, builds = builds_dic, owner_id=owner_id) 
 
 @frontend_blueprint.route('/delete_pokemon_form/<owner_id>')
 def delete_pokemon(owner_id):
