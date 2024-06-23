@@ -322,6 +322,49 @@ def is_valid_email(email):
 
     return True
 
+#POST endpoint for adding a new USER   
+@api_blueprint.route('/api/add_user', methods=['POST'])
+def add_user():
+    data_user = request.json
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+
+    try:
+        with engine.connect() as connection:
+            add_user_query = "INSERT INTO USER (username, password, email, profile_picture) VALUES"
+            connection.execute(add_user_query, (username, password, email, profile_picture))
+        return jsonify({'message':'User added successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
+#POST endpoint for modify an existing USER
+@api_blueprint.route('/api/mod_user/<user_id>', methods=['POST'])
+def mod_user(user_id):
+    data_user = request.json
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+
+    try:
+        with engine.connect() as connection:
+            mod_user_query = "UPDATE USER SET username, password, email, profile_picture WHERE id"
+            connection.execute(mod_user_query, (username, password, email, profile_picture, user_id))
+        return jsonify({'message': f'User with id {user_id} modified successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
 
 # POST endpoint for adding a new BUILD
 @api_blueprint.route('/api/add_build/', methods=['POST'])
@@ -378,4 +421,62 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+
+# POST endpoint for modify an existing BUILD
+@api_blueprint.route('/api/mod_build/<build_id>', methods=['POST'])
+def mod_build(build_id):
+    data_build = request.json
+    build_name = data_build.get('build_name', '')
+    owner_id = data_build.get('owner_id', None)
+    pokemon_id_1 = data_build.get('pokemon_id_1', None)
+    pokemon_id_2 = data_build.get('pokemon_id_2', None)
+    pokemon_id_3 = data_build.get('pokemon_id_3', None)
+    pokemon_id_4 = data_build.get('pokemon_id_4', None)
+    pokemon_id_5 = data_build.get('pokemon_id_5', None)
+    pokemon_id_6 = data_build.get('pokemon_id_6', None)
+    timestamp = data_build.get('timestamp', '')
+
+    # Validar los valores recibidos
+    if not build_name:
+        return jsonify({'Error': 'build_name must not be empty'})
+    if owner_id is None:
+        return jsonify({'Error': 'owner_id must not be None'})
+    if timestamp is None:
+        return jsonify({'Error': 'timestamp must not be None'})
     
+    mod_build_query = f"""
+                    UPDATE BUILDS SET
+                    build_name = :build_name,
+                    owner_id = :owner_id,
+                    pokemon_id_1 = :pokemon_id_1,
+                    pokemon_id_2 = :pokemon_id_2,
+                    pokemon_id_3 = :pokemon_id_3,
+                    pokemon_id_4 = :pokemon_id_4,
+                    pokemon_id_5 = :pokemon_id_5,
+                    pokemon_id_6 = :pokemon_id_6,
+                    timestamp = :timestamp
+                    WHERE id = {build_id}
+                    """
+    
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(mod_build_query), {
+                'build_name': build_name,
+                'owner_id': owner_id,
+                'pokemon_id_1': pokemon_id_1,
+                'pokemon_id_2': pokemon_id_2,
+                'pokemon_id_3': pokemon_id_3,
+                'pokemon_id_4': pokemon_id_4,
+                'pokemon_id_5': pokemon_id_5,
+                'pokemon_id_6': pokemon_id_6,
+                'timestamp': timestamp,
+                'build_id':build_id
+            })
+        return jsonify({'Message': f'Build with id: {build_id} modified successfully'})
+    
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'Error1': error})
+    
+    except Exception as e:
+        return jsonify({'Error2': str(e)})
