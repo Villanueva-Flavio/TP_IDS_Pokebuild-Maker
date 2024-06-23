@@ -69,6 +69,37 @@ def test():
     return render_template('searchbar_testing.html', pokemons=pokemons['pokemons'])
 
 
+def get_pokemon_name_by_id(pokedex_id):
+    response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokedex_id}')
+    if response.status_code == 200:
+        pokemon_data = response.json()
+        return pokemon_data['name']
+    else:
+        return None
+
+def get_user_pokemons(user_id):
+    user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_dict = []
+    for pokemon in user_pokemons:
+        fetched_pokemon = requests.get(f'http://pokebuild-backend:5000/api/pokemon/{pokemon["id"]}').json()
+        build_row = {
+            'id': pokemon['id'],
+            'name': pokemon['name'],
+            'especie': fetched_pokemon['pokedex_id'],
+            'level': pokemon['level'],
+            'ability_1': pokemon['ability_1'],
+            'ability_2': pokemon['ability_2'],
+            'ability_3': pokemon['ability_3'],
+            'ability_4':pokemon['ability_4']
+        }
+        pokemons_dict.append(build_row)
+    return pokemons_dict
+
+@frontend_blueprint.route('/add_build_form/<owner_id>', methods = ['GET', 'POST'])
+def pokemon_container(owner_id): # cambiar user id cuando este el auth
+    pokemons_dic = get_user_pokemons(owner_id)
+    return render_template('add_build_form.html', pokemons=pokemons_dic, owner_id=owner_id)  
+
 @frontend_blueprint.route('/delete_pokemon_form/<owner_id>')
 def delete_pokemon(owner_id):
     if request.method == 'POST':

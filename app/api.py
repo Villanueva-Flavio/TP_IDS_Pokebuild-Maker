@@ -3,6 +3,7 @@ from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -166,9 +167,6 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
-# POST endpoint for adding a new pokemon to a user
-@api_blueprint.route('/api/add_pokemon/<owner_id>', methods=['POST'])
-
 
 @api_blueprint.route('/api/types/<pokemon_id>/', methods=['GET'])
 def get_pokemon_types(pokemon_id):
@@ -322,3 +320,61 @@ def is_valid_email(email):
         return False
 
     return True
+
+
+# POST endpoint for adding a new BUILD
+@api_blueprint.route('/api/add_build/', methods=['POST'])
+def add_build():
+    data_build = request.json
+
+    build_name = data_build.get('build_name', '')
+    owner_id = data_build.get('owner_id', None)
+    pokemon_id_1 = data_build.get('pokemon_id_1', None)
+    pokemon_id_2 = data_build.get('pokemon_id_2', None)
+    pokemon_id_3 = data_build.get('pokemon_id_3', None)
+    pokemon_id_4 = data_build.get('pokemon_id_4', None)
+    pokemon_id_5 = data_build.get('pokemon_id_5', None)
+    pokemon_id_6 = data_build.get('pokemon_id_6', None)
+    timestamp = data_build.get('timestamp', '')
+
+    # Validar los valores recibidos
+    if not build_name:
+        return jsonify({'Error': 'build_name must not be empty'})
+    if owner_id is None:
+        return jsonify({'Error': 'owner_id must not be None'})
+    if timestamp is None:
+        return jsonify({'Error': 'timestamp must not be None'})
+    
+    add_build_query = """
+            INSERT INTO BUILDS 
+            (build_name, owner_id, pokemon_id_1, pokemon_id_2, 
+            pokemon_id_3, pokemon_id_4, pokemon_id_5, 
+            pokemon_id_6, timestamp)
+            VALUES 
+            (:build_name, :owner_id, :pokemon_id_1, 
+            :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, 
+            :pokemon_id_5, :pokemon_id_6, :timestamp)
+        """
+    
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(add_build_query), {
+                'build_name': build_name,
+                'owner_id': owner_id,
+                'pokemon_id_1': pokemon_id_1,
+                'pokemon_id_2': pokemon_id_2,
+                'pokemon_id_3': pokemon_id_3,
+                'pokemon_id_4': pokemon_id_4,
+                'pokemon_id_5': pokemon_id_5,
+                'pokemon_id_6': pokemon_id_6,
+                'timestamp': timestamp
+            })
+        return jsonify({'Message': 'Build added successfully'})
+    
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'Error': error})
+    
+    except Exception as e:
+        return jsonify({'Error': str(e)})
+    
