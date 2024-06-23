@@ -153,3 +153,7 @@ def delete_pokemon(owner_id):
         }
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
+
+@frontend_blueprint.route('/user_profile')
+def user_profile():
+    return render_template('user_profile.html')
