@@ -154,6 +154,23 @@ def delete_pokemon(owner_id):
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
 
-@frontend_blueprint.route('/user_profile')
-def user_profile():
-    return render_template('user_profile.html')
+@frontend_blueprint.route('/user_profile/<user_id>')
+def user_profile(user_id):
+    user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
+    pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
+
+    build_dict = {}
+    
+    for build in user_builds:
+        result = get_pokedex_id(get_pokemon_id(build), pokemons)
+        build_row = {
+            'owner_id': user_id,
+            'build_name': build['build_name'],
+            'timestamp': build['timestamp']
+        }
+
+        for j in range(6):
+            build_row[f'pokemon_id_{j+1}'] = result[j]
+        build_dict[build['id']] = build_row
+
+    return render_template('user_profile.html', build_dict=build_dict)
