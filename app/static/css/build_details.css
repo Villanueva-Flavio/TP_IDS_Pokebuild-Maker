@@ -1,0 +1,40 @@
+#build-details-container {
+    width: 22%;
+    height: 100%;
+    float: right;
+    background: linear-gradient(to bottom, #5e00ff, #2f006f);
+    color: white;
+    padding: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    -webkit-box-reflect: below 2px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(70%, transparent), to(rgba(255, 255, 255, 0.75)));
+    border-radius: 5px;
+}
+
+#build-details-name {
+    font-family: "Tiny5", sans-serif;
+    font-size: 2.5em;
+}
+
+#build-details-pokemons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    align-items: center;
+}
+
+#build-details-pokemons .pokemon {
+    width: 170px;
+    height: 170px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin: 5px;
+    border: 2px solid white;
+    border-radius: 5px;
+}
