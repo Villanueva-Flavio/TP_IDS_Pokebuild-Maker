@@ -160,7 +160,6 @@ def user_profile(user_id):
     pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
 
     build_dict = {}
-    
     for build in user_builds:
         result = get_pokedex_id(get_pokemon_id(build), pokemons)
         build_row = {

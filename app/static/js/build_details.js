@@ -18,8 +18,7 @@ document.querySelectorAll('.build-container').forEach(container => {
         pokemonIds.forEach(pokemon => {
             const div = document.createElement('div');
             div.classList.add('pokemon');
-            // Extraer la URL de backgroundImage
-            const url = pokemon.slice(5, -2); // Remover url(" al inicio y ") al final
+            const url = pokemon.slice(5, -2);
             div.style.backgroundImage = `url(${url})`;
             buildDetailsPokemons.appendChild(div);
         });
