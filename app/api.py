@@ -269,3 +269,29 @@ def del_user(user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+# POST endpoint para eliminar una BUILD por su ID (primary key)
+@api_blueprint.route('/api/delete_build/', methods=['POST'])
+def delete_build():
+    data = request.json
+    build_id = data.get('build_id')
+
+    if not build_id:
+        return jsonify({'error': 'build_id is required'})
+
+    try:
+        with engine.connect() as connection:
+            delete_build_query = """
+                DELETE FROM BUILDS 
+                WHERE id = :build_id
+            """
+            result = connection.execute(delete_build_query, {'build_id': build_id})
+            # Verifica si se eliminó una fila
+            if result.rowcount == 0:
+                return jsonify({'error': f'Build with id {build_id} not found'})
+            
+            return jsonify({'message': f'Build with id {build_id} deleted successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
