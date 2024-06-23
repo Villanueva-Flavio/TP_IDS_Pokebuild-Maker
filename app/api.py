@@ -23,17 +23,22 @@ POST_POKEMON_QUERY = """
 INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id)
 VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)
 """
+POKEMONS_MOVES_ROUTE='/api/moves/<pokemon_id>'
+POKEMONS_GET_ALL_ROUTE='/api/get_all_pokemons'
+POKEMONS_TYPES_ROUTE='/api/types/<pokemon_id>/'
+
 DELETE_USER_POKEMON = '/api/delete_pokemon/<owner_id>/<pokemon_id>'
 
 BUILDS_ROUTE = '/api/builds/'
 BUILDS_QUERY = "SELECT * FROM BUILDS"
 BUILD_ID_ROUTE = '/api/build/<build_id>/'
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
-
+ADD_BUILD_ROUTE='/api/add_build/'
 
 USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
 USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
-USER_ID_BUILDS_ROUTE = "SELECT id, build_name, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp FROM BUILDS WHERE owner_id ="
+USER_ID_BUILDS_ROUTE='/api/builds_by_user/<owner_id>'
+USER_ID_BUILDS_QUERY = "SELECT id, build_name, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp FROM BUILDS WHERE owner_id ="
 
 
 USERS_ROUTE = '/api/users_profiles/'
@@ -148,7 +153,7 @@ def add_pokemon():
         return jsonify({'error': str(e)}), 500
 
 
-@api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
+@api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
     url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
@@ -160,7 +165,7 @@ def get_pokemon_moves(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 404
 
-@api_blueprint.route('/api/get_all_pokemons', methods=['GET'])
+@api_blueprint.route(POKEMONS_GET_ALL_ROUTE, methods=['GET'])
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -171,7 +176,7 @@ def get_all_pokemons():
     return jsonify({'pokemons': pokemons})
 
 
-@api_blueprint.route('/api/types/<pokemon_id>/', methods=['GET'])
+@api_blueprint.route(POKEMONS_TYPES_ROUTE, methods=['GET'])
 def get_pokemon_types(pokemon_id):
     pokemon_id = pokemon_id.lower()
     url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
@@ -326,7 +331,7 @@ def is_valid_email(email):
 
 
 # POST endpoint for adding a new BUILD
-@api_blueprint.route('/api/add_build/', methods=['POST'])
+@api_blueprint.route(ADD_BUILD_ROUTE, methods=['POST'])
 def add_build():
     data_build = request.json
 
@@ -381,6 +386,6 @@ def add_build():
     except Exception as e:
         return jsonify({'Error': str(e)})
     
-@api_blueprint.route('/api/builds_by_user/<owner_id>', methods=['GET'])
+@api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'])
 def get_build_by_user(owner_id):
-    return get_data( USER_ID_BUILDS_ROUTE + owner_id)
+    return get_data( USER_ID_BUILDS_QUERY + owner_id)
