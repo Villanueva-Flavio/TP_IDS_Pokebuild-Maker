@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from datetime import datetime
 from dotenv import load_dotenv
+import mysql.connector
 
 load_dotenv()
 
@@ -27,7 +28,7 @@ POKEMONS_MOVES_ROUTE='/api/moves/<pokemon_id>'
 POKEMONS_GET_ALL_ROUTE='/api/get_all_pokemons'
 POKEMONS_TYPES_ROUTE='/api/types/<pokemon_id>/'
 
-DELETE_USER_POKEMON = '/api/delete_pokemon/<owner_id>/<pokemon_id>'
+DELETE_USER_POKEMON = '/api/delete_pokemon/<int:owner_id>/<int:pokemon_id>'
 
 BUILDS_ROUTE = '/api/builds/'
 BUILDS_QUERY = "SELECT * FROM BUILDS"
@@ -211,27 +212,79 @@ def get_pokemon_types(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 400
 
+def reorder_nulls_to_end():
+    try:
+        conn = mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME
+        )
+
+        cursor = conn.cursor()
+
+        query = "SELECT * FROM BUILDS"
+        cursor.execute(query)
+        builds = cursor.fetchall()
+
+        updated_builds = []
+
+        for build in builds:
+            pokemon_ids = [build[2], build[3], build[4], build[5], build[6], build[7]]
+
+            sorted_pokemon_ids = sorted(pokemon_ids, key=lambda x: x is None)
+
+            updated_build = (
+                build[1],  
+                sorted_pokemon_ids[0],
+                sorted_pokemon_ids[1],
+                sorted_pokemon_ids[2],
+                sorted_pokemon_ids[3],
+                sorted_pokemon_ids[4],
+                sorted_pokemon_ids[5],
+                build[8],
+                build[9]
+            )
+
+            updated_builds.append(updated_build)
+
+        update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
+        for idx, updated_build in enumerate(updated_builds):
+            cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        print("Tabla BUILDS actualizada exitosamente.")
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+
+
+#DELETE endport for POKEMON by ID
 @api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'])
 def delete_pokemon(pokemon_id, owner_id):
     try:
         with engine.connect() as connection:
             with connection.begin():
-                # Verificar si el Pokémon pertenece al usuario
-                verify_query = text("SELECT * FROM POKEMON WHERE id = :id AND owner_id = :owner_id")
-                result = connection.execute(verify_query, {"id": pokemon_id, "owner_id": owner_id}).fetchone()
-                
-                if not result:
-                    return {"error": f"Pokemon con id {pokemon_id} no pertenece al usuario con id {owner_id}."}, 404
 
-                # Eliminar el Pokémon
-                delete_pokemon_query = text("DELETE FROM POKEMON WHERE id = :id")
-                connection.execute(delete_pokemon_query, {"id": pokemon_id})
+                delete_pokemon_query = text("DELETE FROM POKEMON WHERE id = :id AND owner_id = :owner_id")
+                connection.execute(delete_pokemon_query, {"id": pokemon_id, "owner_id":owner_id})
 
-                # Eliminar filas de la tabla BUILDS
-                delete_builds_query = text("DELETE FROM BUILDS WHERE pokemon_id_1 = :pokemon_id OR pokemon_id_2 = :pokemon_id OR pokemon_id_3 = :pokemon_id OR pokemon_id_4 = :pokemon_id OR pokemon_id_5 = :pokemon_id OR pokemon_id_6 = :pokemon_id")
-                connection.execute(delete_builds_query, {"pokemon_id": pokemon_id})
+                update_cases = ', '.join([
+                    f"pokemon_id_{i} = CASE WHEN pokemon_id_{i} = :pokemon_id THEN NULL ELSE pokemon_id_{i} END"
+                    for i in range(1, 7)
+                ])
 
-            #reorder_nulls_to_end()
+                update_builds_query = text(f"""
+                UPDATE BUILDS
+                SET {update_cases}
+                """)
+                connection.execute(update_builds_query, {"pokemon_id": pokemon_id})
+
+        reorder_nulls_to_end()
 
         return {"message": f"Pokémon con id {pokemon_id} eliminado exitosamente."}, 200
 
