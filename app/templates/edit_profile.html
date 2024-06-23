@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify Profile</title>
+    <style>
+        .hidden { display: none; }
+        
+    </style> 
+</head>
+<body>
+
+    <h1>Edit Profile</h1>
+
+    <div class="form-container">
+        <form action="/update_profile" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <br>
+
+            <div class="form-actions">
+                <button type="button" class="cancel" onclick="window.location.href='/profile'">Cancel</button>
+                <button type="submit" class="save">Save</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

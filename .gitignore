@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ./app/__pycache__/
 ./app/.env
 __pycache__/
@@ -11,7 +10,3 @@ app/.env
 .vscode/
 .idea/
 *.swp
-=======
-./app/__pycache__/
-./app/.env
->>>>>>> Frontend-formulario_añadir_pokemon

@@ -79,6 +79,7 @@ def get_user_profile(user_id):
 @api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
 def get_pokemons_by_user(owner_id):
     return get_data(USER_ID_POKEMONS_QUERY + owner_id)
+
 # GET endpoint for HOME
 @api_blueprint.route('/api', methods=['GET'])
 def api_home():
