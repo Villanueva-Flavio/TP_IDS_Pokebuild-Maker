@@ -470,7 +470,7 @@ def mod_build(build_id):
                 'pokemon_id_5': pokemon_id_5,
                 'pokemon_id_6': pokemon_id_6,
                 'timestamp': timestamp,
-                'build_id':build_id
+                'build_id': build_id
             })
         return jsonify({'Message': f'Build with id: {build_id} modified successfully'})
     
@@ -480,3 +480,53 @@ def mod_build(build_id):
     
     except Exception as e:
         return jsonify({'Error2': str(e)})
+
+#POST endpoint for modify an existing POKEMON
+@api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'])
+def mod_pokemon(pokemon_id):
+    data = request.json
+    name = data.get('name')
+    pokedex_id = data.get('pokedex_id')
+    level = data.get('level')
+    ability_1 = data.get('ability_1')
+    ability_2 = data.get('ability_2')
+    ability_3 = data.get('ability_3')
+    ability_4 = data.get('ability_4')
+    owner_id = data.get('owner_id')
+
+    if not name or not pokedex_id or not level or not ability_1 or not ability_2 or not ability_3 or not ability_4 or not owner_id:
+        return jsonify({'error': 'All fields are required'})
+
+    mod_pokemon_query = f"""
+                        UPDATE POKEMON SET 
+                        name = :name, 
+                        pokedex_id = :pokedex_id, 
+                        level = :level, 
+                        ability_1 = :ability_1, 
+                        ability_2 = :ability_2, 
+                        ability_3 = :ability_3, 
+                        ability_4 = :ability_4, 
+                        owner_id = :owner_id
+                        WHERE id = {pokemon_id}
+                        """
+
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(mod_pokemon_query), {
+                'name': name,
+                'pokedex_id': pokedex_id,
+                'level': level,
+                'ability_1': ability_1,
+                'ability_2': ability_2,
+                'ability_3': ability_3,
+                'ability_4': ability_4,
+                'owner_id': owner_id,
+                'pokemon_id': pokemon_id
+            })
+        return jsonify({'message': f'Pokemon with id: {pokemon_id} modified successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+    except Exception as e:
+        return jsonify({'error': str(e)})
