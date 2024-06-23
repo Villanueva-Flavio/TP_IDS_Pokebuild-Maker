@@ -73,6 +73,8 @@ def get_user_pokemons(user_id):
         especie_pokemon= get_pokemon_name_by_id(pokemon['pokedex_id'])
         build_row = {
             'name': pokemon['name'],
+            'id': pokemon['id'],
+            'pokedex_id': pokemon['pokedex_id'],
             'especie': especie_pokemon,
             'level': pokemon['level'],
             'ability_1': pokemon['ability_1'],
@@ -83,9 +85,10 @@ def get_user_pokemons(user_id):
         pokemons_dict.append(build_row)
     return pokemons_dict
 
-@frontend_blueprint.route('/formulario_modificar_pokemon/<user_id>', methods=['GET','POST'])
-def formulario_modificar_pokemon(user_id):
-    if request.method == 'POST':
-        return render_template('home.html')
-    pokemons_dict = get_user_pokemons(user_id)
-    return render_template('formulario_modificar_pokemon.html', pokemons = pokemons_dict)
+@frontend_blueprint.route('/formulario_modificar_pokemon/<owner_id>')
+def formulario_modificar_pokemon(owner_id):
+    pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
+    user_pokemons = get_user_pokemons(owner_id)
+    if request.method == "POST":
+        return render_template("home.html")
+    return render_template('formulario_modificar_pokemon.html', pokemons=pokemons['pokemons'], owner_id=owner_id, user_pokemons=user_pokemons)

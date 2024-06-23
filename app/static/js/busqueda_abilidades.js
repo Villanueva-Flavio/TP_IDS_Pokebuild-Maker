@@ -56,20 +56,6 @@ document.getElementById('poke_name').addEventListener('change', function() {
     }
 });
 
-$(document).ready(function() {
-    $('.select-pokemon').select2({
-        tags: true,
-        placeholder: "Busca a tu pokemon...",
-        allowClear: true
-    });
-
-    $('.select-ability').select2({
-        tags: true,
-        placeholder: "Elige tu movimiento...",
-        allowClear: true
-    });
-var owner_id = "{{ owner_id }}";
-var pokemon_id;
 $('.select-pokemon').on('change', function() {
     pokemon_id = $(this).val();
 
@@ -154,5 +140,4 @@ $('#add_pokemon_btn').on('click', function() {
     .catch(error => {
         console.error('Error al enviar la solicitud:', error);
     });
-});
 });
