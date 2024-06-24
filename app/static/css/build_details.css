@@ -28,17 +28,9 @@
     border-radius: 5px;
 }
 
-#build-details-name.not-empty {
-    display: block;
-}
-
 #build-details-name::-webkit-scrollbar {
     width: 5px;
     height: 10px;
-}
-
-#build-details-name::-webkit-scrollbar-track {
-    background: transparent;
 }
 
 #build-details-name::-webkit-scrollbar-thumb {
