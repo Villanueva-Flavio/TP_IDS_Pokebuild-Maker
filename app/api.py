@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from datetime import datetime
 from dotenv import load_dotenv
+import re
 import mysql.connector
 
 
@@ -43,6 +44,7 @@ USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FR
 REGISTER = '/api/register/'
 LOGIN_ROUTE = '/api/login/'
 
+REGISTER_ROUTE = '/api/register/'
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -214,6 +216,14 @@ def reorder_nulls_to_end():
             password=DB_PASSWORD,
             database=DB_NAME
         )
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex, email) is not None
+
+def is_valid_password(password):
+    # Minimum 8 characters, at least one letter and one number
+    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+    return re.match(regex, password) is not None
 
         cursor = conn.cursor()
 
@@ -322,61 +332,6 @@ def register():
         return jsonify({'error': str(e)})
     
 
-# LOGIN user, checks if email and password are correct
-@api_blueprint.route(LOGIN_ROUTE, methods=['POST'])
-def login():
-    data = request.json
-    email = data.get('email')
-    password = data.get('password')
-
-    if not email or not password:
-        return jsonify({'error': 'Email and password are required'})
-    if not is_valid_email(email):
-        return jsonify({'error': 'Invalid email format'})
-    try:
-        check_login_query = "SELECT id, username, password FROM USER WHERE email = :email"
-        with engine.connect() as connection:
-            result = connection.execute(text(check_login_query), {'email': email})
-            user = result.fetchone()
-        
-        if user:
-            user_id, username, hashed_password = user
-            if check_password_hash(hashed_password, password):
-                return jsonify({"message": "Login successful", "user_id": user_id, "username": username})
-            else:
-                return jsonify({"error": "Invalid password"})
-        else:
-            return jsonify({"error": "Email not found"})
-
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error}), 500
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-#REGEX -> abc@s.c
-def is_valid_email(email):
-    if not email:
-        return False
-
-    parts = email.split('@')
-    if len(parts) != 2:
-        return False
-    
-    local_part, domain_part = parts
-    if local_part < 3:
-        return False
-    if not domain_part or len(domain_part) < 1:
-        return False
-    if '.' not in domain_part or len(domain_part.split('.')[-1]) < 1:
-        return False
-    # para que no exista un mail: 'hola@.com'
-    if domain_part.startswith('.'):
-        return False
-
-    return True
-
-
 # POST endpoint for adding a new BUILD
 @api_blueprint.route('/api/add_build/', methods=['POST'])
 def add_build():
@@ -432,4 +387,45 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+    
+
+@api_blueprint.route('/api/register/', methods=['POST'])
+def register():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    profile_picture = data.get('profile_picture')
+
+    # Check for missing fields
+    if not username or not password or not email or not profile_picture:
+        return jsonify({'error': 'Username, password, email, and profile_picture are required'}), 400
+    
+    # Validate email
+    if not is_valid_email(email):
+        return jsonify({'error': 'Invalid email'}), 400
+
+    # Validate password
+    if not is_valid_password(password):
+        return jsonify({'error': 'Invalid password'}), 400
+    
+    # Hash the password
+    hashed_password = generate_password_hash(password)
+    
+    add_user_query = """
+        INSERT INTO USER (username, password, email, profile_picture)
+        VALUES (%s, %s, %s, %s)
+    """
+
+    try:
+        with engine.connect() as connection:
+            connection.execute(add_user_query, (username, hashed_password, email, profile_picture))
+        return jsonify({"message": "User registered successfully"}), 201
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
     
