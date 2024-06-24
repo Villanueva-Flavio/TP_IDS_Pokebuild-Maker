@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from dotenv import load_dotenv
+from re import search
 
 load_dotenv()
 
@@ -120,6 +121,18 @@ def is_valid_email(email):
 
     return True
 
+# Valida la contraseña, debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula y un número
+def is_valid_password(password):
+    if len(password) < 8:
+        return False
+    if not search("[a-z]", password):
+        return False
+    if not search("[A-Z]", password):
+        return False
+    if not search("[0-9]", password):
+        return False
+    return True
+
 
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
@@ -220,6 +233,9 @@ def register():
     
     if not is_valid_email(email):
         return jsonify({'error': 'Invalid email, it must have this format: abc@d.e'})
+    
+    if not is_valid_password(password):
+        return jsonify({'error': 'Invalid Password, it must be at least 8 characters, including an uppercase letter, a lowercase letter, and a number'})
     
     add_user_query = """
         INSERT INTO USER (username, password, email, profile_picture)
