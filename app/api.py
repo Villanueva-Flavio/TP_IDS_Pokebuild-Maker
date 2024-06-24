@@ -362,8 +362,8 @@ def register():
     profile_picture = data.get('profile_picture')
 
     # Check for missing fields
-    if not username or not password or not email or not profile_picture:
-        return jsonify({'error': 'Username, password, email, and profile_picture are required'}), 400
+    if not username or not password or not email:
+        return jsonify({'error': 'Username, password and email are required'}), 400
     
     # Validate email
     if not is_valid_email(email):

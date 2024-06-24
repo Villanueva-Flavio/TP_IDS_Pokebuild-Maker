@@ -17,10 +17,11 @@
             <label for="password_input" class="label_login_register">PASSWORD:</label>
             <input type="password" id="password_input" placeholder="my_password12345" class="login_register_input">
             <div class="buttons_container_login_register_form">
+                <button type="submit" class="login_register_button" onclick="redirectToSignUp()">SIGN UP</button>
                 <button type="submit" class="login_register_button">LOG IN</button>
-                <button type="submit" class="login_register_button">SIGN UP</button>
             </div>
         </div>
     </form>
+    <script src="{{ url_for('static', filename='js/login.js') }}" ></script>
 </body>
 </html>

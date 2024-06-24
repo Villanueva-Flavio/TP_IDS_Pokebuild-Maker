@@ -21,10 +21,11 @@
             <label for="repeat_password_input" class="label_login_register">PASSWORD:</label>
             <input type="password" id="repeat_password_input" placeholder="my_password12345" class="login_register_input">
             <div class="buttons_container_login_register_form">
-                <button type="submit" class="login_register_button">LOG IN</button>
+                <button type="submit" class="login_register_button" onclick="redirectToLogin()">LOG IN</button>
                 <button type="submit" class="login_register_button">SIGN UP</button>
             </div>
         </div>
     </form>
+    <script src="{{ url_for('static', filename='js/register.js') }}" ></script>
 </body>
 </html>
