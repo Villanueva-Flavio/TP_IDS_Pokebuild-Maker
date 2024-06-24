@@ -172,4 +172,4 @@ def user_profile(user_id):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
 
-    return render_template('user_profile.html', build_dict=build_dict)
+    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id)
