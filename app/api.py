@@ -30,7 +30,7 @@ USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 
-REGISTER = '/api/register/'
+REGISTER_ROUTE = '/api/register/'
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -97,7 +97,30 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-    
+
+#Valida si el email tiene el formato 'abc@d.e'
+def is_valid_email(email):
+    if not email:
+        return False
+
+    parts = email.split('@')
+    if len(parts) != 2:
+        return False
+
+    local_part, domain_part = parts
+    if local_part < 3:
+        return False
+    if not domain_part or len(domain_part) < 1:
+        return False
+    if '.' not in domain_part or len(domain_part.split('.')[-1]) < 1:
+        return False
+    # para que no exista un mail: 'hola@.com'
+    if domain_part.startswith('.'):
+        return False
+
+    return True
+
+
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
@@ -182,8 +205,9 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
-    
-@api_blueprint.route(REGISTER, methods=['POST'])
+
+#Register user in database, check invalid email and password
+@api_blueprint.route(REGISTER_ROUTE, methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
@@ -193,6 +217,9 @@ def register():
 
     if not username or not password or not email or not profile_picture:
         return jsonify({'error': 'Username, password, email and profile_picture are required'})
+    
+    if not is_valid_email(email):
+        return jsonify({'error': 'Invalid email, it must have this format: abc@d.e'})
     
     add_user_query = """
         INSERT INTO USER (username, password, email, profile_picture)
