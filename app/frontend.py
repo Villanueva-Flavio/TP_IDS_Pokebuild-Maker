@@ -129,3 +129,11 @@ def delete_pokemon(owner_id):
         }
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
+
+@frontend_blueprint.route('/login/')
+def login_form():
+    return render_template('login_form.html')
+
+@frontend_blueprint.route('/register/')
+def register_form():
+    return render_template('register_form.html')
