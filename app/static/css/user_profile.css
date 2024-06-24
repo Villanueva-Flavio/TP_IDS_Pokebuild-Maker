@@ -1,16 +1,17 @@
 #user-info-container {
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
-    padding: 10px; /* Añade relleno para separar el contenido del borde */
-    display: flex; /* Usa flexbox para alinear elementos */
-    justify-content: center; /* Centra los elementos horizontalmente */
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .user-info-item {
-    margin: 0 10px; /* Margen entre los elementos */
-    font-family: "Tiny5", sans-serif; /* Tipo de fuente */
-    font-size: 1.5em; /* Tamaño de fuente */
-    border: 2px solid white; /* Borde blanco */
-    padding: 3px 10px; /* Espacio entre el texto y el contenedor */
+    margin: 0 10px;
+    font-family: "Tiny5", sans-serif;
+    font-size: 1.5em;
+    border: 2px solid white;
+    padding: 3px 10px;
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
 }
@@ -34,8 +35,8 @@
 }
 
 #container {
-    margin-top: 270px; /* Margen superior para separar del contenedor anterior */
-    margin-left: -20px; /* Margen izquierdo para alinear a la izquierda */
+    margin-top: 270px;
+    margin-left: -20px;
 }
 
 .build-container:first-child {
@@ -49,8 +50,39 @@
 #user-pokemons-container {
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
     max-width: 1190px;
-    max-height: 1190px;
-    padding: 5px;
+    height: 570px; /* Altura fija del contenedor */
+    padding: 12px;
     margin-left: 1210px;
-    margin-top: 10px;
+    margin-top: 6px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+#user-pokemons-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+#user-pokemons-container::-webkit-scrollbar-track {
+    background: #2f006f;
+    border-radius: 10px;
+}
+
+#user-pokemons-container::-webkit-scrollbar-thumb {
+    background: #6a00ff;
+    border-radius: 10px;
+    border: 2px solid #2f006f;
+}
+
+.pokemon-img-container {
+    text-align: center;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 2px solid white;
+}
+
+.pokemon-img-container img {
+    max-width: 100%;
+    height: auto;
 }

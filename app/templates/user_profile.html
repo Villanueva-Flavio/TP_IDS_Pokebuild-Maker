@@ -28,9 +28,13 @@
     {% include 'build_list_container.html' %}
     
     <div id="user-pokemons-container">
-        
+        {% for pokemon_id in pokemons_owned %}
+            <div class="pokemon-img-container">
+                <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/{{ pokemon_id }}.png" alt="Pokemon {{ pokemon_id }}">
+            </div>
+        {% endfor %}
     </div>
-    
+
     <script src="{{ url_for('static', filename='js/build_details.js') }}"></script>
 </body>
 </html>

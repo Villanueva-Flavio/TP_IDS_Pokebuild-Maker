@@ -158,6 +158,11 @@ def delete_pokemon(owner_id):
 def user_profile(user_id):
     user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
     pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
+    user_pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_owned = set()
+
+    for pokemon in user_pokemons:
+        pokemons_owned.add(str(pokemon['pokedex_id']).zfill(3))
 
     build_dict = {}
     for build in user_builds:
@@ -172,4 +177,4 @@ def user_profile(user_id):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
 
-    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id)
+    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned)
