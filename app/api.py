@@ -42,7 +42,7 @@ USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 REGISTER = '/api/register/'
-LOGIN_ROUTE = '/api/login/'
+LOGIN = '/api/login/'
 
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -392,4 +392,37 @@ def register():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@api_blueprint.route(LOGIN, methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
+
+    get_user_query = """
+        SELECT email, password FROM USER WHERE email = %s
+    """
+
+    try:
+        with engine.connect() as connection:
+            result = connection.execute(get_user_query, (email,))
+            user = result.fetchone()
+
+            if user is None:
+                return jsonify({'error': 'Invalid email or password'}), 401
+
+            stored_password = user['password']
+
+            if check_password_hash(stored_password, password):
+                return jsonify({'message': 'Login successful'}), 200
+            else:
+                return jsonify({'error': 'Invalid email or password'}), 401
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
