@@ -3,6 +3,7 @@ from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 import os, requests
 from dotenv import load_dotenv
+from re import search
 
 load_dotenv()
 
@@ -95,7 +96,41 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-    
+
+#Valida si el email tiene el formato 'abc@d.e'
+def is_valid_email(email):
+    if not email:
+        return False
+
+    parts = email.split('@')
+    if len(parts) != 2:
+        return False
+
+    local_part, domain_part = parts
+    if local_part < 3:
+        return False
+    if not domain_part or len(domain_part) < 1:
+        return False
+    if '.' not in domain_part or len(domain_part.split('.')[-1]) < 1:
+        return False
+    # para que no exista un mail: 'hola@.com'
+    if domain_part.startswith('.'):
+        return False
+
+    return True
+
+# Valida la contraseña, debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula y un número
+def is_valid_password(password):
+    if len(password) < 8:
+        return False
+    if not search("[a-z]", password):
+        return False
+    if not search("[A-Z]", password):
+        return False
+    if not search("[0-9]", password):
+        return False
+    return True
+
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
@@ -125,7 +160,7 @@ def id_must_be_an_integer(id, field_name):
     except (ValueError, TypeError):
         raise ValueError(f"{field_name} must be an integer")
 
- #POST endpoint for adding a new USER   
+#POST endpoint for adding a new USER   
 @api_blueprint.route('/api/add_user', methods=['POST'])
 def add_user():
     data_user = requests.json
@@ -143,11 +178,11 @@ def add_user():
         connection.execute(add_user_query, (username, password, email, profile_picture))
 
         return jsonify({'message':'User added successfully'})
-   
+
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
     return jsonify({'error': error})
-   
+
 #POST endpoint for modify an existing USER
 @api_blueprint.route('/api/mod_user/<user_id>', methods=['POST'])
 def mod_user(user_id):
@@ -159,6 +194,12 @@ def mod_user(user_id):
 
     if not username or not password or not email:
         return jsonify({'error': 'Missing required fields (username, password, email)'})
+    
+    if not is_valid_email(email):
+        return jsonify({'error': 'Invalid email, it must have this format: abc@d.e'})
+
+    if not is_valid_password(password):
+        return jsonify({'error': 'Invalid Password, it must be at least 8 characters, including an uppercase letter, a lowercase letter, and a number'})
     
     try:
         with engine.connect() as connection:
