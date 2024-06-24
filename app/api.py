@@ -44,7 +44,6 @@ USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FR
 REGISTER = '/api/register/'
 LOGIN_ROUTE = '/api/login/'
 
-REGISTER_ROUTE = '/api/register/'
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -216,15 +215,6 @@ def reorder_nulls_to_end():
             password=DB_PASSWORD,
             database=DB_NAME
         )
-def is_valid_email(email):
-    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(regex, email) is not None
-
-def is_valid_password(password):
-    # Minimum 8 characters, at least one letter and one number
-    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
-    return re.match(regex, password) is not None
-
         cursor = conn.cursor()
 
         query = "SELECT * FROM BUILDS"
@@ -266,6 +256,15 @@ def is_valid_password(password):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
 
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex, email) is not None
+
+def is_valid_password(password):
+    # Minimum 8 characters, at least one letter and one number
+    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+    return re.match(regex, password) is not None
+
 
 #DELETE endport for POKEMON by ID
 @api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'])
@@ -295,42 +294,7 @@ def delete_pokemon(pokemon_id, owner_id):
     except SQLAlchemyError as e:
         error_message = f"Error al conectarse a la base de datos: {e}"
         print(error_message)
-        return {"error": error_message}, 500
-
-@api_blueprint.route(REGISTER, methods=['POST'])
-def register():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    email = data.get('email')
-    profile_picture = data.get('profile_picture')
-
-    if not username or not password or not email or not profile_picture:
-        return jsonify({'error': 'Username, password, email and profile_picture are required'})
-    
-    add_user_query = """
-        INSERT INTO USER (username, password, email, profile_picture)
-        VALUES (:username, :password, :email, :profile_picture)
-    """
-
-    hashed_password = generate_password_hash(password)
-
-    try:
-        with engine.connect() as connection:
-            connection.execute(add_user_query), {
-                'username': username,
-                'password': hashed_password,
-                'email': email,
-                'profile_picture': profile_picture
-            }
-        return jsonify({"message": "User registered successfully"})
-
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error})
-    except Exception as e:
-        return jsonify({'error': str(e)})
-    
+        return {"error": error_message}, 500    
 
 # POST endpoint for adding a new BUILD
 @api_blueprint.route('/api/add_build/', methods=['POST'])
@@ -389,7 +353,7 @@ def add_build():
         return jsonify({'Error': str(e)})
     
 
-@api_blueprint.route('/api/register/', methods=['POST'])
+@api_blueprint.route(REGISTER, methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
