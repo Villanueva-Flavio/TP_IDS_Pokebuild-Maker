@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from dotenv import load_dotenv
-from re import search
+import re
 
 load_dotenv()
 
@@ -99,41 +99,6 @@ def get_data(query):
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
 
-#Valida si el email tiene el formato 'abc@d.e'
-def is_valid_email(email):
-    if not email:
-        return False
-
-    parts = email.split('@')
-    if len(parts) != 2:
-        return False
-
-    local_part, domain_part = parts
-    if local_part < 3:
-        return False
-    if not domain_part or len(domain_part) < 1:
-        return False
-    if '.' not in domain_part or len(domain_part.split('.')[-1]) < 1:
-        return False
-    # para que no exista un mail: 'hola@.com'
-    if domain_part.startswith('.'):
-        return False
-
-    return True
-
-# Valida la contraseña, debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula y un número
-def is_valid_password(password):
-    if len(password) < 8:
-        return False
-    if not search("[a-z]", password):
-        return False
-    if not search("[A-Z]", password):
-        return False
-    if not search("[0-9]", password):
-        return False
-    return True
-
-
 @api_blueprint.route('/api/moves/<pokemon_id>', methods=['GET'])
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
@@ -156,12 +121,14 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
-def id_must_be_an_integer(id, field_name):
-    try:
-        id_int = int(id)
-        return id_int
-    except (ValueError, TypeError):
-        raise ValueError(f"{field_name} must be an integer")
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex, email) is not None
+
+def is_valid_password(password):
+    # Minimum 8 characters, at least one letter and one number
+    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+    return re.match(regex, password) is not None
 
 # POST endpoint for adding a new BUILD
 @api_blueprint.route(BUILDS_ROUTE, methods=['POST'])
@@ -218,9 +185,9 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+    
 
-#Register user in database, check invalid email and password
-@api_blueprint.route(REGISTER_ROUTE, methods=['POST'])
+@api_blueprint.route('/api/register/', methods=['POST'])
 def register():
     data = request.json
     username = data.get('username')
@@ -228,34 +195,35 @@ def register():
     email = data.get('email')
     profile_picture = data.get('profile_picture')
 
+    # Check for missing fields
     if not username or not password or not email or not profile_picture:
-        return jsonify({'error': 'Username, password, email and profile_picture are required'})
+        return jsonify({'error': 'Username, password, email, and profile_picture are required'}), 400
     
+    # Validate email
     if not is_valid_email(email):
-        return jsonify({'error': 'Invalid email, it must have this format: abc@d.e'})
-    
+        return jsonify({'error': 'Invalid email'}), 400
+
+    # Validate password
     if not is_valid_password(password):
-        return jsonify({'error': 'Invalid Password, it must be at least 8 characters, including an uppercase letter, a lowercase letter, and a number'})
+        return jsonify({'error': 'Invalid password'}), 400
+    
+    # Hash the password
+    hashed_password = generate_password_hash(password)
     
     add_user_query = """
         INSERT INTO USER (username, password, email, profile_picture)
-        VALUES (:username, :password, :email, :profile_picture)
+        VALUES (%s, %s, %s, %s)
     """
-
-    hashed_password = generate_password_hash(password)
 
     try:
         with engine.connect() as connection:
-            connection.execute(add_user_query), {
-                'username': username,
-                'password': hashed_password,
-                'email': email,
-                'profile_picture': profile_picture
-            }
-        return jsonify({"message": "User registered successfully"})
+            connection.execute(add_user_query, (username, hashed_password, email, profile_picture))
+        return jsonify({"message": "User registered successfully"}), 201
 
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        return jsonify({'error': error})
+        return jsonify({'error': error}), 500
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 500
+
+    
