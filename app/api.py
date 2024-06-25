@@ -544,11 +544,12 @@ def add_user():
     except Exception as e:
         return jsonify({'error': str(e)})
     
-    
-    #POST endpoint for modify an existing USER
+
+
+#POST endpoint for modify an existing USER
 @api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'])
 def mod_user(user_id):
-    data_user = request.json  # Cambio: 'requests' a 'request'
+    data_user = request.json 
     username = data_user.get('username')
     password = data_user.get('password')
     email = data_user.get('email')
