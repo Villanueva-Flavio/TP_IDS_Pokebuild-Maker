@@ -1,9 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
-from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
-from datetime import datetime
 from dotenv import load_dotenv
 import re
 import mysql.connector
@@ -52,6 +50,9 @@ USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FR
 REGISTER = '/api/register/'
 LOGIN = '/api/login/'
 
+USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
+USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
+
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
@@ -86,11 +87,6 @@ def get_users_profiles():
 def get_user_profile(user_id):
     return get_data(USER_ID_QUERY + user_id)
 
-# GET endpoint for POKEMONS by USER
-@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
-def get_pokemons_by_user(owner_id):
-    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
-
 # GET endpoint for HOME
 @api_blueprint.route('/api', methods=['GET'])
 def api_home():
@@ -100,6 +96,10 @@ def api_home():
         "users_profiles": "/api/users_profiles"
     }
     return jsonify(endpoints)
+# GET endpoints for Pokemons by owner_id
+@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
+def get_pokemons_by_user(owner_id):
+    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
 
 def get_data(query):
     try:
@@ -247,14 +247,54 @@ def reorder_nulls_to_end():
                 build[8],
                 build[9]
             )
+#POST endpoint for modify an existing POKEMON
+@api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'])
+def mod_pokemon(pokemon_id):
+    data = request.json
+    name = data.get('name')
+    pokedex_id = data.get('pokedex_id')
+    level = data.get('level')
+    ability_1 = data.get('ability_1')
+    ability_2 = data.get('ability_2', None)
+    ability_3 = data.get('ability_3', None)
+    ability_4 = data.get('ability_4', None)
+    owner_id = data.get('owner_id')
 
             updated_builds.append(updated_build)
+    if not name or not pokedex_id or not level or not ability_1 or not owner_id:
+        return jsonify({'error': 'All fields are required'})
 
         update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
         for idx, updated_build in enumerate(updated_builds):
             cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
+    mod_pokemon_query = f"""
+                        UPDATE POKEMON SET 
+                        name = :name, 
+                        pokedex_id = :pokedex_id, 
+                        level = :level, 
+                        ability_1 = :ability_1, 
+                        ability_2 = :ability_2, 
+                        ability_3 = :ability_3, 
+                        ability_4 = :ability_4, 
+                        owner_id = :owner_id
+                        WHERE id = {pokemon_id}
+                        """
 
         conn.commit()
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(mod_pokemon_query), {
+                'name': name,
+                'pokedex_id': pokedex_id,
+                'level': level,
+                'ability_1': ability_1,
+                'ability_2': ability_2,
+                'ability_3': ability_3,
+                'ability_4': ability_4,
+                'owner_id': owner_id,
+                'pokemon_id': pokemon_id
+            })
+        return jsonify({'message': f'Pokemon with id: {pokemon_id} modified successfully'})
 
         cursor.close()
         conn.close()
@@ -437,3 +477,8 @@ def login():
 @api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'])
 def get_build_by_user(owner_id):
     return get_data( USER_ID_BUILDS_QUERY + owner_id)
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+    except Exception as e:
+        return jsonify({'error': str(e)})
