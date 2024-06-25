@@ -571,7 +571,7 @@ def mod_user(user_id):
                 'username': username,
                 'password': password,
                 'email': email,
-                profile_picture': profile_picture,
+            'profile_picture': profile_picture,
                 'user_id': user_id
             })
 
@@ -584,7 +584,8 @@ def mod_user(user_id):
     except Exception as e:
         return jsonify({'error': str(e)})
         
-        #POST endpoint for delete user
+        
+#POST endpoint for delete user
 @api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'])
 def del_user(user_id):
     try:
@@ -594,7 +595,7 @@ def del_user(user_id):
         
         return jsonify({'message': f'User with ID {user_id} deleted successfully'})
         
-        except SQLAlchemyError as e:
+    except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
 
