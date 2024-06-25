@@ -444,17 +444,28 @@ def register():
     if not is_valid_password(password):
         return jsonify({'error': 'Invalid password'}), 400
     
-    # Hash the password
-    hashed_password = generate_password_hash(password)
-    
-    add_user_query = """
-        INSERT INTO USER (username, password, email, profile_picture)
-        VALUES (%s, %s, %s, %s)
+    # Creo la consulta SQL para verificar si username o email ya existe
+    check_user_query = """
+        SELECT * FROM USER WHERE username = %s OR email = %s
     """
 
     try:
         with engine.connect() as connection:
-            connection.execute(add_user_query, (username, hashed_password, email, profile_picture))
+            result = connection.execute(check_user_query, (username, email)).fetchone()
+            if result:
+                if result['username'] == username:
+                    return jsonify({'error': 'That username is already taken'}), 400
+                if result['email'] == email:
+                    return jsonify({'error': 'That email is already registered'}), 400
+
+            # Hash the password
+            hashed_password = generate_password_hash(password)
+            
+            add_user_query = """
+                INSERT INTO USER (username, password, email)
+                VALUES (%s, %s, %s)
+            """
+            connection.execute(add_user_query, (username, hashed_password, email))
         return jsonify({"message": "User registered successfully"}), 201
 
     except SQLAlchemyError as e:
