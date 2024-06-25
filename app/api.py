@@ -572,7 +572,7 @@ def mod_user(user_id):
                 'username': username,
                 'password': password,
                 'email': email,
-            'profile_picture': profile_picture,
+                'profile_picture': profile_picture,
                 'user_id': user_id
             })
 
