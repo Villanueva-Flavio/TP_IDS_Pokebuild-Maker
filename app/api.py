@@ -593,3 +593,10 @@ def del_user(user_id):
             connection.execute(text(del_user_query), {'user_id': user_id})
         
         return jsonify({'message': f'User with ID {user_id} deleted successfully'})
+        
+        except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
