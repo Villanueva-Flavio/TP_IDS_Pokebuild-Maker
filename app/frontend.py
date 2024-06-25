@@ -220,6 +220,7 @@ def trainers_list_container():
     usuarios = requests.get('http://pokebuild-backend:5000/api/users_profiles/').json() #Se puede agregar a fetch_data, pero tengo miedo de cagarla uwu
     dic_nombre_usuario = {}
     for user in usuarios:
+        dic_nombre_usuario[user['id']] = user['id']
         dic_nombre_usuario[user['username']] = user['username']
         dic_nombre_usuario[user['build_count']] = user['build_count']
         dic_nombre_usuario[user['pokemon_count']] = user['pokemon_count']
