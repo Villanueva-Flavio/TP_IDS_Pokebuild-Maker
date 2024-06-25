@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Delete Builds</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Search and Delete Builds</h2>
+        <select id="editable-select" class="builds_searchbar">
+            {% for build in builds %}
+                <option id="{{ build.id }}">{{ build.name }}</option>
+            {% endfor %}
+        </select>
+        <button id="delete_builds_btn">Delete</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/delete_builds_by_id.js')}}"></script>
+</body>
+</html>
