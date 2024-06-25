@@ -42,12 +42,6 @@
     
             <div id="datos_pokemon_caja" class="input-right-side">
                 <div id="imagen_poke_especie" class="select-pokemon-container">
-                    <select id="select_especie_pokemon" name="pokemon" placeholder="Pokemon" class="select-pokemon poke_name_especie">
-                        <option value="" id="dadada"></option>
-                        {% for pokemon in pokemons %}
-                        <option class="pokemon_especie" value="{{pokemon.id}}" id="pokemon_imagenn_cuadrado">{{pokemon.name}}</option>
-                        {% endfor %}
-                    </select>
                     <img src="{{ url_for('static', filename='images/Logo.png')}}" alt="POKEMON" id="pokemon-image">
                 </div>
                 <div id="tipos_datos_poke" class="type-container">
@@ -80,6 +74,41 @@
                 $('#select_especie_pokemon').val(especie).trigger('change');
                 $('#select_especie_pokemon').find('option:first').text(especie);
             }
+            $('#add_pokemon_btn').on('click', function() {
+            var pokemon_name = $('#poke_name').val();
+            var pokemon_level = $('#poke_LVL').val();
+            var pokemon_species = $('#pokemon_especie').val();
+            var pokemon_ability_1 = $('#ability_1').val();
+            var pokemon_ability_2 = $('#ability_2').val();
+            var pokemon_ability_3 = $('#ability_3').val();
+            var pokemon_ability_4 = $('#ability_4').val();
+
+            fetch('/api/add_pokemon/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    'name': pokemon_name,
+                    'level': pokemon_level,
+                    'ability_1': pokemon_ability_1,
+                    'ability_2': pokemon_ability_2,
+                    'ability_3': pokemon_ability_3,
+                    'ability_4': pokemon_ability_4,
+                    'pokedex_id': pokemon_id,
+                    'owner_id': owner_id
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Respuesta del servidor:');
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error al enviar la solicitud:', error);
+            });
+        });
+    });
     
             // Event handler for #select_pokemon
             $('#select_pokemon').on('change', function() {
