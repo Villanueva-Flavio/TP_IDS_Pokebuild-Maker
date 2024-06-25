@@ -543,3 +543,31 @@ def add_user():
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+    
+    #POST endpoint for modify an existing USER
+@api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'])
+def mod_user(user_id):
+    data_user = request.json  # Cambio: 'requests' a 'request'
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+
+    try:
+        with engine.connect() as connection:
+            mod_user_query = """
+                UPDATE USER 
+                SET username = :username, 
+                    password = :password, 
+                    email = :email, 
+                    profile_picture = :profile_picture
+                WHERE id = :user_id
+            """
+            connection.execute(text(mod_user_query), {
+                'username': username,
+                'password': password,
+                'email': email,
