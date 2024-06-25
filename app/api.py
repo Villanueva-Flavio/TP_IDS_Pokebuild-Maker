@@ -119,7 +119,6 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-    
 @api_blueprint.route(POST_POKEMON, methods=['POST'])
 def add_pokemon():
     try:
@@ -132,7 +131,15 @@ def add_pokemon():
         for field in required_fields:
             if field not in pokemon_data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
-
+            
+        abilities = [
+            pokemon_data.get('ability_1'),
+            pokemon_data.get('ability_2'),
+            pokemon_data.get('ability_3'),
+            pokemon_data.get('ability_4')
+        ]
+        if all(ability in (None, '') for ability in abilities):
+            return jsonify({'error': 'At least one ability is required'}), 400
         with engine.connect() as connection:
             connection.execute(text(POST_POKEMON_QUERY), {
                 'pokedex_id': pokemon_data['pokedex_id'],
@@ -156,6 +163,7 @@ def add_pokemon():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 @api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'])
@@ -279,9 +287,16 @@ def mod_pokemon(pokemon_id):
     owner_id = data.get('owner_id')
 
 
-    if not name or not pokedex_id or not level or not ability_1 or not owner_id:
+    if not name or not pokedex_id or not level or not owner_id:
         return jsonify({'error': 'All fields are required'})
-
+    abilities = [
+        data.get('ability_1'),
+        data.get('ability_2'),
+        data.get('ability_3'),
+        data.get('ability_4')
+    ]
+    if all(ability in (None, '') for ability in abilities):
+        return jsonify({'error': 'At least one ability is required'}), 400
       
     mod_pokemon_query = f"""
                         UPDATE POKEMON SET 

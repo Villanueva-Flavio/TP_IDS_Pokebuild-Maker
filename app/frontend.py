@@ -154,6 +154,12 @@ def delete_pokemon(owner_id):
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
 
+@frontend_blueprint.route('/add_pokemon_form/<owner_id>', methods=["POST", "GET"]) #Hasta que este el POST endpoint de pokemon, tiene esto.
+def add_pokemon_form(owner_id):
+    pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
+    if request.method == "POST":
+        return render_template("home.html")
+    return render_template('add_pokemon_form.html', pokemons=pokemons['pokemons'], owner_id=owner_id)
 
 @frontend_blueprint.route('/user_profile/<user_id>')
 def user_profile(user_id):
