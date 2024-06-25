@@ -18,12 +18,6 @@
     color: #28ffbd;
 }
 
-#select_pokemon{
-    font-family: "Tiny5", sans-serif;
-    font-style: normal;
-    font-size: 40px;
-}
-
 #contenedor_all_against {/*Hace que lo que esta dentro este en columnas*/
     flex-direction: column; 
     display: flex;
@@ -36,7 +30,7 @@
     color: #28ffbd;
 }
 
-.Submit{ /*caja donde esta el ADD A NEW POKEMON*/
+#Submit{ /*caja donde esta el ADD A NEW POKEMON*/
     width: 1568px;
     height: 77px;
     margin-left: 10px;
@@ -45,7 +39,6 @@
     border: 5px solid #5e00ff;
     text-align: center;
     color: #28ffbd;
-    padding-top: 10px;
 
 }
 #usuario{ /*Le da el tamaño al cuadrado donde se pone el nombre, nivel y habilidades*/
@@ -146,10 +139,6 @@ h1{
 }
 .pokemon_especie{
     background-color: black;
-    color: #28ffbd;
-}
-#sasasa{
-    color: #28ffbd;
 }
 
 .abilities_elegir_inferiores{ /*Las habilidades 3 y 4*/
@@ -203,6 +192,7 @@ h1{
 
 #abilities_container{
     margin-left: 50px;
+    transform: translatey(-20%);
 }
 
 .img-type-against{
@@ -224,15 +214,7 @@ h1{
     margin-bottom: 10px;
 }
 
-.botones{
-    height: 60px;
-    width: 110px;
-    font-family: "Tiny5", sans-serif;
-    font-size: 30px;
-    color: #28ffbd;
-    background-color: black;
-    transform: translatex(23%)
-}
+
 
 .caja{
     border-radius: 5px;

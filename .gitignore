@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ./app/__pycache__/
 ./app/.env
 __pycache__/
@@ -10,3 +11,17 @@ app/.env
 .vscode/
 .idea/
 *.swp
+=======
+./app/__pycache__/
+./app/.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+app/__pycache__/
+app/.env
+
+.vscode/
+.idea/
+*.swp
+>>>>>>> origin/API-modify
