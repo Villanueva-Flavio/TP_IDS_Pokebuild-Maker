@@ -12,8 +12,16 @@
 </head>
 <body>
     <div class="button-container">
-        <button class="pokemon-button login-button">Sign In</button>
-        <button class="pokemon-button register-button">Sing up</button>
+        <button class="pokemon-button login-button" id="login">Sign In</button>
+        <button class="pokemon-button register-button" id="register">Sing up</button>
     </div>
+    <script>
+        document.getElementById('login').addEventListener('click', function(){
+            window.location.href = '/login/';
+        });
+        document.getElementById('register').addEventListener('click', function(){
+            window.location.href = '/register/';
+        });
+    </script>
 </body>
 </html>

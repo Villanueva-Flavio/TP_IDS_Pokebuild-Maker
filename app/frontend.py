@@ -198,6 +198,7 @@ def user_profile(user_id):
         for j in range(6):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
+        print("Build Dict:", build_dict)
     try:
         username = get_user_name(user_id)
         profile_picture = get_user_profile_picture(user_id)

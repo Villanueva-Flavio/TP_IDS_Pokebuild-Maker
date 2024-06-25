@@ -99,6 +99,7 @@
                     var pokemon = pokemones.find(p => p.name === pokemon_seleccionado);
                     if (pokemon) {
                         pokemon_ids[index] = pokemon.id;
+                        
                     } else {
                         console.error('Could not find ID for selected Pokemon:', pokemon_seleccionado);
                     }
@@ -106,17 +107,18 @@
                     console.error(`Pokemon ${index + 1} is empty!`);
                 }
     });
+    window.location.href = '/';
+    if (!build_name) {
+        console.error('Build name is empty!');
+        return;
+    }
+    if (pokemon_ids.every(id => id === null)) {
+        console.error('All Pokemon slots are empty!');
+        return;
+    }
+
 
     pokemon_ids = sort_list(pokemon_ids);
-
-    if (pokemon_ids.length === 0 || pokemon_ids[0] === null) {
-        console.error('pokemon_id_1 cannot be null or empty');
-        return;
-    }
-    if (pokemon_ids[0] === null){
-        console.error('pokemon_id_1 cannot be null or empty');
-        return;
-    }
     var build = {
         'owner_id': parseInt(owner_id),
         'build_name': build_name,
@@ -138,6 +140,7 @@
             console.log(response);
             if (response['status'] === 'success') {
                 console.log('Build added successfully!');
+
             } else {
                 console.error('Error adding build:', response);
             }
