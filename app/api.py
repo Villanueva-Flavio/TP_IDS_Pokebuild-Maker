@@ -119,52 +119,15 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-@api_blueprint.route(POST_POKEMON, methods=['POST'])
-def add_pokemon():
-    try:
-        pokemon_data = request.get_json()
 
-        if pokemon_data is None:
-            return jsonify({'error': 'Invalid JSON or empty request body'}), 400
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex, email) is not None
 
-        required_fields = ['pokedex_id', 'level', 'ability_1', 'owner_id']
-        for field in required_fields:
-            if field not in pokemon_data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
-            
-        abilities = [
-            pokemon_data.get('ability_1'),
-            pokemon_data.get('ability_2'),
-            pokemon_data.get('ability_3'),
-            pokemon_data.get('ability_4')
-        ]
-        if all(ability in (None, '') for ability in abilities):
-            return jsonify({'error': 'At least one ability is required'}), 400
-        with engine.connect() as connection:
-            connection.execute(text(POST_POKEMON_QUERY), {
-                'pokedex_id': pokemon_data['pokedex_id'],
-                'level': pokemon_data['level'],
-                'name': pokemon_data.get('name', None),
-                'ability_1': pokemon_data['ability_1'],
-                'ability_2': pokemon_data.get('ability_2', None),
-                'ability_3': pokemon_data.get('ability_3', None),
-                'ability_4': pokemon_data.get('ability_4', None),
-                'owner_id': pokemon_data['owner_id']
-            })
-
-        return jsonify({'message': 'Pokemon added successfully.'}), 200
-
-    except KeyError as e:
-        return jsonify({'error': f'Missing key in JSON: {str(e)}'}), 400
-
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error}), 500
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
+def is_valid_password(password):
+    # Minimum 8 characters, at least one letter and one number
+    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+    return re.match(regex, password) is not None
 
 @api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'])
 def get_pokemon_moves(pokemon_id):
@@ -273,6 +236,54 @@ def reorder_nulls_to_end():
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
+
+
+@api_blueprint.route(POST_POKEMON, methods=['POST'])
+def add_pokemon():
+    try:
+        pokemon_data = request.get_json()
+
+        if pokemon_data is None:
+            return jsonify({'error': 'Invalid JSON or empty request body'}), 400
+
+        required_fields = ['pokedex_id', 'level', 'ability_1', 'owner_id']
+        for field in required_fields:
+            if field not in pokemon_data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+            
+        abilities = [
+            pokemon_data.get('ability_1'),
+            pokemon_data.get('ability_2'),
+            pokemon_data.get('ability_3'),
+            pokemon_data.get('ability_4')
+        ]
+        if all(ability in (None, '') for ability in abilities):
+            return jsonify({'error': 'At least one ability is required'}), 400
+        with engine.connect() as connection:
+            connection.execute(text(POST_POKEMON_QUERY), {
+                'pokedex_id': pokemon_data['pokedex_id'],
+                'level': pokemon_data['level'],
+                'name': pokemon_data.get('name', None),
+                'ability_1': pokemon_data['ability_1'],
+                'ability_2': pokemon_data.get('ability_2', None),
+                'ability_3': pokemon_data.get('ability_3', None),
+                'ability_4': pokemon_data.get('ability_4', None),
+                'owner_id': pokemon_data['owner_id']
+            })
+
+        return jsonify({'message': 'Pokemon added successfully.'}), 200
+
+    except KeyError as e:
+        return jsonify({'error': f'Missing key in JSON: {str(e)}'}), 400
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 #POST endpoint for modify an existing POKEMON
 @api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'])
 def mod_pokemon(pokemon_id):
@@ -297,7 +308,7 @@ def mod_pokemon(pokemon_id):
     ]
     if all(ability in (None, '') for ability in abilities):
         return jsonify({'error': 'At least one ability is required'}), 400
-      
+    
     mod_pokemon_query = f"""
                         UPDATE POKEMON SET 
                         name = :name, 
@@ -326,15 +337,6 @@ def mod_pokemon(pokemon_id):
         return jsonify({'message': f'Pokemon with id: {pokemon_id} modified successfully'})
     except mysql.connector.Error as err:
         print(f"Error: {err}")
-
-def is_valid_email(email):
-    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    return re.match(regex, email) is not None
-
-def is_valid_password(password):
-    # Minimum 8 characters, at least one letter and one number
-    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
-    return re.match(regex, password) is not None
 
 
 #DELETE endport for POKEMON by ID
@@ -366,6 +368,7 @@ def delete_pokemon(pokemon_id, owner_id):
         error_message = f"Error al conectarse a la base de datos: {e}"
         print(error_message)
         return {"error": error_message}, 500    
+
 
 # POST endpoint for adding a new BUILD
 @api_blueprint.route(ADD_BUILD_ROUTE, methods=['POST'])
@@ -422,7 +425,67 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
-    
+
+
+# POST endpoint for modify an existing BUILD
+@api_blueprint.route('/api/mod_build/<build_id>', methods=['POST'])
+def mod_build(build_id):
+    data_build = request.json
+    build_name = data_build.get('build_name', '')
+    owner_id = data_build.get('owner_id', None)
+    pokemon_id_1 = data_build.get('pokemon_id_1', None)
+    pokemon_id_2 = data_build.get('pokemon_id_2', None)
+    pokemon_id_3 = data_build.get('pokemon_id_3', None)
+    pokemon_id_4 = data_build.get('pokemon_id_4', None)
+    pokemon_id_5 = data_build.get('pokemon_id_5', None)
+    pokemon_id_6 = data_build.get('pokemon_id_6', None)
+    timestamp = data_build.get('timestamp', '')
+
+    # Validar los valores recibidos
+    if not build_name:
+        return jsonify({'Error': 'build_name must not be empty'})
+    if owner_id is None:
+        return jsonify({'Error': 'owner_id must not be None'})
+    if timestamp is None:
+        return jsonify({'Error': 'timestamp must not be None'})
+
+    mod_build_query = f"""
+                    UPDATE BUILDS SET
+                    build_name = :build_name,
+                    owner_id = :owner_id,
+                    pokemon_id_1 = :pokemon_id_1,
+                    pokemon_id_2 = :pokemon_id_2,
+                    pokemon_id_3 = :pokemon_id_3,
+                    pokemon_id_4 = :pokemon_id_4,
+                    pokemon_id_5 = :pokemon_id_5,
+                    pokemon_id_6 = :pokemon_id_6,
+                    timestamp = :timestamp
+                    WHERE id = {build_id}
+                    """
+
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(mod_build_query), {
+                'build_name': build_name,
+                'owner_id': owner_id,
+                'pokemon_id_1': pokemon_id_1,
+                'pokemon_id_2': pokemon_id_2,
+                'pokemon_id_3': pokemon_id_3,
+                'pokemon_id_4': pokemon_id_4,
+                'pokemon_id_5': pokemon_id_5,
+                'pokemon_id_6': pokemon_id_6,
+                'timestamp': timestamp,
+                'build_id':build_id
+            })
+        return jsonify({'Message': f'Build with id: {build_id} modified successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'Error1': error})
+
+    except Exception as e:
+        return jsonify({'Error2': str(e)})
+
 
 @api_blueprint.route(REGISTER, methods=['POST'])
 def register():
@@ -534,16 +597,14 @@ def add_user():
                 'email': email,
                 'profile_picture': profile_picture
             })
-
         return jsonify({'message': 'User added successfully'})
-
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-
     except Exception as e:
         return jsonify({'error': str(e)})
-    
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 
 #POST endpoint for modify an existing USER
@@ -602,5 +663,3 @@ def del_user(user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)})
-    
-    
