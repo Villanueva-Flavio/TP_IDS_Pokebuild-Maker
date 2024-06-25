@@ -511,3 +511,35 @@ def login():
 @api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'])
 def get_build_by_user(owner_id):
     return get_data( USER_ID_BUILDS_QUERY + owner_id)
+
+
+#POST endpoint for adding a new USER   
+@api_blueprint.route('/api/add_user', methods=['POST'])
+def add_user():
+    data_user = request.json  
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+
+    try:
+        with engine.connect() as connection:
+            add_user_query = "INSERT INTO USER (username, password, email, profile_picture) VALUES (:username, :password, :email, :profile_picture)"
+            connection.execute(text(add_user_query), {
+                'username': username,
+                'password': password,
+                'email': email,
+                'profile_picture': profile_picture
+            })
+
+        return jsonify({'message': 'User added successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
