@@ -15,9 +15,17 @@
         <div id="searchBar_container">
             <input type="text" id="searchBar" placeholder="Buscar usuario...">
         </div>
-        <div id="container">
+        <div id="list_container">
             {% for user in usuarios %}
-                <div class="rectangle" id="{{ dic_nombre_usuario[user['username']] }}"></div>
+                <div class="rectangle" id="{{ dic_nombre_usuario[user['username']] }}">
+                    <img class="img_user" src="/static/images/Logo.png">
+                    <div class="info_user">
+                        <label for="">NAME: {{ dic_nombre_usuario[user['username']] }} </label><br>
+                        <label for="">POKEMONS ADDED: {{ dic_nombre_usuario[user['pokemon_count']] }} </label><br>
+                        <label for="">BUILDS ADDED: {{ dic_nombre_usuario[user['build_count']] }}</label><br>
+                        <a href="">VER PERFIL</a>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>

@@ -1,7 +1,31 @@
-#todo{
-    margin-top: 10px
+/* paleta de colores
+    #5e00ff (violeta)
+    #000000 (negro)
+    #ffffff (blanco)
+    #28ffbd (verde marino)
+*/
+
+*{
+    margin: 0;
+    padding: 0;
 }
-#container{
+
+body{
+    font-family: "Tiny5", sans-serif;
+    margin-top: 10px;
+    background-color: black;
+}
+
+#meet_all_trainers{
+    color: #28ffbd;
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#list_container{
     margin-top: 30px;
     margin-left: 85px;
     margin-right: 35px;
@@ -9,28 +33,40 @@
     flex-direction: row;
     flex-wrap: wrap;
     overflow-y:auto;
-    max-height: calc(100vh - 200px);
     padding-left: 20px;
     padding-right: 20px;
 }
-.rectangle{
 
-    border: 5px solid black;
-    height: 270px;
-    width: 752px;
-    margin: 10px 30px;
-}
-*{
-    font-family: "Tiny5", sans-serif;
-    font-weight: 400;
-}
-#meet_all_trainers{
-    font-size: 50px;
+.rectangle{ /* clase en uso con script, no cambiar nombre*/
     display: flex;
-    justify-content: center;
-    align-items: center;
+    color: #28ffbd;
+    border: 5px solid #5e00ff;
+    height: 270px;
+    width: 800px;
+    margin: 20px;
+    box-shadow: 0 0 30px #5e00ff;
+    border-radius: 5px;
+    font-size: 2.5vh;  
+    
     text-align: center;
 }
+
+.img_user{
+    box-shadow: 0 0 20px #5e00ff;
+    margin-right: 20px;
+}
+
+.info_user{
+    margin: auto;
+    width:  90%;
+
+    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+/* ----------no tocar---------- */
 .search-input {
     flex: 1;
     border: none;
@@ -45,6 +81,7 @@
     cursor: pointer;
 }
 #searchBar {
+    font-family: "Tiny5", sans-serif;
     margin-top: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -58,5 +95,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }

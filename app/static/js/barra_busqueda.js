@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         rectangles.forEach(rectangle => {
             const id = rectangle.id.toLowerCase();
             if (id.includes(searchTerm)) {
-                rectangle.style.display = 'block';
+                rectangle.style.display = 'flex';
             } else {
                 rectangle.style.display = 'none';
             }
