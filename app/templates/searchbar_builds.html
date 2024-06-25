@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search and Delete Pokémon Builds</title>
+    <title>Search and Delete Builds</title>
     <style>
         
         .container {
@@ -20,8 +20,8 @@
         <h2>Search and Delete Builds</h2>
         <select id="editable-select" class="builds_searchbar">
             
-            {% for pokemon in pokemons %}
-                <option id="{{ builds.id }}">{{ pokemon.name }}</option>
+            {% for build in builds %}
+                <option id="{{ builds.id }}">{{ build.name }}</option>
             {% endfor %}
         </select>
         <button id="delete_builds_btn">Delete</button>
