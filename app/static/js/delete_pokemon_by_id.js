@@ -15,10 +15,11 @@ function delete_pokemon_by_id(event) {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
+    .then(async response => {
         if (!response.ok) {
             console.log('Network response was not ok');
-            return response.text().then(error => { throw new Error(error); });
+            const error = await response.text();
+            throw new Error(error);
         }
         return response.json();
     })

@@ -6,6 +6,7 @@ import os, requests
 from dotenv import load_dotenv
 import re
 import mysql.connector
+from sqlalchemy.sql import text
 
 
 load_dotenv()
@@ -543,22 +544,18 @@ def add_user():
 
     except Exception as e:
         return jsonify({'error': str(e)})
-    
 
-
-#POST endpoint for modify an existing USER
 @api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'])
 def mod_user(user_id):
-    data_user = request.json 
-    username = data_user.get('username')
-    password = data_user.get('password')
-    email = data_user.get('email')
-    profile_picture = data_user.get('profile_picture')
-
-    if not username or not password or not email:
-        return jsonify({'error': 'Missing required fields (username, password, email)'})
-
     try:
+        username = request.form.get('username')
+        password = generate_password_hash(request.form.get('password'))
+        email = request.form.get('email')
+        profile_picture = request.files.get('profile_picture')
+
+        if not username or not password or not email:
+            return jsonify({'error': 'Missing required fields (username, password, email)'})
+
         with engine.connect() as connection:
             mod_user_query = """
                 UPDATE USER 
@@ -572,7 +569,7 @@ def mod_user(user_id):
                 'username': username,
                 'password': password,
                 'email': email,
-                'profile_picture': profile_picture,
+                'profile_picture': profile_picture.read() if profile_picture else None,
                 'user_id': user_id
             })
 
@@ -584,6 +581,7 @@ def mod_user(user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)})
+
         
         
 #POST endpoint for delete user

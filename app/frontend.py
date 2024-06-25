@@ -65,6 +65,7 @@ def get_pokemon_name_by_id(pokedex_id):
     else:
         return None
 
+
 def get_user_pokemons(user_id):
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
     if isinstance(user_pokemons, dict): #Cuando es solo un unico pokemon, en vez de devolverlo como una lista, lo devuelve como un diccionario y ocurre un error con el for.
@@ -216,3 +217,8 @@ def trainers_list_container():
         dic_nombre_usuario[user['build_count']] = user['build_count']
         dic_nombre_usuario[user['pokemon_count']] = user['pokemon_count']
     return render_template('trainers_list_container.html', usuarios=usuarios, dic_nombre_usuario=dic_nombre_usuario)
+
+@frontend_blueprint.route('/modify_user_data/<user_id>')
+def modify_user_data(user_id):
+    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/').json()
+    return render_template('edit_profile.html', user_data=user_data)

@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Profile</title>
-    <style>
-        .hidden { display: none; }
-        
-    </style> 
 </head>
 <body>
 
     <h1>Edit Profile</h1>
 
     <div class="form-container">
-        <form action="/update_profile" method="post">
+        <form action="" id="mod_form">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
@@ -51,11 +47,45 @@
             <br>
 
             <div class="form-actions">
-                <button type="button" class="cancel" onclick="window.location.href='/profile'">Cancel</button>
+                <button type="button" class="cancel" onclick="window.location.href='/user_profile/{{ user_data.id }}'">Cancel</button>
                 <button type="submit" class="save">Save</button>
             </div>
         </form>
     </div>
+    <script>
+        document.getElementById('mod_form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm_password = document.getElementById('confirm-password').value;
+            const profile_pic = document.getElementById('profile-pic').files[0];
+            console.log(profile_pic, confirm_password, password, email, name);
+            if (password !== confirm_password) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('username', name);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('profile_picture', profile_pic);
+            console.log(formData);
+            fetch('/api/mod_user/{{ user_data.id }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+             .then(data => {
+                if (data.success) {
+                    window.location.href = '/user_profile/{{ user_data.id }}';
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
