@@ -29,7 +29,6 @@ def get_build_dict(builds, pokemons):
             'build_name': build['build_name'],
             'timestamp': build['timestamp']
         }
-
         for j in range(6):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
@@ -214,3 +213,14 @@ def login_form():
 @frontend_blueprint.route('/register/')
 def register_form():
     return render_template('register_form.html')
+
+
+@frontend_blueprint.route('/trainers_list_container')
+def trainers_list_container():
+    usuarios = requests.get('http://pokebuild-backend:5000/api/users_profiles/').json() #Se puede agregar a fetch_data, pero tengo miedo de cagarla uwu
+    dic_nombre_usuario = {}
+    for user in usuarios:
+        dic_nombre_usuario[user['username']] = user['username']
+        dic_nombre_usuario[user['build_count']] = user['build_count']
+        dic_nombre_usuario[user['pokemon_count']] = user['pokemon_count']
+    return render_template('trainers_list_container.html', usuarios=usuarios, dic_nombre_usuario=dic_nombre_usuario)
