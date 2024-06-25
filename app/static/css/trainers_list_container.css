@@ -26,29 +26,34 @@ body{
 }
 
 #list_container{
-    margin-top: 30px;
-    margin-left: 85px;
-    margin-right: 35px;
+
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     overflow-y:auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    justify-content: space-evenly;
 }
 
 .rectangle{ /* clase en uso con script, no cambiar nombre*/
+    background-color: black;
     display: flex;
     color: #28ffbd;
     border: 5px solid #5e00ff;
     height: 270px;
     width: 800px;
     margin: 20px;
-    box-shadow: 0 0 30px #5e00ff;
+    box-shadow: 0 0 15px #5e00ff;
     border-radius: 5px;
-    font-size: 2.5vh;  
-    
+    font-size: 30px;  
+    transition: ease-in-out 0.2s;
     text-align: center;
+}
+
+.rectangle:hover{
+    transform: scale(1.12);
+    z-index: 1;
+    transition: ease-in-out 0.2s;
+    box-shadow: 0 0 60px #5e00ff;
 }
 
 .img_user{
