@@ -15,7 +15,7 @@
     <div class="formulario">
         <div class="Submit">
             SELECT YOUR POKEMON TO MODIFY:
-            <select name="" id="select_pokemon">
+            <select name="" id="select_pokemon" class="poke_name_especie">
                 {% for pokemon in user_pokemons %}
                 <option value="{{ pokemon.id }}" data-name="{{ pokemon.name }}" data-level="{{ pokemon.level }}" data-especie="{{ pokemon.especie }}" data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" data-ability-4="{{ pokemon.ability_4 }}" data-pokedex_id = "{{ pokemon.pokedex_id }}">
                     {{ pokemon.name }}
@@ -42,6 +42,7 @@
     
             <div id="datos_pokemon_caja" class="input-right-side">
                 <div id="imagen_poke_especie" class="select-pokemon-container">
+
                     <img src="{{ url_for('static', filename='images/Logo.png')}}" alt="POKEMON" id="pokemon-image">
                 </div>
                 <div id="tipos_datos_poke" class="type-container">
@@ -74,41 +75,6 @@
                 $('#select_especie_pokemon').val(especie).trigger('change');
                 $('#select_especie_pokemon').find('option:first').text(especie);
             }
-            $('#add_pokemon_btn').on('click', function() {
-            var pokemon_name = $('#poke_name').val();
-            var pokemon_level = $('#poke_LVL').val();
-            var pokemon_species = $('#pokemon_especie').val();
-            var pokemon_ability_1 = $('#ability_1').val();
-            var pokemon_ability_2 = $('#ability_2').val();
-            var pokemon_ability_3 = $('#ability_3').val();
-            var pokemon_ability_4 = $('#ability_4').val();
-
-            fetch('/api/add_pokemon/', {
-                method: 'POST',
-                body: JSON.stringify({
-                    'name': pokemon_name,
-                    'level': pokemon_level,
-                    'ability_1': pokemon_ability_1,
-                    'ability_2': pokemon_ability_2,
-                    'ability_3': pokemon_ability_3,
-                    'ability_4': pokemon_ability_4,
-                    'pokedex_id': pokemon_id,
-                    'owner_id': owner_id
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Respuesta del servidor:');
-                console.log(data);
-            })
-            .catch(error => {
-                console.error('Error al enviar la solicitud:', error);
-            });
-        });
-    });
     
             // Event handler for #select_pokemon
             $('#select_pokemon').on('change', function() {
@@ -116,6 +82,9 @@
                 var pokemonName = selectedOption.data('name');
                 var pokemonLevel = selectedOption.data('level');
                 var pokemonEspecie = selectedOption.data('especie');
+                var pokemonPokedexId = selectedOption.data('pokedex_id');
+                var pokemonId = selectedOption.val();
+                console.log("ID: " + pokemonId+ ", POKEDEX_ID: "+ pokemonPokedexId);
                 var abilities = [
                     selectedOption.data('ability-1'),
                     selectedOption.data('ability-2'),
@@ -168,14 +137,50 @@
                         $('#pokemon-image').attr('src', pokemonImageUrl);
                     });
             });
+            $('#add_pokemon_btn').on('click', function() {
+                var owner_id = "{{ owner_id }}";
+                var selectedOption = $('#select_pokemon').find('option:selected');
+                var pokemon_id = selectedOption.val();
+                var pokedex_id = selectedOption.data('pokedex_id');
+                var pokemon_name = $('#poke_name').val();
+                var pokemon_level = $('#poke_LVL').val();
+                var pokemon_ability_1 = $('#ability_1').val();
+                var pokemon_ability_2 = $('#ability_2').val();
+                var pokemon_ability_3 = $('#ability_3').val();
+                var pokemon_ability_4 = $('#ability_4').val();
+                console.log(owner_id, pokemon_id, pokedex_id, pokemon_name, pokemon_level, pokemon_ability_1, pokemon_ability_2, pokemon_ability_3, pokemon_ability_4)
+                fetch('/api/mod_pokemon/' + pokemon_id, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'name': pokemon_name,
+                        'level': pokemon_level,
+                        'ability_1': pokemon_ability_1,
+                        'ability_2': pokemon_ability_2,
+                        'ability_3': pokemon_ability_3,
+                        'ability_4': pokemon_ability_4,
+                        'pokedex_id': pokedex_id,
+                        'owner_id': owner_id
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Respuesta del servidor:');
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error al enviar la solicitud:', error);
+                });
+            });
+    });
     
-            // Event handler for #select_especie_pokemon
+             // Event handler for #select_especie_pokemon
             $('#select_especie_pokemon').on('change', function() {
                 var especie = $(this).val();
                 $('#select_pokemon').find('option:selected').data('especie', especie);
-            });
-    
-        });
+            }); 
     </script>
     
     
