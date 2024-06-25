@@ -571,3 +571,15 @@ def mod_user(user_id):
                 'username': username,
                 'password': password,
                 'email': email,
+                profile_picture': profile_picture,
+                'user_id': user_id
+            })
+
+        return jsonify({'message': f'User with ID {user_id} modified successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
