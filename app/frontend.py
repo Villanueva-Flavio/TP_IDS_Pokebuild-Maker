@@ -67,6 +67,8 @@ def get_pokemon_name_by_id(pokedex_id):
 
 def get_user_pokemons(user_id):
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    if isinstance(user_pokemons, dict): #Cuando es solo un unico pokemon, en vez de devolverlo como una lista, lo devuelve como un diccionario y ocurre un error con el for.
+        user_pokemons = [user_pokemons]
     pokemons_dict = []
     for pokemon in user_pokemons:
         especie_pokemon= get_pokemon_name_by_id(pokemon['pokedex_id'])
@@ -91,6 +93,7 @@ def formulario_modificar_pokemon(owner_id):
     if request.method == "POST":
         return render_template("home.html")
     return render_template('formulario_modificar_pokemon.html', pokemons=pokemons['pokemons'], owner_id=owner_id, user_pokemons=user_pokemons)
+
 def get_user_builds(user_id):
     user_builds=requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
     builds_dict = []
@@ -145,6 +148,8 @@ def delete_pokemon(owner_id):
     if request.method == 'POST':
         return render_template('home.html') #tiene que ser cambiado a profile
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{owner_id}').json()
+    if isinstance(user_pokemons, dict):
+        user_pokemons = [user_pokemons]
     pokemons_dict = []
     for pokemon in user_pokemons:
         build_row = {
