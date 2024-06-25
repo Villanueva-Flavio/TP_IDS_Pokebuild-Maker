@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 import requests
 
 frontend_blueprint = Blueprint('frontend', __name__)
@@ -129,6 +129,26 @@ def get_user_builds(user_id):
         builds_dict.append(build_row)
     return builds_dict
 
+def get_user_name(user_id):
+    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/')
+    try:
+        user_data = user_data.json()
+    except ValueError as e:
+        print(f"Error parsing JSON: {e}")
+        print(f"Response content: {user_data.content}")
+        raise
+    return user_data['username']
+
+def get_user_profile_picture(user_id):
+    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/')
+    try:
+        user_data = user_data.json()
+    except ValueError as e:
+        print(f"Error parsing JSON: {e}")
+        print(f"Response content: {user_data.content}")
+        raise
+    return user_data['profile_picture']
+
 @frontend_blueprint.route('/add_build_form/<owner_id>', methods = ['GET', 'POST'])
 def pokemon_container(owner_id): # cambiar user id cuando este el auth
     pokemons_dic = get_user_pokemons(owner_id)
@@ -176,5 +196,10 @@ def user_profile(user_id):
         for j in range(6):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
-
-    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned)
+    try:
+        username = get_user_name(user_id)
+        profile_picture = get_user_profile_picture(user_id)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username, profile_picture=profile_picture)
