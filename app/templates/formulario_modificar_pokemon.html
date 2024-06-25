@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="/static/css/add_pokemon_form.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+</head>
+<body id="body_formulario_añadir_pokemon">
+
+    <div class="formulario">
+        <div class="Submit">
+            SELECT YOUR POKEMON TO MODIFY:
+            <select name="" id="select_pokemon" class="poke_name_especie">
+                {% for pokemon in user_pokemons %}
+                <option value="{{ pokemon.id }}" data-name="{{ pokemon.name }}" data-level="{{ pokemon.level }}" data-especie="{{ pokemon.especie }}" data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" data-ability-4="{{ pokemon.ability_4 }}" data-pokedex_id = "{{ pokemon.pokedex_id }}">
+                    {{ pokemon.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="nombre_nivel" class="input-container">
+            <div id="usuario">
+                <label for="poke_name" id="name" class="color">NAME: </label>
+                <input type="text" id="poke_name" name="pname" placeholder="Name" class="color poke_name_especie">
+                <label for="poke_LVL" id="level" class="color">LVL: </label>
+                <input type="number" id="poke_LVL" name="pLVL" placeholder="000" class="color caja input_personalizado">
+                <h1 id="abilities_texto" class="color">Abilities</h1>
+                <div id="abilities_container">
+                    {% for i in range(2) %}
+                    <select class="select-ability abilities_elegir" id="ability_{{i+1}}"></select>
+                    {% endfor %}
+                    {% for x in range(2, 4) %}
+                    <select class="select-ability abilities_elegir_inferiores" id="ability_{{x+1}}"></select>
+                    {% endfor %}
+                </div>
+            </div>
+    
+            <div id="datos_pokemon_caja" class="input-right-side">
+                <div id="imagen_poke_especie" class="select-pokemon-container">
+
+                    <img src="{{ url_for('static', filename='images/Logo.png')}}" alt="POKEMON" id="pokemon-image">
+                </div>
+                <div id="tipos_datos_poke" class="type-container">
+                    <div class="color">Type</div>
+                </div>
+            </div>
+        </div>
+        <div id="contenedor_all_against">
+            <div class="against" id="good">
+                <div class="against_texto">Good against: </div>
+            </div>
+            <br>
+            <div class="against" id="bad">
+                <div class="against_texto" id="bad_against_texto">Bad against: </div>
+            </div>
+        </div>
+        <div class="boton">
+            <button type="submit" class="caja botones" id="add_pokemon_btn">Save</button>
+            <button class="caja botones" type="reset">Cancel</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+    
+            // Function to update #select_especie_pokemon select based on selected pokemon in #select_pokemon
+            function updateSasasa(especie) {
+                $('#select_especie_pokemon').val(especie).trigger('change');
+                $('#select_especie_pokemon').find('option:first').text(especie);
+            }
+    
+            // Event handler for #select_pokemon
+            $('#select_pokemon').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var pokemonName = selectedOption.data('name');
+                var pokemonLevel = selectedOption.data('level');
+                var pokemonEspecie = selectedOption.data('especie');
+                var pokemonPokedexId = selectedOption.data('pokedex_id');
+                var pokemonId = selectedOption.val();
+                console.log("ID: " + pokemonId+ ", POKEDEX_ID: "+ pokemonPokedexId);
+                var abilities = [
+                    selectedOption.data('ability-1'),
+                    selectedOption.data('ability-2'),
+                    selectedOption.data('ability-3'),
+                    selectedOption.data('ability-4')
+                ];
+    
+                $('#poke_name').val(pokemonName);
+                $('#poke_LVL').val(pokemonLevel);
+                updateSasasa(pokemonEspecie);
+    
+                // Fetch moves for the selected pokemon
+                fetch('/api/moves/' + selectedOption.val())
+                    .then(response => response.json())
+                    .then(data => {
+                        var move_list = data.moves;
+                        $('#ability_1, #ability_2, #ability_3, #ability_4').each(function() {
+                            $(this).empty().append('<option value=""></option>');
+                            move_list.forEach(move => {
+                                $(this).append(`<option value="${move}">${move}</option>`);
+                            });
+                        });
+                    });
+    
+                // Fetch types and strengths/weaknesses for the selected pokemon
+                fetch(`/api/types/${selectedOption.data('pokedex_id')}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var pokemonType = data.pokemon_type;
+                        var goodAgainst = data.good_against;
+                        var badAgainst = data.bad_against;
+    
+                        $('.type-container img').remove();
+                        $('#good img').remove();
+                        $('#bad img').remove();
+    
+                        pokemonType.forEach(type => {
+                            $('.type-container').append(`<img src="/static/images/tipos_pokemon/${type}.png" alt="type" class="img-type">`);
+                        });
+    
+                        goodAgainst.forEach(type => {
+                            $('#good').append(`<img src="/static/images/tipos_pokemon/${type}.png" alt="type" class="img-type-against">`);
+                        });
+    
+                        badAgainst.forEach(type => {
+                            $('#bad').append(`<img src="/static/images/tipos_pokemon/${type}.png" alt="type" class="img-type-against">`);
+                        });
+    
+                        var pokemonImageUrl = `https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/${String(selectedOption.data('pokedex_id')).padStart(3, '0')}.png`;
+                        $('#pokemon-image').attr('src', pokemonImageUrl);
+                    });
+            });
+            $('#add_pokemon_btn').on('click', function() {
+                var owner_id = "{{ owner_id }}";
+                var selectedOption = $('#select_pokemon').find('option:selected');
+                var pokemon_id = selectedOption.val();
+                var pokedex_id = selectedOption.data('pokedex_id');
+                var pokemon_name = $('#poke_name').val();
+                var pokemon_level = $('#poke_LVL').val();
+                var pokemon_ability_1 = $('#ability_1').val();
+                var pokemon_ability_2 = $('#ability_2').val();
+                var pokemon_ability_3 = $('#ability_3').val();
+                var pokemon_ability_4 = $('#ability_4').val();
+                console.log(owner_id, pokemon_id, pokedex_id, pokemon_name, pokemon_level, pokemon_ability_1, pokemon_ability_2, pokemon_ability_3, pokemon_ability_4)
+                fetch('/api/mod_pokemon/' + pokemon_id, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'name': pokemon_name,
+                        'level': pokemon_level,
+                        'ability_1': pokemon_ability_1,
+                        'ability_2': pokemon_ability_2,
+                        'ability_3': pokemon_ability_3,
+                        'ability_4': pokemon_ability_4,
+                        'pokedex_id': pokedex_id,
+                        'owner_id': owner_id
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Respuesta del servidor:');
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error al enviar la solicitud:', error);
+                });
+            });
+    });
+    
+             // Event handler for #select_especie_pokemon
+            $('#select_especie_pokemon').on('change', function() {
+                var especie = $(this).val();
+                $('#select_pokemon').find('option:selected').data('especie', especie);
+            }); 
+    </script>
+    
+    
+</body>
+</html>

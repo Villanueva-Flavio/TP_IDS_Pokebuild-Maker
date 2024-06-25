@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Builds</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlaza tu archivo CSS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importa jQuery -->
+</head>
+<body>
+    <div class="container">
+        <h2>Delete Builds</h2>
+        <form id="deleteBuildForm">
+            <input type="text" id="searchInput" placeholder="Buscar build...">
+            <select id="buildsList" size="10"> <!-- size="10" define el tamaño visible -->
+                <!-- Aquí se generarán las opciones dinámicamente -->
+            </select>
+            <div class="button-container">
+                <button type="button" id="deleteBuildBtn">Delete</button>
+                <button type="button" id="cancelBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/delete_build.js')}}"></script> <!-- Enlaza el archivo de script -->
+</body>
+</html>
+

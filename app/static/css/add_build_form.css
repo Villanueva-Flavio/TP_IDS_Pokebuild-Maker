@@ -35,7 +35,19 @@ h1{
 #title{
     margin-top: 3%;
     font-size: 5em;
+    text-align: center;
 }
+#builds_to_select{
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+    height: 50px;
+    width: 480px;
+    transform: translateY(-15%);
+    text-align: center;
+}
+
 
 .container_build_name{
     margin-top: 2%
@@ -54,7 +66,13 @@ h1{
 }
 
 .container_build_name input{
-    font-size: 20px;
+    font-size: 25px;
+}
+
+#build_name{
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .select2-search__field{
