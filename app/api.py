@@ -3,9 +3,10 @@ from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
-from datetime import datetime
 from dotenv import load_dotenv
+import re
 import mysql.connector
+
 
 load_dotenv()
 
@@ -24,6 +25,7 @@ POST_POKEMON_QUERY = """
 INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id)
 VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)
 """
+DELETE_USER_POKEMON = '/api/delete_pokemon/<int:owner_id>/<int:pokemon_id>'
 POKEMONS_MOVES_ROUTE='/api/moves/<pokemon_id>'
 POKEMONS_GET_ALL_ROUTE='/api/get_all_pokemons'
 POKEMONS_TYPES_ROUTE='/api/types/<pokemon_id>/'
@@ -47,7 +49,10 @@ USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 REGISTER = '/api/register/'
-LOGIN_ROUTE = '/api/login/'
+LOGIN = '/api/login/'
+
+USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
+USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
 
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -83,11 +88,6 @@ def get_users_profiles():
 def get_user_profile(user_id):
     return get_data(USER_ID_QUERY + user_id)
 
-# GET endpoint for POKEMONS by USER
-@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
-def get_pokemons_by_user(owner_id):
-    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
-
 # GET endpoint for HOME
 @api_blueprint.route('/api', methods=['GET'])
 def api_home():
@@ -97,6 +97,10 @@ def api_home():
         "users_profiles": "/api/users_profiles"
     }
     return jsonify(endpoints)
+# GET endpoints for Pokemons by owner_id
+@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
+def get_pokemons_by_user(owner_id):
+    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
 
 def get_data(query):
     try:
@@ -115,7 +119,6 @@ def get_data(query):
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-    
 @api_blueprint.route(POST_POKEMON, methods=['POST'])
 def add_pokemon():
     try:
@@ -128,7 +131,15 @@ def add_pokemon():
         for field in required_fields:
             if field not in pokemon_data:
                 return jsonify({'error': f'Missing required field: {field}'}), 400
-
+            
+        abilities = [
+            pokemon_data.get('ability_1'),
+            pokemon_data.get('ability_2'),
+            pokemon_data.get('ability_3'),
+            pokemon_data.get('ability_4')
+        ]
+        if all(ability in (None, '') for ability in abilities):
+            return jsonify({'error': 'At least one ability is required'}), 400
         with engine.connect() as connection:
             connection.execute(text(POST_POKEMON_QUERY), {
                 'pokedex_id': pokemon_data['pokedex_id'],
@@ -152,6 +163,7 @@ def add_pokemon():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
 
 @api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'])
@@ -261,6 +273,68 @@ def reorder_nulls_to_end():
 
     except mysql.connector.Error as err:
         print(f"Error: {err}")
+#POST endpoint for modify an existing POKEMON
+@api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'])
+def mod_pokemon(pokemon_id):
+    data = request.json
+    name = data.get('name')
+    pokedex_id = data.get('pokedex_id')
+    level = data.get('level')
+    ability_1 = data.get('ability_1')
+    ability_2 = data.get('ability_2', None)
+    ability_3 = data.get('ability_3', None)
+    ability_4 = data.get('ability_4', None)
+    owner_id = data.get('owner_id')
+
+
+    if not name or not pokedex_id or not level or not owner_id:
+        return jsonify({'error': 'All fields are required'})
+    abilities = [
+        data.get('ability_1'),
+        data.get('ability_2'),
+        data.get('ability_3'),
+        data.get('ability_4')
+    ]
+    if all(ability in (None, '') for ability in abilities):
+        return jsonify({'error': 'At least one ability is required'}), 400
+      
+    mod_pokemon_query = f"""
+                        UPDATE POKEMON SET 
+                        name = :name, 
+                        pokedex_id = :pokedex_id, 
+                        level = :level, 
+                        ability_1 = :ability_1, 
+                        ability_2 = :ability_2, 
+                        ability_3 = :ability_3, 
+                        ability_4 = :ability_4, 
+                        owner_id = :owner_id
+                        WHERE id = {pokemon_id}
+                        """
+    try:
+        with engine.connect() as connection:
+            connection.execute(text(mod_pokemon_query), {
+                'name': name,
+                'pokedex_id': pokedex_id,
+                'level': level,
+                'ability_1': ability_1,
+                'ability_2': ability_2,
+                'ability_3': ability_3,
+                'ability_4': ability_4,
+                'owner_id': owner_id,
+                'pokemon_id': pokemon_id
+            })
+        return jsonify({'message': f'Pokemon with id: {pokemon_id} modified successfully'})
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+
+def is_valid_email(email):
+    regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(regex, email) is not None
+
+def is_valid_password(password):
+    # Minimum 8 characters, at least one letter and one number
+    regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
+    return re.match(regex, password) is not None
 
 
 #DELETE endport for POKEMON by ID
@@ -291,97 +365,7 @@ def delete_pokemon(pokemon_id, owner_id):
     except SQLAlchemyError as e:
         error_message = f"Error al conectarse a la base de datos: {e}"
         print(error_message)
-        return {"error": error_message}, 500
-    
-@api_blueprint.route(REGISTER, methods=['POST'])
-def register():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    email = data.get('email')
-    profile_picture = data.get('profile_picture')
-
-    if not username or not password or not email or not profile_picture:
-        return jsonify({'error': 'Username, password, email and profile_picture are required'})
-    
-    add_user_query = """
-        INSERT INTO USER (username, password, email, profile_picture)
-        VALUES (:username, :password, :email, :profile_picture)
-    """
-
-    hashed_password = generate_password_hash(password)
-
-    try:
-        with engine.connect() as connection:
-            connection.execute(add_user_query), {
-                'username': username,
-                'password': hashed_password,
-                'email': email,
-                'profile_picture': profile_picture
-            }
-        return jsonify({"message": "User registered successfully"})
-
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error})
-    except Exception as e:
-        return jsonify({'error': str(e)})
-    
-
-# LOGIN user, checks if email and password are correct
-@api_blueprint.route(LOGIN_ROUTE, methods=['POST'])
-def login():
-    data = request.json
-    email = data.get('email')
-    password = data.get('password')
-
-    if not email or not password:
-        return jsonify({'error': 'Email and password are required'})
-    if not is_valid_email(email):
-        return jsonify({'error': 'Invalid email format'})
-    try:
-        check_login_query = "SELECT id, username, password FROM USER WHERE email = :email"
-        with engine.connect() as connection:
-            result = connection.execute(text(check_login_query), {'email': email})
-            user = result.fetchone()
-        
-        if user:
-            user_id, username, hashed_password = user
-            if check_password_hash(hashed_password, password):
-                return jsonify({"message": "Login successful", "user_id": user_id, "username": username})
-            else:
-                return jsonify({"error": "Invalid password"})
-        else:
-            return jsonify({"error": "Email not found"})
-
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error}), 500
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-#REGEX -> abc@s.c
-def is_valid_email(email):
-    if not email:
-        return False
-
-    parts = email.split('@')
-    if len(parts) != 2:
-        return False
-    
-    local_part, domain_part = parts
-    if local_part < 3:
-        return False
-    if not domain_part or len(domain_part) < 1:
-        return False
-    if '.' not in domain_part or len(domain_part.split('.')[-1]) < 1:
-        return False
-    # para que no exista un mail: 'hola@.com'
-    if domain_part.startswith('.'):
-        return False
-
-    return True
-
+        return {"error": error_message}, 500    
 
 # POST endpoint for adding a new BUILD
 @api_blueprint.route(ADD_BUILD_ROUTE, methods=['POST'])
@@ -438,6 +422,91 @@ def add_build():
     
     except Exception as e:
         return jsonify({'Error': str(e)})
+    
+
+@api_blueprint.route(REGISTER, methods=['POST'])
+def register():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    profile_picture = data.get('profile_picture')
+
+    # Check for missing fields
+    if not username or not password or not email:
+        return jsonify({'error': 'Username, password and email are required'}), 400
+    
+    # Validate email
+    if not is_valid_email(email):
+        return jsonify({'error': 'Invalid email'}), 400
+
+    # Validate password
+    if not is_valid_password(password):
+        return jsonify({'error': 'Invalid password'}), 400
+    
+    # Creo la consulta SQL para verificar si username o email ya existe
+    check_user_query = """
+        SELECT * FROM USER WHERE username = %s OR email = %s
+    """
+
+    try:
+        with engine.connect() as connection:
+            result = connection.execute(check_user_query, (username, email)).fetchone()
+            if result:
+                if result['username'] == username:
+                    return jsonify({'error': 'That username is already taken'}), 400
+                if result['email'] == email:
+                    return jsonify({'error': 'That email is already registered'}), 400
+
+            # Hash the password
+            hashed_password = generate_password_hash(password)
+            
+            add_user_query = """
+                INSERT INTO USER (username, password, email, profile_picture)
+                VALUES (%s, %s, %s, %s)
+            """
+            connection.execute(add_user_query, (username, hashed_password, email, profile_picture))
+        return jsonify({"message": "User registered successfully"}), 201
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api_blueprint.route(LOGIN, methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Email and password are required'}), 400
+
+    get_user_query = """
+        SELECT email, password FROM USER WHERE email = %s
+    """
+
+    try:
+        with engine.connect() as connection:
+            result = connection.execute(get_user_query, (email,))
+            user = result.fetchone()
+
+            if user is None:
+                return jsonify({'error': 'Invalid email or password'}), 401
+
+            stored_password = user['password']
+
+            if check_password_hash(stored_password, password):
+                return jsonify({'message': 'Login successful'}), 200
+            else:
+                return jsonify({'error': 'Invalid email or password'}), 401
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
 @api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'])
 def get_build_by_user(owner_id):
