@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
 from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
+from werkzeug.security import generate_password_hash, check_password_hash
 import os, requests
 from dotenv import load_dotenv
 import re
@@ -223,6 +224,7 @@ def reorder_nulls_to_end():
             password=DB_PASSWORD,
             database=DB_NAME
         )
+
         cursor = conn.cursor()
 
         query = "SELECT * FROM BUILDS"
@@ -247,6 +249,22 @@ def reorder_nulls_to_end():
                 build[8],
                 build[9]
             )
+
+            updated_builds.append(updated_build)
+
+        update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
+        for idx, updated_build in enumerate(updated_builds):
+            cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
+
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        print("Tabla BUILDS actualizada exitosamente.")
+
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
 #POST endpoint for modify an existing POKEMON
 @api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'])
 def mod_pokemon(pokemon_id):
@@ -260,13 +278,11 @@ def mod_pokemon(pokemon_id):
     ability_4 = data.get('ability_4', None)
     owner_id = data.get('owner_id')
 
-            updated_builds.append(updated_build)
+
     if not name or not pokedex_id or not level or not ability_1 or not owner_id:
         return jsonify({'error': 'All fields are required'})
 
-        update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
-        for idx, updated_build in enumerate(updated_builds):
-            cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
+      
     mod_pokemon_query = f"""
                         UPDATE POKEMON SET 
                         name = :name, 
@@ -279,8 +295,6 @@ def mod_pokemon(pokemon_id):
                         owner_id = :owner_id
                         WHERE id = {pokemon_id}
                         """
-
-        conn.commit()
     try:
         with engine.connect() as connection:
             connection.execute(text(mod_pokemon_query), {
@@ -295,12 +309,6 @@ def mod_pokemon(pokemon_id):
                 'pokemon_id': pokemon_id
             })
         return jsonify({'message': f'Pokemon with id: {pokemon_id} modified successfully'})
-
-        cursor.close()
-        conn.close()
-
-        print("Tabla BUILDS actualizada exitosamente.")
-
     except mysql.connector.Error as err:
         print(f"Error: {err}")
 
@@ -477,8 +485,3 @@ def login():
 @api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'])
 def get_build_by_user(owner_id):
     return get_data( USER_ID_BUILDS_QUERY + owner_id)
-    except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error})
-    except Exception as e:
-        return jsonify({'error': str(e)})
