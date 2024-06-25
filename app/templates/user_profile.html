@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/build_list_container.css') }}">
+    <link rel="stylesheet" type="text/css" href="/static/css/build_container.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/user_profile.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Tiny5&display=swap" rel="stylesheet">
+    <title>Profile</title>
+</head>
+<body style="background-color: #101010; overflow: hidden;">
+    
+    <div id="user-info-container">
+        <div class="user-info-item"><h2>ID: {{ user_id }}</h2></div>
+        <div class="user-info-item"><h2>USERNAME: {{ username }}</h2> </div>
+        <div class="user-info-item"><h2>PROFILE PICTURE: {{ profile_picture }}</h2></div>
+    </div>
+
+    <div id="builds-title-container">
+        <div class="user-info-item"><h2>BUILDS</h2> </div>
+    </div>
+
+    <div id="pokemons-title-container">
+        <div class="user-info-item"><h2>POKEMONS</h2> </div>
+    </div>
+
+    {% include 'build_list_container.html' %}
+    
+    <div id="user-pokemons-container">
+        {% for pokemon_id in pokemons_owned %}
+            <div class="pokemon-img-container">
+                <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/{{ pokemon_id }}.png" alt="Pokemon {{ pokemon_id }}">
+            </div>
+        {% endfor %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js/build_details.js') }}"></script>
+</body>
+</html>

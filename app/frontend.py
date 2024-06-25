@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 import requests
 
 frontend_blueprint = Blueprint('frontend', __name__)
@@ -111,10 +111,54 @@ def get_user_pokemons(user_id):
         pokemons_dict.append(build_row)
     return pokemons_dict
 
+def get_user_builds(user_id):
+    user_builds=requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
+    builds_dict = []
+    for build in user_builds:
+        build_row = {
+            'id': build['id'],
+            'build_name': build['build_name'],
+            'pokemon_id_1': build['pokemon_id_1'],
+            'pokemon_id_2': build['pokemon_id_2'],
+            'pokemon_id_3': build['pokemon_id_3'],
+            'pokemon_id_4': build['pokemon_id_4'],
+            'pokemon_id_5': build['pokemon_id_5'],
+            'pokemon_id_6': build['pokemon_id_6'],
+            'timestamp': build['timestamp']
+        }
+        builds_dict.append(build_row)
+    return builds_dict
+
+def get_user_name(user_id):
+    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/')
+    try:
+        user_data = user_data.json()
+    except ValueError as e:
+        print(f"Error parsing JSON: {e}")
+        print(f"Response content: {user_data.content}")
+        raise
+    return user_data['username']
+
+def get_user_profile_picture(user_id):
+    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/')
+    try:
+        user_data = user_data.json()
+    except ValueError as e:
+        print(f"Error parsing JSON: {e}")
+        print(f"Response content: {user_data.content}")
+        raise
+    return user_data['profile_picture']
+
 @frontend_blueprint.route('/add_build_form/<owner_id>', methods = ['GET', 'POST'])
 def pokemon_container(owner_id): # cambiar user id cuando este el auth
     pokemons_dic = get_user_pokemons(owner_id)
     return render_template('add_build_form.html', pokemons=pokemons_dic, owner_id=owner_id)  
+
+@frontend_blueprint.route('/modify_build_form/<owner_id>', methods = ['GET', 'POST'])
+def sasa(owner_id): # cambiar user id cuando este el auth
+    pokemons_dic = get_user_pokemons(owner_id)
+    builds_dic=get_user_builds(owner_id)
+    return render_template('modify_build_form.html', pokemons=pokemons_dic, builds = builds_dic, owner_id=owner_id) 
 
 @frontend_blueprint.route('/delete_pokemon_form/<owner_id>')
 def delete_pokemon(owner_id):
@@ -130,6 +174,35 @@ def delete_pokemon(owner_id):
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
 
+@frontend_blueprint.route('/user_profile/<user_id>')
+def user_profile(user_id):
+    user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
+    pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
+    user_pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+    pokemons_owned = set()
+
+    for pokemon in user_pokemons:
+        pokemons_owned.add(str(pokemon['pokedex_id']).zfill(3))
+
+    build_dict = {}
+    for build in user_builds:
+        result = get_pokedex_id(get_pokemon_id(build), pokemons)
+        build_row = {
+            'owner_id': user_id,
+            'build_name': build['build_name'],
+            'timestamp': build['timestamp']
+        }
+
+        for j in range(6):
+            build_row[f'pokemon_id_{j+1}'] = result[j]
+        build_dict[build['id']] = build_row
+    try:
+        username = get_user_name(user_id)
+        profile_picture = get_user_profile_picture(user_id)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username, profile_picture=profile_picture)
 @frontend_blueprint.route('/login/')
 def login_form():
     return render_template('login_form.html')
