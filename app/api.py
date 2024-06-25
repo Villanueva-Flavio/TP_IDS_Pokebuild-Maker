@@ -583,3 +583,13 @@ def mod_user(user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)})
+        
+        #POST endpoint for delete user
+@api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'])
+def del_user(user_id):
+    try:
+        with engine.connect() as connection:
+            del_user_query = "DELETE FROM USER WHERE id = :user_id"
+            connection.execute(text(del_user_query), {'user_id': user_id})
+        
+        return jsonify({'message': f'User with ID {user_id} deleted successfully'})
