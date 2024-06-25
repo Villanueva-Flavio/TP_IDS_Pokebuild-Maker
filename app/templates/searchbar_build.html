@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Select Builds</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable-select/1.7.9/jquery-editable-select.min.css"> <!-- Estilos para editable-select -->
+</head>
+<body>
+    <div class="container">
+        <h2>Search and Select Builds</h2>
+        <select id="buildsSelect" class="editable-select">
+            {% for build in builds %}
+                <option value="{{ build.id }}">{{ build.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Importa jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-editable-select/1.7.9/jquery-editable-select.min.js"></script> <!-- Importa editable-select -->
+    <script src="{{ url_for('static', filename='js/search_and_select_build.js')}}"></script> <!-- Enlaza tu archivo de script -->
+</body>
+</html>
