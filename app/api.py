@@ -462,10 +462,10 @@ def register():
             hashed_password = generate_password_hash(password)
             
             add_user_query = """
-                INSERT INTO USER (username, password, email)
-                VALUES (%s, %s, %s)
+                INSERT INTO USER (username, password, email, image_profile)
+                VALUES (%s, %s, %s, %s)
             """
-            connection.execute(add_user_query, (username, hashed_password, email))
+            connection.execute(add_user_query, (username, hashed_password, email, image_profile))
         return jsonify({"message": "User registered successfully"}), 201
 
     except SQLAlchemyError as e:
