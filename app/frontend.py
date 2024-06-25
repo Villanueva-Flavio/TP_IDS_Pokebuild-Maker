@@ -19,6 +19,7 @@ def get_pokedex_id(pokemon_list, pokemons):
         '000' if pokemon_id == -1 or pokemon_id - 1 >= len(pokemons) else str(pokemons[pokemon_id - 1]['pokedex_id']).zfill(3)
         for pokemon_id in pokemon_list
     ]
+
 def get_build_dict(builds, pokemons):
     build_dict = {}
     for build in builds:
@@ -174,6 +175,7 @@ def delete_pokemon(owner_id):
         pokemons_dict.append(build_row)
     return render_template('delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
 
+
 @frontend_blueprint.route('/user_profile/<user_id>')
 def user_profile(user_id):
     user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
@@ -203,6 +205,7 @@ def user_profile(user_id):
         return jsonify({"error": str(e)}), 500
     
     return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username, profile_picture=profile_picture)
+
 @frontend_blueprint.route('/login/')
 def login_form():
     return render_template('login_form.html')
