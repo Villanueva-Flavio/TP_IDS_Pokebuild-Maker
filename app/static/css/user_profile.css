@@ -18,25 +18,26 @@
 
 #builds-title-container {
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
-    max-width: 1190px;
+    width: 68.3vw;
     padding: 5px;
     margin-top: 5px;
     text-align: center;
+    float: left;
 }
 
 #pokemons-title-container {
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
-    max-width: 600px;
+    width: 29.2vw;
     padding: 5px;
     margin-top: 5px;
     text-align: center;
-    margin-left: 1210px;
-    margin-top: -120px;
+    float: right;
 }
 
 #container {
     margin-top: 270px;
     margin-left: -20px;
+    float: left;
 }
 
 .build-container:first-child {
@@ -49,15 +50,15 @@
 
 #user-pokemons-container {
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
-    max-width: 1190px;
-    height: 570px; /* Altura fija del contenedor */
+    width: 28.4vw;
+    height: 66vh;
     padding: 12px;
-    margin-left: 1210px;
-    margin-top: 6px;
+    margin-top: 0.7vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
     overflow-y: auto;
+    float: right;
 }
 
 #user-pokemons-container::-webkit-scrollbar {
