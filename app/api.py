@@ -582,6 +582,11 @@ def mod_user(user_id):
         # Validate password, hecho por Facu
         if not is_valid_password(password):
             return jsonify({'error': 'Invalid password'}), 400
+
+        # Creo la consulta SQL para verificar si username o email elegidos ya existen
+        check_user_query = """
+            SELECT * FROM USER WHERE username = %s OR email = %s
+        """
     
         with engine.connect() as connection:
             mod_user_query = """
