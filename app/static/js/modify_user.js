@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('profile_picture', profile_pic);
         }
 
-        fetch('/api/mod_user/{{ user_data.id }}', {
+        fetch('/api/mod_user/{{ user_id }}', {
             method: 'POST',
             body: formData
         })
