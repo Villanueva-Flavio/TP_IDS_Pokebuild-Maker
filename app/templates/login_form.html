@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login_register_form.css') }}">
 </head>
 <body>
@@ -16,6 +16,7 @@
             <input type="email" placeholder="my_email@gmail.com" id="email_input" class="login_register_input">
             <label for="password_input" class="label_login_register">PASSWORD:</label>
             <input type="password" id="password_input" placeholder="my_password12345" class="login_register_input">
+            <div id="errorMensaje"></div>
             <div class="buttons_container_login_register_form">
                 <button type="submit" class="login_register_button" onclick="redirectToSignUp()">SIGN UP</button>
                 <button type="submit" class="login_register_button">LOG IN</button>
