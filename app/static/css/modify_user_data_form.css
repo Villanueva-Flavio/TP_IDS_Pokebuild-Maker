@@ -45,3 +45,13 @@
     align-items: center;
     justify-content: center;
 }
+
+.edit_profile_button{
+    font-family: "Tiny5", sans-serif;
+    font-size: 45px;
+    width: 300px;
+    color: #28ffbd;
+    border: 2px solid white;
+    background-color: #160033;
+}
+
