@@ -8,40 +8,42 @@ function validatePassword(password) {
     return passwordPattern.test(password);
 }
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('mod_form').addEventListener('submit', function(event) {
+    const modForm = document.getElementById('mod_form');
+
+    modForm.addEventListener('submit', function(event) {
         event.preventDefault();
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        const confirm_password = document.getElementById('confirm-password').value;
-        const profile_pic = document.getElementById('profile-pic').files[0];
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const profilePicInput = document.getElementById('profile-pic');
+        const profile_pic = profilePicInput.files[0];
 
         
-        const passwordValidation = validatePassword(password, confirm_password);
+        const passwordValidation = validatePassword(password, confirmPassword);
         if (!passwordValidation.valid) {
             alert(passwordValidation.message);
             return;
         }
 
+        
+        if (name.trim() === '' || email.trim() === '') {
+            alert('Name and email are required fields.');
+            return;
+        }
+
+        
         const formData = new FormData();
         formData.append('username', name);
         formData.append('email', email);
         formData.append('password', password);
-        formData.append('profile_picture', profile_pic);
-        if(username.trim() === "" || email.trim() === "" || password.trim() === ""){
-            $("#errorMensaje").html("Rellenar todos los campos");
-        }
-        if (!validateEmail(email)) {
-            console.log('Invalid email');
-            $('#errorMensaje').text('Correo electrónico inválido');
-            return;
-        }
-        if (!validatePassword(password)) {
-            console.log('Invalid password');
-            $('#errorMensaje').text('Contraseña inválida');
-            return;
+        
+        
+        if (profile_pic) {
+            formData.append('profile_picture', profile_pic);
         }
 
+        
         fetch('/api/mod_user/{{ user_data.id }}', {
             method: 'POST',
             body: formData
@@ -64,16 +66,17 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Failed to update profile');
         });
     });
+
+    
+    function validatePassword(password, confirmPassword) {
+        if (password !== confirmPassword) {
+            return { valid: false, message: 'Passwords do not match' };
+        }
+        if (password.length < 8) {
+            return { valid: false, message: 'Password should be at least 8 characters long' };
+        }
+        
+        return { valid: true };
+    }
 });
 
-function validatePassword(password, confirmPassword) {
-    if (password !== confirmPassword) {
-        return { valid: false, message: 'Passwords do not match' };
-    }
-    if (password.length < 8) {
-        return { valid: false, message: 'Password should be at least 8 characters long' };
-    }
-    
-
-    return { valid: true };
-}
