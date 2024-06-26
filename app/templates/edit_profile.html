@@ -1,52 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Profile</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
+    
 </head>
 <body>
 
-    <h1>Edit Profile</h1>
-
-    <div class="form-container">
+    <div class="container" id="modify_profile_container">
+        <h1>Edit Profile</h1>
         <form action="" id="mod_form">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
             </div>
 
-            <br>
-
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
             </div>
-
-            <br>
 
             <div class="form-group">
                 <label for="password">New Password</label>
                 <input type="password" id="password" name="password">
             </div>
 
-            <br>
-
             <div class="form-group">
                 <label for="confirm-password">Confirm New Password</label>
                 <input type="password" id="confirm-password" name="confirm-password">
             </div>
-        
-            <br>
-
-
-            <div class="form-group">
-                <label for="profile-pic">New Profile Picture</label>
-                <input type="file" id="profile-pic" name="profile-pic">
-            </div>
-
-            <br>
 
             <div class="form-actions">
                 <button type="button" class="cancel" onclick="cancelarEdicion()">Cancel</button>
@@ -55,6 +39,66 @@
         </form>
     </div>
 
-    <script src="script.js"></script> 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modForm = document.getElementById('mod_form');
+
+            modForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                
+                const passwordValidation = validatePassword(password, confirmPassword);
+                if (!passwordValidation.valid) {
+                    alert(passwordValidation.message);
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('username', name);
+                formData.append('email', email);
+                formData.append('password', password);
+
+                
+                fetch('/api/mod_user/{{ user_data.id }}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/user_profile/{{ user_data.id }}';
+                    } else {
+                        alert(data.message || 'Failed to update profile');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update profile');
+                });
+            });
+
+            function validatePassword(password, confirmPassword) {
+                if (password !== confirmPassword) {
+                    return { valid: false, message: 'Passwords do not match' };
+                }
+                if (password.length < 8) {
+                    return { valid: false, message: 'Password should be at least 8 characters long' };
+                }
+                
+
+                return { valid: true };
+            }
+
+            function cancelarEdicion() {
+                window.location.href = '/'; 
+            }
+        });
+    </script>
+
 </body>
 </html>
+
