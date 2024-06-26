@@ -2,12 +2,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
-import os, requests
+import os, requests, mysql.connector, re
 from dotenv import load_dotenv
-import re
-import mysql.connector
-from sqlalchemy.sql import text
-
 
 load_dotenv()
 
@@ -22,86 +18,68 @@ POKEMONS_QUERY = "SELECT * FROM POKEMON"
 POKEMON_ID_ROUTE = '/api/pokemon/<pokemon_id>/'
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
 POST_POKEMON = '/api/add_pokemon/'
-POST_POKEMON_QUERY = """
-INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id)
-VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)
-"""
+POST_POKEMON_QUERY = """INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)"""
 DELETE_USER_POKEMON = '/api/delete_pokemon/<int:owner_id>/<int:pokemon_id>'
 POKEMONS_MOVES_ROUTE='/api/moves/<pokemon_id>'
 POKEMONS_GET_ALL_ROUTE='/api/get_all_pokemons'
 POKEMONS_TYPES_ROUTE='/api/types/<pokemon_id>/'
-
 DELETE_USER_POKEMON = '/api/delete_pokemon/<int:owner_id>/<int:pokemon_id>'
-
 BUILDS_ROUTE = '/api/builds/'
 BUILDS_QUERY = "SELECT * FROM BUILDS"
 BUILD_ID_ROUTE = '/api/build/<build_id>/'
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
 ADD_BUILD_ROUTE='/api/add_build/'
-
 USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
 USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
 USER_ID_BUILDS_ROUTE='/api/builds_by_user/<owner_id>'
 USER_ID_BUILDS_QUERY = "SELECT id, build_name, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp FROM BUILDS WHERE owner_id ="
-
-
 USERS_ROUTE = '/api/users_profiles/'
 USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u;"
 USER_ID_ROUTE = '/api/user_profile/<user_id>/'
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 REGISTER = '/api/register/'
 LOGIN = '/api/login/'
-
 USER_ID_POKEMONS_ROUTE='/api/pokemons_by_user/<owner_id>'
 USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
 
 api_blueprint = Blueprint('api', __name__)
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
+conn = mysql.connector.connect(host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME)
 
-# GET endpoint for POKEMONS
-@api_blueprint.route(POKEMONS_ROUTE, methods=['GET'])
-def get_pokemons():
-    return get_data(POKEMONS_QUERY)
+def reorder_nulls_to_end():
+    try:
+        cursor = conn.cursor()
+        cursor.execute(BUILDS_QUERY)
+        builds = cursor.fetchall()
 
-# GET endpoint for POKEMON by ID
-@api_blueprint.route(POKEMON_ID_ROUTE, methods=['GET'])
-def get_pokemon_by_id(pokemon_id):
-    return get_data(POKEMON_ID_QUERY + pokemon_id)
+        updated_builds = []
+        for build in builds:
+            pokemon_ids = [build[2], build[3], build[4], build[5], build[6], build[7]]
+            sorted_pokemon_ids = sorted(pokemon_ids, key=lambda x: x is None)
+            updated_build = (
+                build[1],  
+                sorted_pokemon_ids[0],
+                sorted_pokemon_ids[1],
+                sorted_pokemon_ids[2],
+                sorted_pokemon_ids[3],
+                sorted_pokemon_ids[4],
+                sorted_pokemon_ids[5],
+                build[8],
+                build[9]
+            )
+            updated_builds.append(updated_build)
 
-# GET endpoint for BUILDS
-@api_blueprint.route(BUILDS_ROUTE, methods=['GET'])
-def get_builds():
-    return get_data(BUILDS_QUERY)
+        update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
+        for idx, updated_build in enumerate(updated_builds):
+            cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
 
-# GET endpoint for BUILD by ID
-@api_blueprint.route(BUILD_ID_ROUTE, methods=['GET'])
-def get_build_by_id(build_id):
-    return get_data(BUILD_ID_QUERY + build_id)
+        conn.commit()
+        cursor.close()
+        conn.close()
 
-# GET endpoint for USERS
-@api_blueprint.route(USERS_ROUTE, methods=['GET'])
-def get_users_profiles():
-    return get_data(USERS_QUERY)
-
-# GET endpoint for USER by ID
-@api_blueprint.route(USER_ID_ROUTE, methods=['GET'])
-def get_user_profile(user_id):
-    return get_data(USER_ID_QUERY + user_id)
-
-# GET endpoint for HOME
-@api_blueprint.route('/api', methods=['GET'])
-def api_home():
-    endpoints = {
-        "pokemons": "/api/pokemons",
-        "builds": "/api/builds",
-        "users_profiles": "/api/users_profiles"
-    }
-    return jsonify(endpoints)
-# GET endpoints for Pokemons by owner_id
-@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'])
-def get_pokemons_by_user(owner_id):
-    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
 
 def get_data(query):
     try:
@@ -111,15 +89,10 @@ def get_data(query):
             for row in result:
                 data_dict = dict(row)
                 data.append(data_dict)
-
-        if len(data) == 1:
-            return jsonify(data[0])
-        else:
-            return jsonify(data)
+        return jsonify(data[0]) if(len(data) == 1) else jsonify(data)
         
     except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error})
+        return jsonify({'error': str(e.__dict__['orig'])})
 
 def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -129,8 +102,52 @@ def is_valid_password(password):
     regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
     return re.match(regex, password) is not None
 
+# GET endpoint for HOME
+@api_blueprint.route('/api', methods=['GET'], strict_slashes=False)
+def api_home():
+    endpoints = {
+        "pokemons": "/api/pokemons",
+        "builds": "/api/builds",
+        "users_profiles": "/api/users_profiles"
+    }
+    return jsonify(endpoints)
 
-@api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'])
+# GET endpoint for POKEMONS
+@api_blueprint.route(POKEMONS_ROUTE, methods=['GET'], strict_slashes=False)
+def get_pokemons():
+    return get_data(POKEMONS_QUERY)
+
+# GET endpoint for POKEMON by ID
+@api_blueprint.route(POKEMON_ID_ROUTE, methods=['GET'], strict_slashes=False)
+def get_pokemon_by_id(pokemon_id):
+    return get_data(POKEMON_ID_QUERY + pokemon_id)
+
+# GET endpoint for BUILDS
+@api_blueprint.route(BUILDS_ROUTE, methods=['GET'], strict_slashes=False)
+def get_builds():
+    return get_data(BUILDS_QUERY)
+
+# GET endpoint for BUILD by ID
+@api_blueprint.route(BUILD_ID_ROUTE, methods=['GET'], strict_slashes=False)
+def get_build_by_id(build_id):
+    return get_data(BUILD_ID_QUERY + build_id)
+
+# GET endpoint for USERS
+@api_blueprint.route(USERS_ROUTE, methods=['GET'], strict_slashes=False)
+def get_users_profiles():
+    return get_data(USERS_QUERY)
+
+# GET endpoint for USER by ID
+@api_blueprint.route(USER_ID_ROUTE, methods=['GET'], strict_slashes=False)
+def get_user_profile(user_id):
+    return get_data(USER_ID_QUERY + user_id)
+
+# GET endpoints for Pokemons by owner_id
+@api_blueprint.route(USER_ID_POKEMONS_ROUTE, methods=['GET'], strict_slashes=False)
+def get_pokemons_by_user(owner_id):
+    return get_data(USER_ID_POKEMONS_QUERY + owner_id)
+
+@api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'], strict_slashes=False)
 def get_pokemon_moves(pokemon_id):
     pokemon_id = pokemon_id.lower()
     url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
@@ -142,7 +159,7 @@ def get_pokemon_moves(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 404
 
-@api_blueprint.route(POKEMONS_GET_ALL_ROUTE, methods=['GET'])
+@api_blueprint.route(POKEMONS_GET_ALL_ROUTE, methods=['GET'], strict_slashes=False)
 def get_all_pokemons():
     url = 'https://pokeapi.co/api/v2/pokemon?limit=1025'
     response = requests.get(url)
@@ -152,8 +169,7 @@ def get_all_pokemons():
         pokemon['name'] = pokemon['name'].capitalize()
     return jsonify({'pokemons': pokemons})
 
-
-@api_blueprint.route(POKEMONS_TYPES_ROUTE, methods=['GET'])
+@api_blueprint.route(POKEMONS_TYPES_ROUTE, methods=['GET'], strict_slashes=False)
 def get_pokemon_types(pokemon_id):
     pokemon_id = pokemon_id.lower()
     url = f'https://pokeapi.co/api/v2/pokemon/{pokemon_id}'
@@ -173,7 +189,6 @@ def get_pokemon_types(pokemon_id):
 
             if coverage_response.status_code == 200:
                 types_data = coverage_response.json()
-
                 for damage_from in types_data['damage_relations']['double_damage_from']:
                     bad_against.add(damage_from['name'])
                 for damage_to in types_data['damage_relations']['double_damage_to']:
@@ -188,58 +203,7 @@ def get_pokemon_types(pokemon_id):
     else:
         return jsonify({'error': 'Pokemon not found'}), 400
 
-def reorder_nulls_to_end():
-    try:
-        conn = mysql.connector.connect(
-            host=DB_HOST,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            database=DB_NAME
-        )
-
-        cursor = conn.cursor()
-
-        query = "SELECT * FROM BUILDS"
-        cursor.execute(query)
-        builds = cursor.fetchall()
-
-        updated_builds = []
-
-        for build in builds:
-            pokemon_ids = [build[2], build[3], build[4], build[5], build[6], build[7]]
-
-            sorted_pokemon_ids = sorted(pokemon_ids, key=lambda x: x is None)
-
-            updated_build = (
-                build[1],  
-                sorted_pokemon_ids[0],
-                sorted_pokemon_ids[1],
-                sorted_pokemon_ids[2],
-                sorted_pokemon_ids[3],
-                sorted_pokemon_ids[4],
-                sorted_pokemon_ids[5],
-                build[8],
-                build[9]
-            )
-
-            updated_builds.append(updated_build)
-
-        update_query = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
-        for idx, updated_build in enumerate(updated_builds):
-            cursor.execute(update_query, (updated_build[1], updated_build[2], updated_build[3], updated_build[4], updated_build[5], updated_build[6], builds[idx][0]))
-
-        conn.commit()
-
-        cursor.close()
-        conn.close()
-
-        print("Tabla BUILDS actualizada exitosamente.")
-
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
-
-
-@api_blueprint.route(POST_POKEMON, methods=['POST'])
+@api_blueprint.route(POST_POKEMON, methods=['POST'], strict_slashes=False)
 def add_pokemon():
     try:
         pokemon_data = request.get_json()
@@ -284,9 +248,8 @@ def add_pokemon():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 #POST endpoint for modify an existing POKEMON
-@api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'])
+@api_blueprint.route('/api/mod_pokemon/<pokemon_id>', methods=['POST'], strict_slashes=False)
 def mod_pokemon(pokemon_id):
     data = request.json
     name = data.get('name')
@@ -339,9 +302,8 @@ def mod_pokemon(pokemon_id):
     except mysql.connector.Error as err:
         print(f"Error: {err}")
 
-
 #DELETE endport for POKEMON by ID
-@api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'])
+@api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'], strict_slashes=False)
 def delete_pokemon(pokemon_id, owner_id):
     try:
         with engine.connect() as connection:
@@ -370,9 +332,8 @@ def delete_pokemon(pokemon_id, owner_id):
         print(error_message)
         return {"error": error_message}, 500    
 
-
 # POST endpoint for adding a new BUILD
-@api_blueprint.route(ADD_BUILD_ROUTE, methods=['POST'])
+@api_blueprint.route(ADD_BUILD_ROUTE, methods=['POST'], strict_slashes=False)
 def add_build():
     data_build = request.json
 
@@ -427,9 +388,8 @@ def add_build():
     except Exception as e:
         return jsonify({'Error': str(e)})
 
-
 # POST endpoint for modify an existing BUILD
-@api_blueprint.route('/api/mod_build/<build_id>', methods=['POST'])
+@api_blueprint.route('/api/mod_build/<build_id>', methods=['POST'], strict_slashes=False)
 def mod_build(build_id):
     data_build = request.json
     data_build = request.json
@@ -489,9 +449,13 @@ def mod_build(build_id):
     except Exception as e:
         return jsonify({'Error2': str(e)})
 
+<<<<<<< HEAD
 
 
 @api_blueprint.route(REGISTER, methods=['POST'])
+=======
+@api_blueprint.route(REGISTER, methods=['POST'], strict_slashes=False)
+>>>>>>> 9a2db2581e8d75815965895c84ceb0c0440112ea
 def register():
     data = request.json
     username = data.get('username')
@@ -541,7 +505,7 @@ def register():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@api_blueprint.route(LOGIN, methods=['POST'])
+@api_blueprint.route(LOGIN, methods=['POST'], strict_slashes=False)
 def login():
     data = request.json
     email = data.get('email')
@@ -575,13 +539,12 @@ def login():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-@api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'])
+@api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'], strict_slashes=False)
 def get_build_by_user(owner_id):
     return get_data( USER_ID_BUILDS_QUERY + owner_id)
 
-
 #POST endpoint for adding a new USER   
-@api_blueprint.route('/api/add_user', methods=['POST'])
+@api_blueprint.route('/api/add_user', methods=['POST'], strict_slashes=False)
 def add_user():
     data_user = request.json  
     username = data_user.get('username')
@@ -608,7 +571,7 @@ def add_user():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-@api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'])
+@api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'], strict_slashes=False)
 def mod_user(user_id):
     try:
         username = request.form.get('username')
@@ -644,11 +607,9 @@ def mod_user(user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)})
-
-        
-        
+     
 #POST endpoint for delete user
-@api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'])
+@api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'], strict_slashes=False)
 def del_user(user_id):
     try:
         with engine.connect() as connection:
@@ -664,9 +625,8 @@ def del_user(user_id):
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
 # POST endpoint para eliminar una BUILD por su ID (primary key de la BUILD)
-@api_blueprint.route('/api/delete_build/', methods=['POST'])
+@api_blueprint.route('/api/delete_build', methods=['POST'], strict_slashes=False)
 def delete_build():
     data = request.json
     build_id = data.get('build_id')
