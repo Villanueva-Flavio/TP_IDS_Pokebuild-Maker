@@ -32,3 +32,4 @@ app/.env
 *.swp
 >>>>>>> origin/API-modify
 >>>>>>> Frontend-formulario_modificar_pokemon
+__pycache__/
