@@ -1,12 +1,3 @@
-
-function validateEmail(email) {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(email);
-}
-function validatePassword(password) {
-    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return passwordPattern.test(password);
-}
 document.addEventListener('DOMContentLoaded', function() {
     const modForm = document.getElementById('mod_form');
 
@@ -16,44 +7,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
-        const profilePicInput = document.getElementById('profile-pic');
-        const profile_pic = profilePicInput.files[0];
+        const profilePic = document.getElementById('profile-pic').files[0];
 
-        
         const passwordValidation = validatePassword(password, confirmPassword);
         if (!passwordValidation.valid) {
             alert(passwordValidation.message);
             return;
         }
 
-        
-        if (name.trim() === '' || email.trim() === '') {
-            alert('Name and email are required fields.');
-            return;
-        }
-
-        
         const formData = new FormData();
         formData.append('username', name);
         formData.append('email', email);
         formData.append('password', password);
-        
-        
-        if (profile_pic) {
-            formData.append('profile_picture', profile_pic);
-        }
+        formData.append('profile_picture', profilePic);
 
-        
         fetch('/api/mod_user/{{ user_data.id }}', {
             method: 'POST',
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 window.location.href = '/user_profile/{{ user_data.id }}';
@@ -67,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    
     function validatePassword(password, confirmPassword) {
         if (password !== confirmPassword) {
             return { valid: false, message: 'Passwords do not match' };
@@ -79,4 +50,3 @@ document.addEventListener('DOMContentLoaded', function() {
         return { valid: true };
     }
 });
-
