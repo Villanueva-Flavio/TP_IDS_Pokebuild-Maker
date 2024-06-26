@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('password', password);
         formData.append('profile_picture', profilePic);
 
-        fetch('/api/mod_user/{{ user_data.id }}', {
+        fetch('/api/mod_user/{{ user_id }}', {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = '/user_profile/{{ user_data.id }}';
+                window.location.href = '/user_profile/{{ user_id }}';
             } else {
                 alert(data.message || 'Failed to update profile');
             }
