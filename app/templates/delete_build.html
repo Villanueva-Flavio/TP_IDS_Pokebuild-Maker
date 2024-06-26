@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Delete Builds</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
+</head>
+<body>
+    <div class="container" id="delete_build_container">
+        <h2>Search and Delete Builds</h2>
+        <select id="editable-select" class="builds_searchbar">
+            {% for build in builds %}
+                <option id="{{ build.id }}">{{ build.build_name }}</option>
+            {% endfor %}
+        </select>
+        <button id="delete_builds_btn">Delete</button>
+        <button id="cancel_builds_btn">Cancel</button>
+    </div>
+
+    <script>
+        const select = document.getElementById('editable-select');
+        const deleteBtn = document.getElementById('delete_builds_btn');
+        const cancelBtn = document.getElementById('cancel_builds_btn');
+
+        deleteBtn.addEventListener('click', event => {
+            event.preventDefault();
+            const selectedBuild = select.options[select.selectedIndex];
+            const buildId = selectedBuild.id;
+            console.log(buildId);
+            fetch(`/api/delete_build/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ build_id: buildId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    console.log('Build deleted successfully');
+                    window.location.href = '/'; 
+                } else {
+                    console.log('An error occurred: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            window.location.href = '/'; 
+        });
+    </script>
+</body>
+</html>
+
+

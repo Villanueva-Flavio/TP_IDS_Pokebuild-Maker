@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a New Build</title>
+    <link rel="stylesheet" href='../static/css/add_build_form.css'>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+    <h1 id="title">CREATE A NEW BUILD</h1>
+    <form action="" class="container_build_name">
+        <label for="">BUILD NAME</label>
+        <input type="text" id="build_name">
+    </form>
+    <form id="build_form" action=""> 
+    <div class="container_all_pokemon">
+        {% for i in range (6) %}
+            <div class="pokemon_container">
+                <div class="search_container"> 
+                    <select name="" class="select-pokemon pokemon_{{i+1}}">
+                        <option value="">Seleccione un Pokemon</option>
+                        {%for pokemon in pokemons%}
+                        <option value="{{ pokemon.name }}" data-pokedex-id="{{ pokemon.especie }}" data-level='{{ pokemon.level }}'
+                        data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" 
+                        data-ability-4="{{ pokemon.ability_4 }}" data-name="{{pokemon.name}}">{{ pokemon.name }}</option>
+                        {%endfor%}
+                    </select> 
+                </div>
+                <div class="datos_container">    
+                    <div class="img_container">
+                        <img class="img_pokemon" src="../static/images/Logo.png">
+                    </div>
+                    <div class="info_container"> 
+                        <label for="" class="name">NAME: </label><br>
+                        <label for="" class="poke_LVL">LVL: </label><br>
+                        <label for="" class="poke_habilidad_1">ABILITY 1: </label><br>
+                        <label for="" class="poke_habilidad_2">ABILITY 2: </label><br>
+                        <label for="" class="poke_habilidad_3">ABILITY 3: </label><br>
+                        <label for="" class="poke_habilidad_4">ABILITY 4: </label>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</form>
+    <div class="btn_nav">
+        <button class="btn">Cancel</button> <!-- Usar modulo botones cancel save -->
+        <button class="btn" id="add_build_btn"  type="button" >Save</button>
+    </div>
+
+    <script>
+    function sort_list(lista) {
+        const numeros = lista.filter(elemento => typeof elemento === 'number');
+        const nulos = lista.filter(elemento => elemento === null);
+        const resultado = [...numeros, ...nulos];
+        return resultado;
+    }
+    function get_current_timestamp() {
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        var day = String(now.getDate()).padStart(2, '0');
+        var hours = String(now.getHours()).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+        var seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    $(document).ready(function() {
+        var owner_id = "{{ owner_id }}";
+        var pokemones = [];
+
+        try {
+            pokemones = JSON.parse('{{ pokemons | tojson | safe }}');
+        } catch (error) {
+            console.error('Error parsing pokemon data:', error);
+        }
+
+        console.log('Owner ID:', owner_id);
+        console.log('Pokemones:', pokemones);
+
+        $('.select-pokemon').select2({
+            tags: true,
+            placeholder: "Busca a tu pokemon...",
+            allowClear: true
+        });
+        $('#add_build_btn').on('click', function() {
+            console.log('Boton de agregar pokemon presionado!');
+            var build_name = $('#build_name').val().trim();
+            var pokemon_ids = [null, null, null, null, null, null];
+
+            $('.select-pokemon').each(function(index) {
+                var pokemon_seleccionado = $(this).val();
+                console.log('Selected Pokemon:', pokemon_seleccionado);
+                if (pokemon_seleccionado) {
+                    var pokemon = pokemones.find(p => p.name === pokemon_seleccionado);
+                    if (pokemon) {
+                        pokemon_ids[index] = pokemon.id;
+                        
+                    } else {
+                        console.error('Could not find ID for selected Pokemon:', pokemon_seleccionado);
+                    }
+                } else {
+                    console.error(`Pokemon ${index + 1} is empty!`);
+                }
+    });
+    window.location.href = '/';
+    if (!build_name) {
+        console.error('Build name is empty!');
+        return;
+    }
+    if (pokemon_ids.every(id => id === null)) {
+        console.error('All Pokemon slots are empty!');
+        return;
+    }
+
+
+    pokemon_ids = sort_list(pokemon_ids);
+    var build = {
+        'owner_id': parseInt(owner_id),
+        'build_name': build_name,
+        'pokemon_id_1': pokemon_ids[0],
+        'pokemon_id_2': pokemon_ids[1],
+        'pokemon_id_3': pokemon_ids[2],
+        'pokemon_id_4': pokemon_ids[3],
+        'pokemon_id_5': pokemon_ids[4],
+        'pokemon_id_6': pokemon_ids[5],
+        'timestamp': get_current_timestamp(),
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/add_build/',
+        contentType: 'application/json',
+        data: JSON.stringify(build),
+        success: function(response) {
+            console.log(response);
+            if (response['status'] === 'success') {
+                console.log('Build added successfully!');
+
+            } else {
+                console.error('Error adding build:', response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error);
+        }
+    });
+});
+
+    function procesar_datos() {
+        var selectedOption = this.options[this.selectedIndex];
+        var container = $(this).closest('.pokemon_container');
+
+        if(selectedOption.value === ""){
+            container.find('.name').html("NAME: ");
+            container.find('.poke_LVL').html("LVL: ");
+            container.find('.img_pokemon').attr('src', '');
+            for (var i = 1; i <= 4; i++) { container.find('.poke_habilidad_' + i).html("ABILITY " + i + ": "); }
+        } else {
+            var id = $(selectedOption).attr('data-pokedex-id');
+            while(id.length < 3) id = '0' + id;
+            var photo = 'https://pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/' + id + '.png';
+            container.find('.name').html('NAME: ' + $(selectedOption).attr('data-name'));
+            container.find('.poke_LVL').html('LVL: ' + $(selectedOption).attr('data-level'));
+            container.find('.img_pokemon').attr('src', photo);
+            for (var i = 1; i <= 4; i++) { container.find('.poke_habilidad_' + i).html('ABILITY ' + i + ': ' + $(selectedOption).attr('data-ability-' + i)); }
+        }
+    }
+    $('.select-pokemon').change(procesar_datos);
+
+});
+        
+    </script>
+</body>
+</html>

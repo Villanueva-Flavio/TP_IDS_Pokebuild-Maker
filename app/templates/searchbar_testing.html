@@ -1,82 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <script>var pokedex_id = 1;</script>
     <meta charset="UTF-8">
-    <title>Pokémon Moves Search</title>
-    <script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js"></script>
-    <link href="//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
-        .search-container {
-            margin: 20px;
-        }
-        .result-container {
-            margin: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-        .pokemon_searchbar {
-            width: 200px;
-        }
-        .es-visible{
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searchbars</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+    
+    
+    .select2-selection__rendered{
+        font-family: 'Roboto', sans-serif;
+        background-color: #121212;
+        height: 26px;
+        border-radius: 1px;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__clear {
+        background-color: #121212;
+    }
+
+    .select2-selection__arrow{
+        background-color: #121212;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: #fff transparent transparent transparent;
+    }
+
+    .select2-results__option{
+        font-family: 'Roboto', sans-serif;
+        background-color: #101010;
+        color: white;
+    }
+</style>
 <body>
-    <form>
-        <div id="pokemonSearchbarContainer">{% include 'pokemon_searchbar.html' %}</div>
-        <div id="abilitySearchbarContainer">{% for i in range(4) %}{% include 'ability_searchbar.html' %}{% endfor %}</div>
-        <button type="submit">AGREGAR</button>
-    </form>
+    <select id="select-pokemon" style="width: 300px;">
+        <option value=""></option>
+        {% for pokemon in pokemons %}
+            <option value="{{pokemon.id}}">{{pokemon.name}}</option>
+        {% endfor %}
+    </select>
+
+    {% for i in range(4) %}
+        <select class="select-ability" style="width: 200px;">
+            <option class="aviso">Elige pokemon</option>
+        </select>
+    {% endfor %}
 
     <script>
-        document.getElementById('editable-select').onchange = function() {
-            var name = document.querySelector('.es-visible').textContent;
-            var id = document.querySelector('.es-visible').id;
-            var moves;
-            fetch('/api/moves/' + id)
-            .then(response => response.json())
-            .then(data => {
-                var moves = data.moves;
-                console.log(moves);
-
-                var movesSelect = document.querySelector('.ability_1');
-                var movesSelect2 = document.querySelector('.ability_2');
-                var movesSelect3 = document.querySelector('.ability_3');
-                var movesSelect4 = document.querySelector('.ability_4');
-
-                // Clear existing options
-                movesSelect.innerHTML = '<option value="" disabled selected>Select move</option>';
-                movesSelect2.innerHTML = '<option value="" disabled selected>Select move</option>';
-                movesSelect3.innerHTML = '<option value="" disabled selected>Select move</option>';
-                movesSelect4.innerHTML = '<option value="" disabled selected>Select move</option>';
-
-                moves.forEach(move => {
-                    var option1 = document.createElement('option');
-                    option1.value = move;
-                    option1.textContent = move;
-                    movesSelect.appendChild(option1);
-
-                    var option2 = document.createElement('option');
-                    option2.value = move;
-                    option2.textContent = move;
-                    movesSelect2.appendChild(option2);
-
-                    var option3 = document.createElement('option');
-                    option3.value = move;
-                    option3.textContent = move;
-                    movesSelect3.appendChild(option3);
-
-                    var option4 = document.createElement('option');
-                    option4.value = move;
-                    option4.textContent = move;
-                    movesSelect4.appendChild(option4);
-                });
+        $(document).ready(function() {
+            $('#select-pokemon').select2({
+                tags: true,
+                placeholder: "Busca a tu pokemon...",
+                allowClear: true
             });
-        };
+
+            $('.select-ability').select2({
+                tags: true,
+                placeholder: "Elige tu movimiento...",
+                allowClear: true
+            });
+        });
+
+        $('#select-pokemon').on('change', function() {
+            $('.select2-selection__rendered').css('background-color', '#2f006f');
+            $('.select2-selection__rendered').css('color', 'white');
+
+            var pokemon_id = $(this).val();
+            console.log(pokemon_id);
+            fetch('/api/moves/' + pokemon_id)
+                .then(response => response.json())
+                .then(data => {
+                    var move_list = data['moves'];
+                    $('.select-ability').each(function() {
+                        $(this).empty();
+                        $(this).append('<option value=""></option>');
+                        for(var i = 0; i < move_list.length; i++) {
+                            $(this).append('<option value="' + move_list[i] + '">' + move_list[i] + '</option>');
+                        }
+                    });
+                });
+        });
     </script>
 </body>
 </html>
