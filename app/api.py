@@ -678,7 +678,8 @@ def delete_build():
                 WHERE id = :build_id
             """
             result = connection.execute(delete_build_query, {'build_id': build_id})
-            
+            if result.rowcount == 0:
+                return jsonify({'error': f'Build with id {build_id} not found'})
             return jsonify({'message': f'Build with id {build_id} deleted successfully'})
 
     except SQLAlchemyError as e:
