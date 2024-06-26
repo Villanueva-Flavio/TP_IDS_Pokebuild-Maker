@@ -30,7 +30,7 @@
             <div class="pokemon_container">
                 <div class="search_container"> 
                     <select name="" class="select-pokemon pokemon_{{i+1}}">
-                        <option value="">Seleccione un Pokemon</option>
+                        <option value="">None</option>
                         {%for pokemon in pokemons%}
                         <option value="{{ pokemon.name }}" data-id="{{ pokemon.id }}" data-pokedex-id="{{ pokemon.especie }}" data-level='{{ pokemon.level }}'
                         data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" 
@@ -92,15 +92,12 @@
         console.log('Owner ID:', owner_id);
         console.log('Pokemones:', pokemones);
 
-        $('.select-pokemon').select2({
-            tags: true,
-            placeholder: "Busca a tu pokemon...",
-            allowClear: true
-        });
-
         $('#add_build_btn').on('click', function() {
             console.log('Boton de agregar pokemon presionado!');
             var build_name = $('#build_name').val().trim();
+            var build_id = $('#builds_to_select').find('option:selected').data('build_id');
+            console.log('Build Name:', build_name);
+            console.log('Build ID:', build_id);
             var pokemon_ids = [null, null, null, null, null, null];
 
             $('.select-pokemon').each(function(index) {
@@ -125,25 +122,31 @@
                 return;
             }
 
+
             var build = {
                 'owner_id': parseInt(owner_id),
                 'build_name': build_name,
-                'pokemon_id_1': pokemon_ids[0],
-                'pokemon_id_2': pokemon_ids[1],
-                'pokemon_id_3': pokemon_ids[2],
-                'pokemon_id_4': pokemon_ids[3],
-                'pokemon_id_5': pokemon_ids[4],
-                'pokemon_id_6': pokemon_ids[5],
+                'pokemon_id_1': (pokemon_ids[0]),
+                'pokemon_id_2': (pokemon_ids[1]),
+                'pokemon_id_3': (pokemon_ids[2]),
+                'pokemon_id_4': (pokemon_ids[3]),
+                'pokemon_id_5': (pokemon_ids[4]),
+                'pokemon_id_6': (pokemon_ids[5]),
                 'timestamp': get_current_timestamp(),
             };
-
+            console.log('Build:', build);
+            if (!build.build_name || !build.pokemon_id_1) {
+                console.error('build_name and pokemon_id_1 must not be empty');
+                return;
+            }
+            console.log('/api/mod_user/'+ build_id);
             $.ajax({
                 type: 'POST',
-                url: '/api/mod_user/{{ owner_id }}',
+                url: '/api/mod_build/'+ build_id,
                 contentType: 'application/json',
                 data: JSON.stringify(build),
                 success: function(response) {
-                    console.log(response);
+                    
                     if (response['status'] === 'success') {
                         console.log('Build added successfully!');
                     } else {

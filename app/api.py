@@ -432,6 +432,8 @@ def add_build():
 @api_blueprint.route('/api/mod_build/<build_id>', methods=['POST'])
 def mod_build(build_id):
     data_build = request.json
+    data_build = request.json
+
     build_name = data_build.get('build_name', '')
     owner_id = data_build.get('owner_id', None)
     pokemon_id_1 = data_build.get('pokemon_id_1', None)
@@ -442,7 +444,7 @@ def mod_build(build_id):
     pokemon_id_6 = data_build.get('pokemon_id_6', None)
     timestamp = data_build.get('timestamp', '')
 
-    # Validar los valores recibidos
+    # Validate the received data
     if not build_name:
         return jsonify({'Error': 'build_name must not be empty'})
     if owner_id is None:
@@ -450,19 +452,19 @@ def mod_build(build_id):
     if timestamp is None:
         return jsonify({'Error': 'timestamp must not be None'})
 
-    mod_build_query = f"""
-                    UPDATE BUILDS SET
-                    build_name = :build_name,
-                    owner_id = :owner_id,
-                    pokemon_id_1 = :pokemon_id_1,
-                    pokemon_id_2 = :pokemon_id_2,
-                    pokemon_id_3 = :pokemon_id_3,
-                    pokemon_id_4 = :pokemon_id_4,
-                    pokemon_id_5 = :pokemon_id_5,
-                    pokemon_id_6 = :pokemon_id_6,
-                    timestamp = :timestamp
-                    WHERE id = {build_id}
-                    """
+    mod_build_query = """
+        UPDATE BUILDS SET
+        build_name = :build_name,
+        owner_id = :owner_id,
+        pokemon_id_1 = :pokemon_id_1,
+        pokemon_id_2 = :pokemon_id_2,
+        pokemon_id_3 = :pokemon_id_3,
+        pokemon_id_4 = :pokemon_id_4,
+        pokemon_id_5 = :pokemon_id_5,
+        pokemon_id_6 = :pokemon_id_6,
+        timestamp = :timestamp
+        WHERE id = :build_id
+    """
 
     try:
         with engine.connect() as connection:
@@ -476,7 +478,7 @@ def mod_build(build_id):
                 'pokemon_id_5': pokemon_id_5,
                 'pokemon_id_6': pokemon_id_6,
                 'timestamp': timestamp,
-                'build_id':build_id
+                'build_id': build_id
             })
         return jsonify({'Message': f'Build with id: {build_id} modified successfully'})
 
@@ -486,6 +488,7 @@ def mod_build(build_id):
 
     except Exception as e:
         return jsonify({'Error2': str(e)})
+
 
 
 @api_blueprint.route(REGISTER, methods=['POST'])
