@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (select.selectedIndex !== -1) {
             deleteBuild();
         } else {
-            alert('Seleccione una construcción.');
+            alert('Select a build');
         }
     });
 
