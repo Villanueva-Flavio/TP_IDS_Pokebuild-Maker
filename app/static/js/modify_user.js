@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        
+        if (name.trim() === '' || email.trim() === '') {
+            alert('Name and email are required fields.');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('username', name);
         formData.append('email', email);
