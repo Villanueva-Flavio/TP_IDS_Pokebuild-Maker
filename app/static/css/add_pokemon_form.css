@@ -1,5 +1,5 @@
 #body_formulario_añadir_pokemon{ /*texto*/
-    background: linear-gradient(to bottom, #5e00ff, #160033);;
+    background: linear-gradient(to bottom, #5e00ff, #160033);
     border-color: white;
     font-family: "Tiny5", sans-serif;
     font-size: 40px;
@@ -8,6 +8,7 @@
 .select2-selection__clear{
     display: none;
 }
+
 
 .formulario{ /*Tamaño maximo de todo*/
     width: 1600px;
