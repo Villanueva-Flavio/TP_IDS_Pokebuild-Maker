@@ -7,14 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const confirm_password = document.getElementById('confirm-password').value;
         const profile_pic = document.getElementById('profile-pic').files[0];
 
-        
         const passwordValidation = validatePassword(password, confirm_password);
         if (!passwordValidation.valid) {
             alert(passwordValidation.message);
             return;
         }
 
-        
         if (name.trim() === '' || email.trim() === '') {
             alert('Name and email are required fields.');
             return;
@@ -24,7 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('username', name);
         formData.append('email', email);
         formData.append('password', password);
-        formData.append('profile_picture', profile_pic);
+        
+        
+        if (profile_pic) {
+            formData.append('profile_picture', profile_pic);
+        }
 
         fetch('/api/mod_user/{{ user_data.id }}', {
             method: 'POST',
@@ -58,6 +60,5 @@ function validatePassword(password, confirmPassword) {
         return { valid: false, message: 'Password should be at least 8 characters long' };
     }
     
-
     return { valid: true };
 }
