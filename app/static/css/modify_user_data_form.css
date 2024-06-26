@@ -1,0 +1,11 @@
+#edit_profile_form {
+    background: #160033;
+    border-radius: 5px;
+    border: 3px solid white;
+    font-family: "Tiny5", sans-serif;
+    color: #28ffbd;
+    height: 700px;
+    width: 710px;
+    padding: 20px;
+}
+
