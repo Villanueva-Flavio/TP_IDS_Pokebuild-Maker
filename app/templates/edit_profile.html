@@ -75,14 +75,14 @@
                 formData.append('email', email);
                 formData.append('password', password);
 
-                fetch('/api/mod_user/{{ user_data.id }}', {
+                fetch('/api/mod_user/{{ user_id }}', {
                     method: 'POST',
                     body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        window.location.href = '/user_profile/{{ user_data.id }}';
+                        window.location.href = '/user_profile/{{ user_id }}';
                     } else {
                         alert(data.message || 'Failed to update profile');
                     }
@@ -105,7 +105,7 @@
             }
 
             function cancelarEdicion() {
-                window.location.href = '/';
+                window.location.href = '/api/add_build_form/';
             }
         });
     </script>

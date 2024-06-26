@@ -49,4 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return { valid: true };
     }
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 6257ca05da574da869c845092cb54fc3ffcfdb79
