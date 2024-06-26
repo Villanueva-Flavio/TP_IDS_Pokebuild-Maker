@@ -37,3 +37,11 @@
     margin-right: 30px;
     padding-left: 10px;
 }
+
+.buttons_container_edit_profile_form{
+    margin-top: 40px;
+    gap: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
