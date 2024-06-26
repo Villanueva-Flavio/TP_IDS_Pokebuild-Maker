@@ -27,3 +27,13 @@
     margin-left: 30px;
     margin-top: 20px;
 }
+
+.edit_profile_input{
+    font-family: "Tiny5", sans-serif;
+    font-size: 30px;
+    background: #160033;
+    color: white;
+    margin-left: 30px;
+    margin-right: 30px;
+    padding-left: 10px;
+}
