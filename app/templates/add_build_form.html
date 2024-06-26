@@ -46,12 +46,14 @@
         {% endfor %}
     </div>
 </form>
+<div id="errorMensaje"></div>
     <div class="btn_nav">
-        <button class="btn">Cancel</button> <!-- Usar modulo botones cancel save -->
-        <button class="btn" id="add_build_btn"  type="button" >Save</button>
+        <button class="btn" id="cancel_btn">Cancel</button> <!-- Usar modulo botones cancel save -->
+        <button class="btn" id="add_build_btn">Save</button>
     </div>
 
     <script>
+    const cancelBtn = document.getElementById('cancel_btn');
     function sort_list(lista) {
         const numeros = lista.filter(elemento => typeof elemento === 'number');
         const nulos = lista.filter(elemento => elemento === null);
@@ -107,18 +109,21 @@
                     console.error(`Pokemon ${index + 1} is empty!`);
                 }
     });
-    window.location.href = '/';
+    
     if (!build_name) {
         console.error('Build name is empty!');
+        $('#errorMensaje').text('Ingrese el nombre de la build!');
         return;
     }
     if (pokemon_ids.every(id => id === null)) {
         console.error('All Pokemon slots are empty!');
+        $('#errorMensaje').text('Ingrese algun Pokémon!');
         return;
     }
-
-
-    pokemon_ids = sort_list(pokemon_ids);
+    if (pokemon_ids.length !== 6) {
+        console.error('Invalid number of Pokemon IDs:', pokemon_ids);
+        return;
+    }
     var build = {
         'owner_id': parseInt(owner_id),
         'build_name': build_name,
@@ -139,8 +144,7 @@
         success: function(response) {
             console.log(response);
             if (response['status'] === 'success') {
-                console.log('Build added successfully!');
-
+                window.location.href = '/';
             } else {
                 console.error('Error adding build:', response);
             }
@@ -173,7 +177,9 @@
     $('.select-pokemon').change(procesar_datos);
 
 });
-        
+    cancelBtn.addEventListener('click', () => {
+            window.location.href = '/'; 
+        });
     </script>
 </body>
 </html>

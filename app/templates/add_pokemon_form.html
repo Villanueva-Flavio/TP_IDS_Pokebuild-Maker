@@ -58,11 +58,12 @@
         <div id="errorMensaje"></div>
         <div class="boton">
             <button type="submit" class="caja cancel_save_button" id="add_pokemon_btn">Save</button>
-            <button class="caja cancel_save_button" type="reset">Cancel</button>
+            <button class="caja cancel_save_button" id="cancel_btn">Cancel</button>
         </div>
     </div>
 
     <script>
+    const cancelBtn = document.getElementById('cancel_btn');
         $(document).ready(function() {
             $('.select-pokemon').select2({
                 tags: true,
@@ -175,6 +176,9 @@
             });
         });
     });
+    cancelBtn.addEventListener('click', () => {
+            window.location.href = '/'; 
+        });
     </script>
 </body>
 </html>
