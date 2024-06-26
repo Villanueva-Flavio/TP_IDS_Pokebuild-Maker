@@ -9,3 +9,16 @@
     padding: 20px;
 }
 
+.tittle_edit_profile {
+    font-size: 40px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+
+.edit_profile_container_datos{
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+}
