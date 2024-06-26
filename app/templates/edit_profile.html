@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
-    
 </head>
 <body>
 
     <div class="container" id="modify_profile_container">
         <h1>Edit Profile</h1>
-        <form action="" id="mod_form">
+        <form action="/api/mod_user/{{ user_data.id }}" id="mod_form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="username" required>
             </div>
 
             <br>
@@ -42,7 +41,7 @@
 
             <div class="form-group">
                 <label for="profile-pic">New Profile Picture</label>
-                <input type="file" id="profile-pic" name="profile-pic">
+                <input type="file" id="profile-pic" name="profile_picture">
             </div>
 
             <br>
@@ -65,7 +64,6 @@
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirm-password').value;
 
-                
                 const passwordValidation = validatePassword(password, confirmPassword);
                 if (!passwordValidation.valid) {
                     alert(passwordValidation.message);
@@ -77,7 +75,6 @@
                 formData.append('email', email);
                 formData.append('password', password);
 
-                
                 fetch('/api/mod_user/{{ user_data.id }}', {
                     method: 'POST',
                     body: formData
@@ -103,17 +100,15 @@
                 if (password.length < 8) {
                     return { valid: false, message: 'Password should be at least 8 characters long' };
                 }
-                
 
                 return { valid: true };
             }
 
             function cancelarEdicion() {
-                window.location.href = '/'; 
+                window.location.href = '/';
             }
         });
     </script>
 
 </body>
 </html>
-
