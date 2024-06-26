@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadBuilds();
 
-    // Función para eliminar una construcción
+    
     function deleteBuild() {
         var selectedBuild = select.options[select.selectedIndex];
         var buildId = selectedBuild.value;
