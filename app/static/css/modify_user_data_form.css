@@ -55,3 +55,8 @@
     background-color: #160033;
 }
 
+.edit_profile_button:hover {
+    background: linear-gradient(140deg, #160033, #5e00ff);
+    color: white;
+}
+
