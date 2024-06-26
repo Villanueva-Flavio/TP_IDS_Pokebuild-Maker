@@ -1,0 +1,243 @@
+#body_formulario_añadir_pokemon{ /*texto*/
+    background: linear-gradient(to bottom, #5e00ff, #160033);;
+    border-color: white;
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    
+}
+.select2-selection__clear{
+    display: none;
+}
+
+.formulario{ /*Tamaño maximo de todo*/
+    width: 1600px;
+    margin-left: 40px;
+    margin-right: 40px;
+    font-family: "Tiny5", sans-serif;
+    font-style: normal;
+    font-size: 40px;
+    background: transparent;
+}
+
+.color{
+    color: #28ffbd;
+}
+.cancel_save_button{
+    background: #160033;
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    height: 68px;
+    color: #28ffbd;
+}
+
+#contenedor_all_against {/*Hace que lo que esta dentro este en columnas*/
+    flex-direction: column; 
+    display: flex;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 5px solid white;
+    width: 1570px;
+    height: 310px;
+    color: #28ffbd;
+    background: #160033;
+}
+
+#Submit{ /*caja donde esta el ADD A NEW POKEMON*/
+    width: 1592px;
+    height: 77px;
+    font-size: 50px; 
+    border-radius: 5px;
+    border: 5px solid white;
+    text-align: center;
+    color: #28ffbd;
+    background: #160033;
+
+}
+#usuario{ /*Le da el tamaño al cuadrado donde se pone el nombre, nivel y habilidades*/
+    width: 1005px;
+    height: 365px;
+    padding-top: 20px;
+    margin-top: 10px;
+    margin-right: 20px;
+    border-radius: 5px;
+    border: 5px solid white;
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    background: #160033;
+}
+#ability_1{
+    margin-left: 48px;
+}
+#ability_3{
+    margin-left: 48px;
+}
+
+#datos_pokemon_caja{ /*Caja de la derecha donde estan los datos de la especie del pokemon*/
+    flex-direction:row; 
+    display: flex;
+    padding: 30px;
+    padding-right: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    width: 470px;
+    border-radius: 5px;
+    border: 5px solid white;
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    height: 320px;
+    background: #160033;
+    transform: translateX(0.5%);
+}
+#imagen_poke_especie{ /*Espacio donde va la imagen del pokemon y la barra para poner la especie pokemon*/
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    gap: 10px;
+}
+#tipos_datos_poke{ /*Espacio de donde van los 2 tipos del pokemon*/
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+}
+
+
+.fila { /*Para que las 4 abilities no esten tan juntas.*/
+    margin-bottom: 10px;
+}
+.input_personalizado{
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    color: #28ffbd;
+    background-color: #160033;
+}
+.poke_name_especie{ /*Tamaño compartido de las cajas de input donde se pone el nombre del pokemon y el tipo*/
+    width: 300px;
+    height: 35px;
+    font-size: 33px;
+    text-align: center;
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    background-color: #160033;
+}
+#nombre_nivel{ /*Permite que el cuadrado de el nombre y el lv y abilities este al mismo nivel que el de los datos del pokemon*/
+    flex-direction:row;
+    display: flex;
+}
+
+h1{ 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#poke_LVL{ /*input de nivel de pokemon*/
+    width: 70px;
+    padding-left: 15px;
+}
+
+.against{ /*Contenedores de los 2 against*/
+    
+    display: flex;
+    flex-direction: row;
+    height: 70px;
+    padding-top: 25px;
+    padding-left: 45px;
+    margin-top: 5px;
+}
+
+.boton{ /*Los botones*/
+    margin-left: 1335px;
+}
+.abilities_elegir{ /*Las habilidades 1 y 2*/
+    width: 440px;
+    text-align: center;
+    height: 50px;
+    margin-bottom: 12px;
+}
+.pokemon_especie{
+    background-color: #160033;
+}
+
+.abilities_elegir_inferiores{ /*Las habilidades 3 y 4*/
+    width: 440px;
+    text-align: center;
+    height: 50px;
+    margin-top: 15px;
+    
+}
+#level{/*label de LVL*/
+    margin-left: 278px;
+}
+#name{ /*Es el label de Name*/
+    margin-left: 45px;
+    margin-top: 180px;
+}
+
+
+#abilities_texto{ /*Le cambia el tamaño a Abilities*/
+    font-size:43px ;
+    display: flex;
+    margin-left: 230px;
+    margin-right: 230px;
+    margin-bottom: 20px;
+    margin-top: 65px;
+    font-family: "Tiny5", sans-serif;
+    font-size: 40px;
+    background-color: #160033;
+}
+
+#pokemon-image{ /*Imagen del pokemon*/
+    width: 304px;
+    height: 280px;
+    border: 2px solid white
+}
+/*Estilos de los tipos*/
+.posibles_tipo{ /*Permite que los 2 posibles tipos del pokemon esten un toque separado*/
+    margin-top: 20px;
+    transform: translateX(-11%);
+}
+
+.against_texto{
+    margin-top: 25px;
+
+    
+}
+
+#bad_against_texto{
+    margin-right: 20px;
+}
+
+#abilities_container{
+    margin-left: 50px;
+    transform: translatey(-20%);
+}
+
+.img-type-against{
+    width:94px;
+    height:120px;
+    margin-left: 5px;
+}
+    
+.img-type{ /*Medidas de las imagenes de los tipos de los pokemon*/
+    width:94px;
+    height:120px;
+    margin-top: 20px;
+}
+
+.tipo_pokemon_Good_Against{ /*los tipos de pokemon de Good against*/
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.tipo_pokemon_Bad_Against{ /*los tipos de pokemon de Bad against*/
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+
+
+.caja{
+    border-radius: 5px;
+    border: 5px solid white;
+}

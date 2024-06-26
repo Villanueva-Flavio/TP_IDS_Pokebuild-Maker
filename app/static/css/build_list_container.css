@@ -1,0 +1,29 @@
+#container {
+    position: absolute;
+    align-items: center;
+    top: 0;
+    max-height: 100%;
+    width: 70%;
+    margin-left: 5%;
+    overflow-y:scroll;
+    scrollbar-width: thin;
+    scrollbar-color: #6a00ff #202020;
+}
+
+#container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.whitespace{
+    display: none;
+}
+
+@media (max-aspect-ratio: 1/1) {
+    #container {
+        width: 99vw;
+        margin-left: -2%;
+        overflow-x: hidden;
+        padding-top: 20%;
+        height: 80vh;
+    }
+}

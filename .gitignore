@@ -1,0 +1,35 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> Frontend-formulario_modificar_pokemon
+./app/__pycache__/
+./app/.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+app/__pycache__/
+app/.env
+
+.vscode/
+.idea/
+<<<<<<< HEAD
+*.swp
+=======
+*.swp
+=======
+./app/__pycache__/
+./app/.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+app/__pycache__/
+app/.env
+
+.vscode/
+.idea/
+*.swp
+>>>>>>> origin/API-modify
+>>>>>>> Frontend-formulario_modificar_pokemon
+__pycache__/
