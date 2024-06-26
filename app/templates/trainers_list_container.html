@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/trainers_list_container.css' )}}">
 </head>
-<body>
+<body class="body_trainers_list_container">
     <div id="todo">
         <div id="meet_all_trainers">MEET ALL THE TRAINERS</div>
         <div id="searchBar_container">
@@ -23,7 +23,7 @@
                         <label for="">NAME: {{ dic_nombre_usuario[user['username']] }} </label><br>
                         <label for="">POKEMONS ADDED: {{ dic_nombre_usuario[user['pokemon_count']] }} </label><br>
                         <label for="">BUILDS ADDED: {{ dic_nombre_usuario[user['build_count']] }}</label><br>
-                        <a href="{{ url_for('frontend.user_profile', user_id=dic_nombre_usuario[user['id']]) }}">VER PERFIL</a>
+                        <a href="{{ url_for('frontend.user_profile', user_id=dic_nombre_usuario[user['id']]) }}" id="ver_perfil_link">VER PERFIL</a>
                     </div>
                 </div>
             {% endfor %}

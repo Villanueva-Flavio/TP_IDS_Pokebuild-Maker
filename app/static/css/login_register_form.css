@@ -1,7 +1,7 @@
 #login_form{
     background: #160033;
     border-radius: 5px;
-    border: 5px solid white;
+    border: 3px solid white;
     font-family: "Tiny5", sans-serif;
     color: #28ffbd;
     height: 400px;
@@ -11,7 +11,7 @@
 #register_form{
     background: #160033;
     border-radius: 5px;
-    border: 5px solid white;
+    border: 3px solid white;
     font-family: "Tiny5", sans-serif;
     color: #28ffbd;
     height: 590px;
@@ -43,7 +43,14 @@
     font-family: "Tiny5", sans-serif;
     font-size: 45px;
     width: 300px;
+    color: #28ffbd;
+    border: 2px solid white;
+    background-color: #160033;
 }
+.login_register_button:hover {
+    background: linear-gradient(140deg, #160033, #5e00ff);
+    color: white;
+} 
 .label_login_register{
     margin-left: 30px;
     margin-top: 20px;

@@ -10,10 +10,21 @@
     padding: 0;
 }
 
-body{
+.body_trainers_list_container{
     font-family: "Tiny5", sans-serif;
     margin-top: 10px;
-    background-color: black;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #5e00ff, #160033);
+}
+
+#ver_perfil_link:hover{ /*NO BORRAR EL -webkit-background-clip: text;*/
+    background: linear-gradient( #28ffbd, white);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#ver_perfil_link {
+    color: #4287f5; /* Visited link */
 }
 
 #meet_all_trainers{
@@ -35,14 +46,14 @@ body{
 }
 
 .rectangle{ /* clase en uso con script, no cambiar nombre*/
-    background-color: black;
+    background-color: #160033;
     display: flex;
     color: #28ffbd;
-    border: 5px solid #5e00ff;
+    border: 5px solid white;
     height: 270px;
     width: 800px;
     margin: 20px;
-    box-shadow: 0 0 15px #5e00ff;
+    box-shadow: 0 0 15px #28ffbd;
     border-radius: 5px;
     font-size: 30px;  
     transition: ease-in-out 0.2s;
@@ -53,11 +64,10 @@ body{
     transform: scale(1.12);
     z-index: 1;
     transition: ease-in-out 0.2s;
-    box-shadow: 0 0 60px #5e00ff;
+    box-shadow: 0 0 60px 10px #28ffbd;
 }
 
 .img_user{
-    box-shadow: 0 0 20px #5e00ff;
     margin-right: 20px;
 }
 
