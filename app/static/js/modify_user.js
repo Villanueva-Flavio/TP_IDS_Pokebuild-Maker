@@ -1,3 +1,12 @@
+
+function validateEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+}
+function validatePassword(password) {
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordPattern.test(password);
+}
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('mod_form').addEventListener('submit', function(event) {
         event.preventDefault();
@@ -19,6 +28,19 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('email', email);
         formData.append('password', password);
         formData.append('profile_picture', profile_pic);
+        if(username.trim() === "" || email.trim() === "" || password.trim() === ""){
+            $("#errorMensaje").html("Rellenar todos los campos");
+        }
+        if (!validateEmail(email)) {
+            console.log('Invalid email');
+            $('#errorMensaje').text('Correo electrónico inválido');
+            return;
+        }
+        if (!validatePassword(password)) {
+            console.log('Invalid password');
+            $('#errorMensaje').text('Contraseña inválida');
+            return;
+        }
 
         fetch('/api/mod_user/{{ user_data.id }}', {
             method: 'POST',

@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
@@ -59,6 +60,7 @@
                 <div class="against_texto" id="bad_against_texto">Bad against: </div>
             </div>
         </div>
+        <div id="errorMensaje"></div>
         <div class="boton">
             <button type="submit" class="caja botones" id="add_pokemon_btn">Save</button>
             <button class="caja botones" type="reset">Cancel</button>
@@ -84,6 +86,8 @@
                 var pokemonEspecie = selectedOption.data('especie');
                 var pokemonPokedexId = selectedOption.data('pokedex_id');
                 var pokemonId = selectedOption.val();
+
+                
                 console.log("ID: " + pokemonId+ ", POKEDEX_ID: "+ pokemonPokedexId);
                 var abilities = [
                     selectedOption.data('ability-1'),
@@ -108,7 +112,7 @@
                             });
                         });
                     });
-    
+                
                 // Fetch types and strengths/weaknesses for the selected pokemon
                 fetch(`/api/types/${selectedOption.data('pokedex_id')}`)
                     .then(response => response.json())
@@ -140,6 +144,7 @@
             $('#add_pokemon_btn').on('click', function() {
                 var owner_id = "{{ owner_id }}";
                 var selectedOption = $('#select_pokemon').find('option:selected');
+
                 var pokemon_id = selectedOption.val();
                 var pokedex_id = selectedOption.data('pokedex_id');
                 var pokemon_name = $('#poke_name').val();
@@ -149,6 +154,20 @@
                 var pokemon_ability_3 = $('#ability_3').val();
                 var pokemon_ability_4 = $('#ability_4').val();
                 console.log(owner_id, pokemon_id, pokedex_id, pokemon_name, pokemon_level, pokemon_ability_1, pokemon_ability_2, pokemon_ability_3, pokemon_ability_4)
+                if(pokemon_level < 1 || pokemon_level > 100){
+                    $('#errorMensaje').text("El nivel debe estar entre 1 y 100.");
+                    return;
+                }
+                if(pokemon_name == ""){
+                    $('#errorMensaje').text("Ingresa el nombre del Pokémon.");
+                    return;
+                }
+                if(pokemon_ability_1 == "" && pokemon_ability_2 == "" && pokemon_ability_3 == "" && pokemon_ability_4 == ""){
+
+                    $('#errorMensaje').text("Ingresa al menos una habilidad.");
+                    return;
+                }
+
                 fetch('/api/mod_pokemon/' + pokemon_id, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -169,6 +188,8 @@
                 .then(data => {
                     console.log('Respuesta del servidor:');
                     console.log(data);
+                        window.location.href = '/user_profile/{{ owner_id }}';
+
                 })
                 .catch(error => {
                     console.error('Error al enviar la solicitud:', error);
