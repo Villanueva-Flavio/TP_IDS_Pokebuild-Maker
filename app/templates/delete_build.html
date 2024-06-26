@@ -19,14 +19,39 @@
         <h2>Search and Delete Builds</h2>
         <select id="editable-select" class="builds_searchbar">
             {% for build in builds %}
-                <option id="{{ build.id }}">{{ build.name }}</option>
+                <option id="{{ build.id }}">{{ build.build_name }}</option>
             {% endfor %}
         </select>
         <button id="delete_builds_btn">Delete</button>
         <button id="delete_builds_btn">Cancel</button>
     </div>
 
-    <script src="{{ url_for('static', filename='js/delete_builds_by_id.js')}}"></script>
+    <script>
+        const select = document.getElementById('editable-select');
+        const deleteBtn = document.getElementById('delete_builds_btn');
+        const cancelBtn = document.getElementById('cancel_builds_btn');
+
+        deleteBtn.addEventListener('click', () => {
+            const selectedBuild = select.options[select.selectedIndex];
+            const buildId = selectedBuild.id;
+            fetch(`/delete_build/${buildId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Build deleted successfully');
+                    window.location.href = '/';
+                } else {
+                    alert('An error occurred');
+                }
+            });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+    </script>
 </body>
 </html>
 
