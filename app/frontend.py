@@ -222,3 +222,8 @@ def trainers_list_container():
 def modify_user_data(user_id):
     user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/').json()
     return render_template('edit_profile.html', user_data=user_data)
+
+@frontend_blueprint.route('/modify_build_form/<owner_id>')
+def modify_build_form(owner_id):
+    build = get_user_builds(owner_id)
+    return render_template('modify_build_form.html', build=build)

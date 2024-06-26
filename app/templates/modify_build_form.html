@@ -139,7 +139,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/api/add_build/',
+                url: '/api/mod_user/{{ owner_id }}',
                 contentType: 'application/json',
                 data: JSON.stringify(build),
                 success: function(response) {

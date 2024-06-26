@@ -126,9 +126,9 @@ def is_valid_email(email):
     return re.match(regex, email) is not None
 
 def is_valid_password(password):
-    # Minimum 8 characters, at least one letter and one number
     regex = r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$'
     return re.match(regex, password) is not None
+
 
 @api_blueprint.route(POKEMONS_MOVES_ROUTE, methods=['GET'])
 def get_pokemon_moves(pokemon_id):
