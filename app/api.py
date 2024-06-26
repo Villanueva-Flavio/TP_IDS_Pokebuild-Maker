@@ -574,7 +574,15 @@ def mod_user(user_id):
 
         if not username or not password or not email:
             return jsonify({'error': 'Missing required fields (username, password, email)'})
+        
+        # Validate email, hecho por Facu
+        if not is_valid_email(email):
+            return jsonify({'error': 'Invalid email'}), 400
 
+        # Validate password, hecho por Facu
+        if not is_valid_password(password):
+            return jsonify({'error': 'Invalid password'}), 400
+    
         with engine.connect() as connection:
             mod_user_query = """
                 UPDATE USER 
