@@ -1,5 +1,4 @@
-$(document).ready(function() {
-    
+document.addEventListener('DOMContentLoaded', function() {
     var builds = [
         { id: 1, name: 'Build 1' },
         { id: 2, name: 'Build 2' },
@@ -13,43 +12,53 @@ $(document).ready(function() {
         { id: 10, name: 'Build 10' }
     ];
 
+    var select = document.getElementById('editable-select');
+    var deleteBtn = document.getElementById('delete_builds_btn');
+    var cancelBtn = document.getElementById('cancel_builds_btn');
+
     
     function loadBuilds() {
-        var buildsList = $('#buildsList');
-        buildsList.empty(); 
-
         builds.forEach(function(build) {
-            buildsList.append(`<option value="${build.id}">${build.name}</option>`);
+            var option = document.createElement('option');
+            option.value = build.id;
+            option.textContent = build.name;
+            select.appendChild(option);
         });
     }
 
-    
     loadBuilds();
 
+    // Función para eliminar una construcción
+    function deleteBuild() {
+        var selectedBuild = select.options[select.selectedIndex];
+        var buildId = selectedBuild.value;
+        var buildName = selectedBuild.textContent;
+
+        
+        console.log('Build deleted:', buildName, '(ID:', buildId, ')');
     
-    $('#searchInput').on('input', function() {
-        var searchValue = $(this).val().toLowerCase();
-        filterBuilds(searchValue);
-    });
+        builds = builds.filter(function(build) {
+            return build.id !== parseInt(buildId);
+        });
+
+        
+        select.innerHTML = '';
+        loadBuilds();
+    }
 
     
-    $('#selectBuildBtn').on('click', function() {
-        var selectedBuildId = $('#buildsList').val();
-        if (selectedBuildId) {
-            var selectedBuildName = $('#buildsList option:selected').text();
-            alert(`Build select: ${selectedBuildName} (ID: ${selectedBuildId})`);
-            
+    deleteBtn.addEventListener('click', function() {
+        if (select.selectedIndex !== -1) {
+            deleteBuild();
         } else {
-            alert('Select build.');
+            alert('Seleccione una construcción.');
         }
     });
 
     
-    function filterBuilds(searchValue) {
-        $('#buildsList option').each(function() {
-            var buildName = $(this).text().toLowerCase();
-            var isVisible = buildName.indexOf(searchValue) > -1;
-            $(this).toggle(isVisible);
-        });
-    }
+    cancelBtn.addEventListener('click', function() {
+        
+        console.log('Cancelled');
+    });
 });
+
