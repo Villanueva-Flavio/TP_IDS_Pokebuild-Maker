@@ -16,36 +16,25 @@
                 <input type="text" id="name" name="name" required>
             </div>
 
-            <br>
-
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
             </div>
 
-            <br>
-
-           
             <div class="form-group">
                 <label for="password">New Password</label>
                 <input type="password" id="password" name="password">
             </div>
-
-            <br>
 
             <div class="form-group">
                 <label for="confirm-password">Confirm New Password</label>
                 <input type="password" id="confirm-password" name="confirm-password">
             </div>
         
-            <br>
-
             <div class="form-group">
                 <label for="profile-pic">New Profile Picture</label>
                 <input type="file" id="profile-pic" name="profile-pic">
             </div>
-
-            <br>
 
             <div class="form-actions">
                 <button type="button" class="cancel" onclick="cancelarEdicion()">Cancel</button>
@@ -54,40 +43,6 @@
         </form>
     </div>
 
-    <script> 
-        document.getElementById('mod_form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirm_password = document.getElementById('confirm-password').value;
-            const profile_pic = document.getElementById('profile-pic').files[0];
-            console.log(profile_pic, confirm_password, password, email, name);
-            if (password !== confirm_password) {
-                alert('Passwords do not match');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('username', name);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('profile_picture', profile_pic);
-            console.log(formData);
-            fetch('/api/mod_user/{{ user_data.id }}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-             .then(data => {
-                if (data.success) {
-                    window.location.href = '/user_profile/{{ user_data.id }}';
-                } else {
-                    alert(data.message);
-                }
-            });
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
