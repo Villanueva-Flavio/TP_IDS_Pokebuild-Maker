@@ -87,7 +87,7 @@ def get_user_pokemons(user_id):
         pokemons_dict.append(build_row)
     return pokemons_dict
 
-@frontend_blueprint.route('/formulario_modificar_pokemon/<owner_id>')
+@frontend_blueprint.route('/modify_pokemon_form/<owner_id>')
 def formulario_modificar_pokemon(owner_id):
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     user_pokemons = get_user_pokemons(owner_id)
@@ -207,7 +207,7 @@ def register_form():
     return render_template('register_form.html')
 
 
-@frontend_blueprint.route('/trainers_list_container')
+@frontend_blueprint.route('/trainers')
 def trainers_list_container():
     usuarios = requests.get('http://pokebuild-backend:5000/api/users_profiles/').json() #Se puede agregar a fetch_data, pero tengo miedo de cagarla uwu
     dic_nombre_usuario = {}

@@ -4,18 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search and Delete Builds</title>
-    <style>
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="delete_build_container">
         <h2>Search and Delete Builds</h2>
         <select id="editable-select" class="builds_searchbar">
             {% for build in builds %}
