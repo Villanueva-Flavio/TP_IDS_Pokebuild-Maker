@@ -235,6 +235,11 @@ h1{
     margin-bottom: 10px;
 }
 
+#errorMensaje{
+    color: red;
+    font-size: 20px;
+    text-align: center;   
+}
 
 
 .caja{

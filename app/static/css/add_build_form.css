@@ -8,6 +8,7 @@
 */
 @import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
 
+
 .es-visible{
     color: #000000;
 }
@@ -152,4 +153,10 @@ select{
 .select2-selection{
     background-color: black !important;
     color: white !important;
+}
+
+#errorMensaje{
+    color: red;
+    font-size: 20px;
+    text-align: center;   
 }

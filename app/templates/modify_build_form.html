@@ -55,6 +55,7 @@
         {% endfor %}
     </div>
 </form>
+    <div id="errorMensaje"></div>
     <div class="btn_nav">
         <button class="btn">Cancel</button> <!-- Usar modulo botones cancel save -->
         <button class="btn" id="add_build_btn"  type="button" >Save</button>
@@ -116,8 +117,13 @@
             });
 
             pokemon_ids = sort_list(pokemon_ids);
-
+            if(build_name.trim() === ''){
+                $('#errorMensaje').text('Por favor ingresa un nombre para el build.');
+                console.error('build_name cannot be empty');
+                return;
+            }
             if (pokemon_ids.length === 0 || pokemon_ids[0] === null) {
+                $('#errorMensaje').text('Por favor ingresa un dato válido.');
                 console.error('pokemon_id_1 cannot be null or empty');
                 return;
             }
@@ -149,6 +155,7 @@
                     
                     if (response['status'] === 'success') {
                         console.log('Build added successfully!');
+                        window.location.href = '/';
                     } else {
                         console.error('Error adding build:', response);
                     }

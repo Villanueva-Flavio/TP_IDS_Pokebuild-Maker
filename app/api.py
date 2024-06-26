@@ -449,13 +449,7 @@ def mod_build(build_id):
     except Exception as e:
         return jsonify({'Error2': str(e)})
 
-<<<<<<< HEAD
-
-
 @api_blueprint.route(REGISTER, methods=['POST'])
-=======
-@api_blueprint.route(REGISTER, methods=['POST'], strict_slashes=False)
->>>>>>> 9a2db2581e8d75815965895c84ceb0c0440112ea
 def register():
     data = request.json
     username = data.get('username')

@@ -55,6 +55,7 @@
                 <div class="against_texto" id="bad_against_texto">Bad against: </div>
             </div>
         </div>
+        <div id="errorMensaje"></div>
         <div class="boton">
             <button type="submit" class="caja cancel_save_button" id="add_pokemon_btn">Save</button>
             <button class="caja cancel_save_button" type="reset">Cancel</button>
@@ -135,7 +136,18 @@
             var pokemon_ability_2 = $('#ability_2').val();
             var pokemon_ability_3 = $('#ability_3').val();
             var pokemon_ability_4 = $('#ability_4').val();
-
+            if(pokemon_name.trim() === ''){
+                $('#errorMensaje').text('El nombre del pokemon no puede estar vacío');
+                return;
+            }
+            if(pokemon_level.trim() === '' || pokemon_level < 1 || pokemon_level > 100){
+                $('#errorMensaje').text('El nivel del pokemon no puede estar vacío o inválido');
+                return;
+            }
+            if(pokemon_ability_1.trim() === '' && pokemon_ability_2.trim() === '' && pokemon_ability_3.trim() === '' && pokemon_ability_4.trim() === ''){
+                $('#errorMensaje').text('Debe seleccionar al menos una habilidad para el pokemon');
+                return;
+            }
             fetch('/api/add_pokemon/', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -156,6 +168,7 @@
             .then(data => {
                 console.log('Respuesta del servidor:');
                 console.log(data);
+                window.location.href = '/';
             })
             .catch(error => {
                 console.error('Error al enviar la solicitud:', error);
