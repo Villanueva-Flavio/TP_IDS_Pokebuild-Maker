@@ -673,10 +673,10 @@ def delete_build():
 
     try:
         with engine.connect() as connection:
-            delete_build_query = """
+            delete_build_query = text("""
                 DELETE FROM BUILDS 
                 WHERE id = :build_id
-            """
+            """)
             result = connection.execute(delete_build_query, {'build_id': build_id})
             if result.rowcount == 0:
                 return jsonify({'error': f'Build with id {build_id} not found'})

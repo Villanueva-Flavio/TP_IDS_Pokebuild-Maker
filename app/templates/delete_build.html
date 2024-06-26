@@ -23,7 +23,7 @@
             {% endfor %}
         </select>
         <button id="delete_builds_btn">Delete</button>
-        <button id="delete_builds_btn">Cancel</button>
+        <button id="cancel_builds_btn">Cancel</button>
     </div>
 
     <script>
@@ -32,18 +32,27 @@
         const cancelBtn = document.getElementById('cancel_builds_btn');
 
         deleteBtn.addEventListener('click', () => {
+            event.preventDefault();
             const selectedBuild = select.options[select.selectedIndex];
             const buildId = selectedBuild.id;
-            fetch(`/delete_build/${buildId}`, {
-                method: 'POST'
+            console.log(buildId);
+            fetch(`/api/delete_build/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ build_id : buildId })
+
             })
+
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert('Build deleted successfully');
+                if (data.message) {
+                    console.log('Build deleted successfully');
                     window.location.href = '/';
                 } else {
-                    alert('An error occurred');
+                    console.log(data);  
+                    console.log('An error occurred: ' + (data.error || 'Unknown error'));
                 }
             });
         });
