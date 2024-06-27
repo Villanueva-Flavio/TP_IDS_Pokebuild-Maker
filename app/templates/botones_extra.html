@@ -10,12 +10,12 @@
 </head>
 <body>
     <div id="botones_extra_container">
-        <button class="botones_extra">TRAINERS</button>
+        <button class="botones_extra" onclick="location.href='/trainers'">TRAINERS</button>
         {% if user_id %}
-            <button class="botones_extra">MI PERFIL</button>
+            <button class="botones_extra" onclick="location.href='/user_profile/{{ user_id }}'">MI PERFIL</button>
         {% endif %}
-        <button class="botones_extra">GITHUB</BUTton>
-
+        <button class="botones_extra" onclick="location.href='https://github.com/Villanueva-Flavio/TP_IDS_Pokebuild-Maker'" >GITHUB</BUTton>
     </div>
+    <script src="/static/js/botones_extra.js"></script>
 </body>
 </html>

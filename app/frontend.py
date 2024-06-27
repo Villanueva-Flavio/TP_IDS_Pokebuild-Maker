@@ -179,7 +179,10 @@ def user_profile(user_id):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
 
-    return render_template('profiles/user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username, logged_user=logged_user)
+    if(user_id ==  logged_user):
+        return render_template('profiles/user_profile_bruto.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
+
+    return render_template('profiles/user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
 
 @frontend_blueprint.route('/login', strict_slashes=False)
 def login_form():
