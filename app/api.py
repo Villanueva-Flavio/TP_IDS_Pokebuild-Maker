@@ -459,30 +459,12 @@ def mod_user(user_id):
             return jsonify({'error': 'Missing required fields (username, password, email)'})
 
         with engine.connect() as connection:
-            mod_user_query = """
-                UPDATE USER 
-                SET username = :username, 
-                    password = :password, 
-                    email = :email, 
-                    profile_picture = :profile_picture
-                WHERE id = :user_id
-            """
-            connection.execute(text(mod_user_query), {
-                'username': username,
-                'password': password,
-                'email': email,
-                'profile_picture': profile_picture.read() if profile_picture else None,
-                'user_id': user_id
-            })
-
+            connection.execute(text(MOD_USER_QUERY), {'username': username, 'password': password, 'email': email, 'profile_picture': profile_picture.read() if profile_picture else None, 'user_id': user_id})
         return jsonify({'message': f'User with ID {user_id} modified successfully'})
 
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
-
-    except Exception as e:
-        return jsonify({'error': str(e)})
 
 #POST endpoint for delete user
 @api_blueprint.route(DEL_USER_ROUTE, methods=['POST'], strict_slashes=False)
