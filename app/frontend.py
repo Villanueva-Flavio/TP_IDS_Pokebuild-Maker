@@ -17,7 +17,7 @@ def get_pokedex_id(pokemon_list, pokemons):
     pokedex_id_list = []
 
     for pokemon_id in pokemon_list:
-        if pokemon_id == -1 or pokemon_id - 1 >= len(pokemons):
+        if pokemon_id == -1:
             pokedex_id_list.append('000')
         else:
             for pokemon in pokemons:

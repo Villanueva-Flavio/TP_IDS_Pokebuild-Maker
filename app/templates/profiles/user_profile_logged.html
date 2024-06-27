@@ -18,7 +18,6 @@
         <div class="user-info-item boton" onclick="location.href='/add_build_form/'"><h2>AGREGAR BUILD</h2> </div>
         <div class="user-info-item boton" onclick="location.href='/delete_pokemon_form'"><h2>DELETE POKEMON</h2> </div>
         <div class="user-info-item boton" onclick="location.href='/delete_build'"><h2>DELETE BUILD</h2> </div>
-        <div class="user-info-item boton" onclick="location.href='/modify_pokemon_form'"><h2>MODIFY POKEMON</h2> </div>
     </div>
 
     <div id="builds-title-container">
@@ -32,6 +31,7 @@
     {% include 'builds/build_list_container.html' %}
     
     <div id="user-pokemons-container">
+        
         {% for pokemon_id in pokemons_owned %}
             <div class="pokemon-img-container">
                 <img src="https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/{{ pokemon_id }}.png" alt="Pokemon {{ pokemon_id }}">
