@@ -114,3 +114,11 @@
     position: relative;
     z-index: 2;
 }
+.boton{
+    transition: ease-in-out 0.5s;
+}
+.boton:hover{
+    background: linear-gradient( #160033, #5e00ff);
+    color: white;
+    transition: ease-in-out 0.5s;
+}

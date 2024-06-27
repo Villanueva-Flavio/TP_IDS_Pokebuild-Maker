@@ -30,6 +30,7 @@ def get_pokedex_id(pokemon_list, pokemons):
 def get_build_dict(builds, pokemons):
     build_dict = {}
     users = requests.get(f'http://pokebuild-backend:5000/api/users_profiles/').json()
+
     for build in builds:
         result = get_pokedex_id(get_pokemon_id(build), pokemons)
         build_row = {
@@ -46,6 +47,8 @@ def get_build_dict(builds, pokemons):
 
 def get_user_builds(user_id):
     user_builds=requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
+    if isinstance(user_builds, dict):
+        user_builds = [user_builds]
     builds_dict = []
     for build in user_builds:
         build_row = {
