@@ -3,7 +3,7 @@ function delete_build_by_id(){
     // El id de la build seleccionada
     const build_id = build_selected.value;
     // BUILD_DELETE_ROUTE
-    fetch(`/api/build_delete/${build_id_id}`, {
+    fetch(`/api/build_delete/${build_id}`, {
         method: 'POST'
     })
     .then(response => {

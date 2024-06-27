@@ -47,10 +47,6 @@ def get_build_dict(builds, pokemons):
 def get_user_builds(user_id):
     user_builds=requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
     builds_dict = []
-
-    if isinstance(user_builds, dict):
-        user_builds = [user_builds]
-
     for build in user_builds:
         build_row = {
             'id': build['id'],
@@ -180,7 +176,7 @@ def user_profile(user_id):
         build_dict[build['id']] = build_row
 
     if user_id ==  str(logged_user):
-        return render_template('profiles/user_profile_bruto.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
+        return render_template('profiles/user_profile_logged.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
 
     return render_template('profiles/user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
 
@@ -219,4 +215,4 @@ def modify_build_form():
 def delete_build_form():
     owner_id = session.get('user_id')
     builds = get_user_builds(owner_id)
-    return render_template('delete_build.html', builds=builds, owner_id=owner_id)
+    return render_template('builds/delete_build.html', builds=builds, owner_id=owner_id)

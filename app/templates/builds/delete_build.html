@@ -43,7 +43,6 @@
             .then(data => {
                 if (data.message) {
                     console.log('Build deleted successfully');
-                    window.location.href = '/user_profile/{{ owner_id }}'; 
                 } else {
                     console.log('An error occurred: ' + (data.error || 'Unknown error'));
                 }
@@ -51,6 +50,8 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+            
+            window.location.href = '/home'; 
         });
 
         cancelBtn.addEventListener('click', () => {
