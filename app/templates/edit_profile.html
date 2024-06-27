@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <body>
 
@@ -55,18 +57,12 @@
 
     <script>
         function validateEmail(email) {
-            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            return emailPattern.test(email);
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email);
         }
-
-        function validatePassword(password, confirmPassword) {
-            if (password !== confirmPassword) {
-                return { valid: false, message: 'The passwords do not match, please try again.' };
-            }
-            if (password.length < 8) {
-                return { valid: false, message: 'The password should be at least 8 characters long.' };
-            }
-            return { valid: true };
+        function validatePassword(password) {
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordPattern.test(password);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -83,25 +79,25 @@
 
                 const passwordValidation = validatePassword(password, confirmPassword);
                 if (!passwordValidation.valid) {
-                    document.getElementById('errorMensaje').textContent = passwordValidation.message;
+                    $('#errorMensaje').text("The password is not valid, it should be at least 8 characters long");
                     return;
                 }
 
                 if (!validateEmail(email)) {
-                    console.log('Invalid email');
-                    document.getElementById('errorMensaje').textContent = 'Correo electrónico inválido';
-                    return;
+                console.log('Invalid email');
+                $('#errorMensaje').text('Correo electrónico inválido');
+                return;
                 }
 
                 if (password !== confirmPassword) {
-                    document.getElementById('errorMensaje').textContent = "The passwords do not match, please try again.";
+                    $('#errorMensaje').text("The passwords do not match, please try again.");
                     return;
                 }
-
-                if (email === "" || name === "") {
-                    document.getElementById('errorMensaje').textContent = "Please fill all the fields.";
+                if(email == "" || name == "") {
+                    $('#errorMensaje').text("Please fill all the fields.");
                     return;
                 }
+                
 
                 const formData = new FormData();
                 formData.append('username', name);
@@ -128,17 +124,31 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    document.getElementById('errorMensaje').textContent = "Email/Username already exists, please try again.";
+                    $('#errorMensaje').text("Email/Username already exists, please try again.");
+
                 });
             });
 
-            document.getElementById('cancel_btn').addEventListener('click', function() {
+            function validatePassword(password, confirmPassword) {
+                if (password !== confirmPassword) {
+                    
+                }
+                if (password.length < 8) {
+                    return { valid: false, message: 'Password should be at least 8 characters long' };
+                }
+
+                return { valid: true };
+            }
+
+            function cancel_btn() {
                 window.location.href = '/';
-            });
+            }
         });
     </script>
 
 </body>
 </html>
+
+
 
 
