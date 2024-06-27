@@ -6,6 +6,7 @@
     <title>Edit Profile</title>
     <link href="https://fonts.googleapis.com/css2?family=Tiny5&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modify_user_data_form.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
 </head>
 <body>
     <form action="" id="edit_profile_form">
@@ -34,54 +35,48 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const confirm_password = document.getElementById('confirm-password').value;
-            const profile_pic = document.getElementById('profile-pic').files[0];
-            
-            console.log("Profile Data:");
-            console.log("Name:", name);
-            console.log("Email:", email);
-            console.log("Password:", password);
-            console.log("Confirm Password:", confirm_password);
-            console.log("Profile Picture:", profile_pic);
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const profilePic = document.getElementById('profile-pic').files[0];
 
-            if (password !== confirm_password) {
-                console.log('Passwords do not match');
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
                 return;
             }
 
-            const formData = new FormData();
-            formData.append('username', name);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('profile_picture', profile_pic);
-
-            console.log("Form Data:");
-            console.log(formData);
-
-            fetch('/api/mod_user/{{ user_data.id }}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Profile updated successfully');
-                    window.location.href = '/user_profile/{{ user_data.id }}';
-                } else {
-                    console.log('Failed to update profile:', data.message);
+            
+            bcrypt.hash(password, 10, function(err, hashedPassword) {
+                if (err) {
+                    console.error('Error hashing password:', err);
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+
+                const formData = new FormData();
+                formData.append('username', name);
+                formData.append('email', email);
+                formData.append('password', hashedPassword); // Enviar la contraseña hasheada
+                formData.append('profile_picture', profilePic);
+
+                
+                fetch('/api/mod_user/{{ user_data.id }}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/user_profile/{{ user_data.id }}';
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while saving profile');
+                });
             });
         });
-
-        function cancelarEdicion() {
-            window.location.href = '/';
-        }
     </script>
 </body>
-</html>
 
               
         
