@@ -29,12 +29,14 @@ def get_pokedex_id(pokemon_list, pokemons):
 
 def get_build_dict(builds, pokemons):
     build_dict = {}
+    users = requests.get(f'http://pokebuild-backend:5000/api/users_profiles/').json()
     for build in builds:
         result = get_pokedex_id(get_pokemon_id(build), pokemons)
         build_row = {
             'owner_id': build['owner_id'],
             'build_name': build['build_name'],
-            'timestamp': build['timestamp']
+            'timestamp': build['timestamp'],
+            'profile_picture': users[build['owner_id']-1]['profile_picture']
         }
         for j in range(6):
             build_row[f'pokemon_id_{j+1}'] = result[j]
@@ -64,26 +66,6 @@ def get_user_builds(user_id):
         builds_dict.append(build_row)
     return builds_dict
 
-def get_user_name(user_id):
-    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/')
-    try:
-        user_data = user_data.json()
-    except ValueError as e:
-        print(f"Error parsing JSON: {e}")
-        print(f"Response content: {user_data.content}")
-        raise
-    return user_data['username']
-
-def get_user_profile_picture(user_id):
-    user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/')
-    try:
-        user_data = user_data.json()
-    except ValueError as e:
-        print(f"Error parsing JSON: {e}")
-        print(f"Response content: {user_data.content}")
-        raise
-    return user_data['profile_picture']
-
 @frontend_blueprint.route('/')
 @frontend_blueprint.route('/home', strict_slashes=False)
 def index():
@@ -106,14 +88,14 @@ def login_register():
 def get_pokemon_name_by_id(pokedex_id):
     response = requests.get(f'https://pokeapi.co/api/v2/pokemon/{pokedex_id}')
     if response.status_code == 200:
-        pokemon_data = response.json()  # Aquí se corrige el uso de json()
+        pokemon_data = response.json()
         return pokemon_data['name']
     else:
         return None
 
 def get_user_pokemons(user_id):
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
-    if isinstance(user_pokemons, dict): #Cuando es solo un unico pokemon, en vez de devolverlo como una lista, lo devuelve como un diccionario y ocurre un error con el for.
+    if isinstance(user_pokemons, dict):
         user_pokemons = [user_pokemons]
     pokemons_dict = []
     for pokemon in user_pokemons:
@@ -178,36 +160,29 @@ def add_pokemon_form(owner_id):
 @frontend_blueprint.route('/user_profile/<user_id>', strict_slashes=False)
 def user_profile(user_id):
     user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
-
     if isinstance(user_builds, dict):
         user_builds = [user_builds]
 
     pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
     user_pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
-
     if isinstance(user_pokemons, dict):
         user_pokemons = [user_pokemons]
 
     pokemons_owned = set()
     build_dict = {}
-
     for pokemon in user_pokemons:
         pokemons_owned.add(str(pokemon['pokedex_id']).zfill(3))
 
+    username = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/').json()['username']
     for build in user_builds:
         result = get_pokedex_id(get_pokemon_id(build), pokemons)
-        build_row = {'owner_id': user_id, 'build_name': build['build_name'],'timestamp': build['timestamp']}
+        pfp = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/').json()['profile_picture']
+        build_row = {'owner_id': user_id, 'build_name': build['build_name'],'timestamp': build['timestamp'], 'profile_picture': pfp, 'username': username}
         for j in range(6):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
-    
-    try:
-        username = get_user_name(user_id)
-        profile_picture = get_user_profile_picture(user_id)
-    except requests.exceptions.RequestException as e:
-        return jsonify({"error": str(e)}), 500
-    
-    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username, profile_picture=profile_picture)
+
+    return render_template('user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
 
 @frontend_blueprint.route('/login', strict_slashes=False)
 def login_form():
@@ -226,6 +201,7 @@ def trainers_list_container():
         dic_nombre_usuario[user['username']] = user['username']
         dic_nombre_usuario[user['build_count']] = user['build_count']
         dic_nombre_usuario[user['pokemon_count']] = user['pokemon_count']
+        dic_nombre_usuario[user['profile_picture']] = user['profile_picture']
     return render_template('trainers_list_container.html', usuarios=usuarios, dic_nombre_usuario=dic_nombre_usuario)
 
 @frontend_blueprint.route('/modify_user_data/<user_id>', strict_slashes=False)

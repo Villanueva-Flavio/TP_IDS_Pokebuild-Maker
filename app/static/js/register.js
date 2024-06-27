@@ -2,17 +2,40 @@ function validateEmail(email) {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email);
 }
+
 function validatePassword(password) {
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     return passwordPattern.test(password);
 }
 
-document.getElementById('register_form').addEventListener('submit', function(event) {
+async function uploadImage(formData) {
+    try {
+        const response = await fetch('https://api.imgbb.com/1/upload', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        if (data.success) {
+            return data.data.url;
+        } else {
+            throw new Error('Image upload failed');
+        }
+    } catch (error) {
+        console.error('Error uploading image', error);
+        return null;
+    }
+}
+
+document.getElementById('register_form').addEventListener('submit', async function(event) {
     event.preventDefault();
     const trainer_name = document.getElementById('trainer_name_input').value;
     const email = document.getElementById('email_input').value;
     const password = document.getElementById('password_input').value;
     const repeat_password = document.getElementById('repeat_password_input').value;
+    var formData = new FormData();
+    formData.append('key', '00b570da421a137379a923f7292c19d7');
+    formData.append('image', $('#profile_picture_input')[0].files[0]);
+
     if (password !== repeat_password) {
         console.log('Passwords do not match');
         $('#errorMensaje').text('Las contraseñas no coinciden');
@@ -33,7 +56,14 @@ document.getElementById('register_form').addEventListener('submit', function(eve
         $('#errorMensaje').text('Contraseña inválida');
         return;
     }
-
+    
+    const image_url = await uploadImage(formData);
+    
+    if (!image_url) {
+        console.log('Error(1) uploading image');
+        $('#errorMensaje').text('Error subiendo la imagen');
+        return;
+    }
 
     fetch('/api/register/', {
         method: 'POST',
@@ -43,7 +73,8 @@ document.getElementById('register_form').addEventListener('submit', function(eve
         body: JSON.stringify({
             username: trainer_name,
             email: email,
-            password: password
+            password: password,
+            profile_picture: image_url
         })
     })
     .then(response => response.json())
@@ -56,6 +87,7 @@ document.getElementById('register_form').addEventListener('submit', function(eve
         }
     });
 });
+
 function redirectToLogin() {
     window.location.href = '/login/';
 }

@@ -18,7 +18,7 @@
         <div id="list_container">
             {% for user in usuarios %}
                 <div class="rectangle" id="{{ dic_nombre_usuario[user['username']] }}">
-                    <img class="img_user" src="/static/images/Logo.png">
+                    <img class="img_user" src="{{ dic_nombre_usuario[user['profile_picture']] }}">
                     <div class="info_user">
                         <label for="">NAME: {{ dic_nombre_usuario[user['username']] }} </label><br>
                         <label for="">POKEMONS ADDED: {{ dic_nombre_usuario[user['pokemon_count']] }} </label><br>

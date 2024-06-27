@@ -37,18 +37,18 @@ CREATE TABLE IF NOT EXISTS BUILDS (
 );
 
 INSERT INTO USER (username, password, email, profile_picture) VALUES
-('user1', 'password1', 'email1@gmail.com', 'profile_picture1.png'),
-('user2', 'password2', 'email2@gmail.com', 'profile_picture2.png'),
-('user3', 'password3', 'email3@gmail.com', 'profile_picture3.png'),
-('user4', 'password4', 'email4@gmail.com', 'profile_picture4.png'),
-('user5', 'password5', 'email5@gmail.com', 'profile_picture5.png'),
-('user6', 'password6', 'email6@gmail.com', 'profile_picture6.png'),
-('user7', 'password7', 'email7@gmail.com', 'profile_picture7.png'),
-('user8', 'password8', 'email8@gmail.com', 'profile_picture8.png'),
-('user9', 'password9', 'email9@gmail.com', 'profile_picture9.png'),
-('user10', 'password10', 'email10@gmail.com', 'profile_picture10.png'),
-('user11', 'password11', 'email11@gmail.com', 'profile_picture11.png'),
-('user12', 'password12', 'email12@gmail.com', 'profile_picture12.png');
+('user1', 'pbkdf2:sha256:260000$Zg4tywpoNsyshnuy$17acab3e14bbe9b27e45dbb64d950f63a0a9f1a67d83eca5269855cb0be338e7', 'email1@gmail.com', 'https://avatars.githubusercontent.com/u/82622526?v=4'),
+('user2', 'pbkdf2:sha256:260000$46jIX3AzwzkD2gdT$d7c996787d566f0c000e0e9716cadc7d2fd060e7aad0e43a6809a008e547e653', 'email2@gmail.com', 'https://avatars.githubusercontent.com/u/150710084?v=4'),
+('user3', 'pbkdf2:sha256:260000$aSqdtiMrSYPbkYbm$7d15941a42deaac9118b5c21162c7c796789b57007327e41775010aa8dfd4f25', 'email3@gmail.com', 'https://avatars.githubusercontent.com/u/166476867?v=4'),
+('user4', 'pbkdf2:sha256:260000$Q4v6h3rOCKHLySkq$7da5b80cfdc1d4b6f25c82f53d3f6d489d5016f2573acd9ef4a5552c01f7b11a', 'email4@gmail.com', 'https://avatars.githubusercontent.com/u/81881239?v=4'),
+('user5', 'pbkdf2:sha256:260000$sj8LbjfYrApUKkqQ$9a9f036253f94f5e988a6c98de4e6f6aabe028da4a5f98841e47022439285cd0', 'email5@gmail.com', 'https://avatars.githubusercontent.com/u/132305830?v=4'),
+('user6', 'pbkdf2:sha256:260000$J8Gedhw92KZ5Ivql$61c20b7adbb271067baa7e47afade5ae6e04393d35083a1c9a962eff36e20857', 'email6@gmail.com', 'https://avatars.githubusercontent.com/u/78744163?v=4'),
+('user7', 'pbkdf2:sha256:260000$I70yQUPmQsGDKbwu$850e0a87eeb2607a4abdf126a0ba4795ef5a5c4255ed1f908b3b49e7539b5efd', 'email7@gmail.com', 'https://avatars.githubusercontent.com/u/82292789?v=4'),
+('user8', 'pbkdf2:sha256:260000$fifQOMhIXPOmt7Dw$bcf01a60635634dd5a1799cc611ae4bc91e27732289eefa6e8bd3b7ab2da098c', 'email8@gmail.com', 'https://avatars.githubusercontent.com/u/81821144?v=4'),
+('user9', 'pbkdf2:sha256:260000$ZCSnsPiycPbOHwvT$919cc3e390511745021710fab9b9114b1f5f6dfba3403bd5096bcbd240b2881c', 'email9@gmail.com', 'https://avatars.githubusercontent.com/u/66759199?v=4'),
+('user10', 'pbkdf2:sha256:260000$xmHgHDLpXkjURZwc$ce10936f437f20cc9987aae14c572ecdeeab6483b0114650fb15d97561729800', 'email10@gmail.com', 'https://avatars.githubusercontent.com/u/89984911?v=4'),
+('user11', 'pbkdf2:sha256:260000$sJS0yiKwVsZAZOA3$11fc75b0deb31c119ab43e76b0912ec357f0898e60a72d530c593b55d40d5e9d', 'email11@gmail.com', 'https://avatars.githubusercontent.com/u/64995978?v=4'),
+('user12', 'pbkdf2:sha256:260000$Hm51DG1GD2bwi4GR$4297c1e393d24ecca3cf7c429fe6a9ec18292906664a07e77333d4beb1dbefb2', 'email12@gmail.com', 'https://avatars.githubusercontent.com/u/146788857?v=4');
 
 INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES
 (6,   9, 'Charizard', 'Blaze', 'Solar Power', 'None', 'None', 1),
