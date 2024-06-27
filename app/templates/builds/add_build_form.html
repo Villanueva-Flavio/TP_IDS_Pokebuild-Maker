@@ -15,21 +15,21 @@
         <label for="">BUILD NAME</label>
         <input type="text" id="build_name">
     </form>
-    <form id="build_form" action=""> 
+    <form id="build_form" action="">
     <div class="container_all_pokemon">
         {% for i in range (6) %}
             <div class="pokemon_container">
                 <div class="search_container"> 
                     <select name="" class="select-pokemon pokemon_{{i+1}}">
                         <option value="">Seleccione un Pokemon</option>
-                        {%for pokemon in pokemons%}
-                        <option value="{{ pokemon.name }}" data-pokedex-id="{{ pokemon.especie }}" data-level='{{ pokemon.level }}'
+                        {% for pokemon in pokemons %}
+                        <option value="{{ pokemon.name }}" data-pokedex-id="{{ pokemon.pokedex_id }}" data-level='{{ pokemon.level }}'
                         data-ability-1="{{ pokemon.ability_1 }}" data-ability-2="{{ pokemon.ability_2 }}" data-ability-3="{{ pokemon.ability_3 }}" 
                         data-ability-4="{{ pokemon.ability_4 }}" data-name="{{pokemon.name}}">{{ pokemon.name }}</option>
-                        {%endfor%}
-                    </select> 
+                        {% endfor %}
+                    </select>
                 </div>
-                <div class="datos_container">    
+                <div class="datos_container">
                     <div class="img_container">
                         <img class="img_pokemon" src="../static/images/Logo.png">
                     </div>
@@ -80,9 +80,6 @@
         } catch (error) {
             console.error('Error parsing pokemon data:', error);
         }
-
-        console.log('Owner ID:', owner_id);
-        console.log('Pokemones:', pokemones);
 
         $('.select-pokemon').select2({
             tags: true,
@@ -166,6 +163,7 @@
             for (var i = 1; i <= 4; i++) { container.find('.poke_habilidad_' + i).html("ABILITY " + i + ": "); }
         } else {
             var id = $(selectedOption).attr('data-pokedex-id');
+            console.log(id);
             while(id.length < 3) id = '0' + id;
             var photo = 'https://pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/' + id + '.png';
             container.find('.name').html('NAME: ' + $(selectedOption).attr('data-name'));
