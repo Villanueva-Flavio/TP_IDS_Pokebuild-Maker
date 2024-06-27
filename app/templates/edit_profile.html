@@ -56,6 +56,15 @@
     </div>
 
     <script>
+        function validateEmail(email) {
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email);
+        }
+        function validatePassword(password) {
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordPattern.test(password);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const modForm = document.getElementById('mod_form');
             const saveButton = document.getElementById('save-button');
@@ -73,6 +82,13 @@
                     $('#errorMensaje').text("The password is not valid, it should be at least 8 characters long");
                     return;
                 }
+
+                if (!validateEmail(email)) {
+                console.log('Invalid email');
+                $('#errorMensaje').text('Correo electrónico inválido');
+                return;
+                }
+
                 if (password !== confirmPassword) {
                     $('#errorMensaje').text("The passwords do not match, please try again.");
                     return;
