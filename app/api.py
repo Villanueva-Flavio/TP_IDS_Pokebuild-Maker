@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
-import mysql.connector, traceback, re
+import mysql.connector, traceback, re, requests
 from constants import *
 
 api_blueprint = Blueprint('api', __name__)
