@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 </head>
 <body>
 
@@ -45,9 +47,9 @@
             </div>
 
             <br>
-
+            <div id="errorMensaje"></div>
             <div class="form-actions">
-                <button type="button" class="cancel" onclick="cancelarEdicion()">Cancel</button>
+                <button type="button" class="cancel" id="cancel_btn">Cancel</button>
                 <button type="submit" class="save" id="save-button">Save</button>
             </div>
         </form>
@@ -68,9 +70,18 @@
 
                 const passwordValidation = validatePassword(password, confirmPassword);
                 if (!passwordValidation.valid) {
-                    alert(passwordValidation.message);
+                    $('#errorMensaje').text("The password is not valid, it should be at least 8 characters long");
                     return;
                 }
+                if (password !== confirmPassword) {
+                    $('#errorMensaje').text("The passwords do not match, please try again.");
+                    return;
+                }
+                if(email == "" || name == "") {
+                    $('#errorMensaje').text("Please fill all the fields.");
+                    return;
+                }
+                
 
                 const formData = new FormData();
                 formData.append('username', name);
@@ -90,20 +101,21 @@
                 .then(data => {
                     if (data.success) {
                         alert('Profile updated successfully');
-                        window.location.href = '/user_profile/{{ user_data.id }}';
+                        window.location.href = '/';
                     } else {
                         alert(data.message || 'Failed to update profile');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to update profile');
+                    $('#errorMensaje').text("Email/Username already exists, please try again.");
+
                 });
             });
 
             function validatePassword(password, confirmPassword) {
                 if (password !== confirmPassword) {
-                    return { valid: false, message: 'Passwords do not match' };
+                    
                 }
                 if (password.length < 8) {
                     return { valid: false, message: 'Password should be at least 8 characters long' };
@@ -112,8 +124,8 @@
                 return { valid: true };
             }
 
-            function cancelarEdicion() {
-                window.location.href = '/api/add_build_form/';
+            function cancel_btn() {
+                window.location.href = '/';
             }
         });
     </script>
