@@ -49,14 +49,15 @@ def get_data(query):
         with engine.connect() as connection:
             result = connection.execute(text(query))
             data = []
+            columns = result.keys()
             for row in result:
-                data_dict = dict(row)
+                data_dict = dict(zip(columns, row))
                 data.append(data_dict)
-        return jsonify(data[0]) if(len(data) == 1) else jsonify(data)
-        
+
+        return jsonify(data[0]) if len(data) == 1 else jsonify(data)
+
     except SQLAlchemyError as e:
         return jsonify({'error': str(e.__dict__['orig'])})
-
 def is_valid_email(email):
     regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(regex, email) is not None
