@@ -141,9 +141,10 @@
         success: function(response) {
             console.log(response);
             if (response['status'] === 'success') {
-                window.location.href = '/';
+                window.location.href = '/user_profile/{{ owner_id }}';
             } else {
                 console.error('Error adding build:', response);
+                window.location.href = '/user_profile/{{ owner_id }}';
             }
         },
         error: function(xhr, status, error) {
@@ -175,8 +176,9 @@
     $('.select-pokemon').change(procesar_datos);
 
 });
-    cancelBtn.addEventListener('click', () => {
-            window.location.href = '/'; 
+   
+        cancelBtn.addEventListener('click', () => {
+            window.location.href = '/user_profile/{{ owner_id }}'; 
         });
     </script>
 </body>

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search and Delete Builds</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Tiny5&display=swap" rel="stylesheet">
 
 </head>
@@ -25,7 +27,9 @@
     <script>
         const select = document.getElementById('editable-select');
         const deleteBtn = document.getElementById('delete_builds_btn');
-        const cancelBtn = document.getElementById('cancel_builds_btn');
+        $('#cancel_builds_btn').click(function() {
+            window.location.href = '/user_profile/{{ owner_id }}';
+        });
 
         deleteBtn.addEventListener('click', event => {
             event.preventDefault();
@@ -43,8 +47,10 @@
             .then(data => {
                 if (data.message) {
                     console.log('Build deleted successfully');
+                    window.location.href = '/user_profile/{{ owner_id }}';
                 } else {
                     console.log('An error occurred: ' + (data.error || 'Unknown error'));
+                    window.location.href = '/user_profile/{{ owner_id }}';
                 }
             })
             .catch(error => {
