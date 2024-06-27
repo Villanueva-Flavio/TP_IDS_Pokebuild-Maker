@@ -101,7 +101,7 @@ def get_user_pokemons(user_id):
         build_row = {
             'name': pokemon['name'],
             'id': pokemon['id'],
-            'pokedex_id': pokemon['pokedex_id'],
+            'pokedex_id': str(pokemon['pokedex_id']).zfill(3),
             'especie': especie_pokemon,
             'level': pokemon['level'],
             'ability_1': pokemon['ability_1'],
@@ -112,8 +112,9 @@ def get_user_pokemons(user_id):
         pokemons_dict.append(build_row)
     return pokemons_dict
 
-@frontend_blueprint.route('/modify_pokemon_form/<owner_id>', strict_slashes=False)
-def formulario_modificar_pokemon(owner_id):
+@frontend_blueprint.route('/modify_pokemon_form/', strict_slashes=False)
+def formulario_modificar_pokemon():
+    owner_id = session.get('user_id')
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     user_pokemons = get_user_pokemons(owner_id)
     if request.method == "POST":
@@ -121,21 +122,17 @@ def formulario_modificar_pokemon(owner_id):
     return render_template('pokemons/formulario_modificar_pokemon.html', pokemons=pokemons['pokemons'], owner_id=owner_id, user_pokemons=user_pokemons)
 
 
-@frontend_blueprint.route('/add_build_form/<owner_id>', methods = ['GET', 'POST'], strict_slashes=False)
-def pokemon_container(owner_id): # cambiar user id cuando este el auth
+@frontend_blueprint.route('/add_build_form/', methods = ['GET', 'POST'], strict_slashes=False)
+def pokemon_container():
+    owner_id = session.get('user_id')
     pokemons_dic = get_user_pokemons(owner_id)
     return render_template('builds/add_build_form.html', pokemons=pokemons_dic, owner_id=owner_id)  
 
-@frontend_blueprint.route('/modify_build_form/<owner_id>', methods = ['GET', 'POST'], strict_slashes=False)
-def sasa(owner_id): # cambiar user id cuando este el auth
-    pokemons_dic = get_user_pokemons(owner_id)
-    builds_dic=get_user_builds(owner_id)
-    return render_template('builds/modify_build_form.html', pokemons=pokemons_dic, builds = builds_dic, owner_id=owner_id) 
-
-@frontend_blueprint.route('/delete_pokemon_form/<owner_id>', strict_slashes=False)
-def delete_pokemon(owner_id):
+@frontend_blueprint.route('/delete_pokemon_form/', strict_slashes=False)
+def delete_pokemon():
+    owner_id = session.get('user_id')
     if request.method == 'POST':
-        return render_template('home.html') #tiene que ser cambiado a profile
+        return render_template('home.html')
     user_pokemons=requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{owner_id}').json()
     if isinstance(user_pokemons, dict):
         user_pokemons = [user_pokemons]
@@ -148,8 +145,9 @@ def delete_pokemon(owner_id):
         pokemons_dict.append(build_row)
     return render_template('pokemons/delete_pokemon.html', pokemons=pokemons_dict, owner_id=owner_id)
 
-@frontend_blueprint.route('/add_pokemon_form/<owner_id>', methods=["POST", "GET"], strict_slashes=False) #Hasta que este el POST endpoint de pokemon, tiene esto.
-def add_pokemon_form(owner_id):
+@frontend_blueprint.route('/add_pokemon_form/', methods=["POST", "GET"], strict_slashes=False) #Hasta que este el POST endpoint de pokemon, tiene esto.
+def add_pokemon_form():
+    owner_id = session.get('user_id')
     pokemons = requests.get("http://localhost:5000/api/get_all_pokemons").json()
     if request.method == "POST":
         return render_template("home.html")
@@ -157,6 +155,7 @@ def add_pokemon_form(owner_id):
 
 @frontend_blueprint.route('/user_profile/<user_id>', strict_slashes=False)
 def user_profile(user_id):
+    logged_user = session.get('user_id')
     user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
     if isinstance(user_builds, dict):
         user_builds = [user_builds]
@@ -180,7 +179,7 @@ def user_profile(user_id):
             build_row[f'pokemon_id_{j+1}'] = result[j]
         build_dict[build['id']] = build_row
 
-    return render_template('profiles/user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username)
+    return render_template('profiles/user_profile.html', build_dict=build_dict, user_id=user_id, pokemons_owned=pokemons_owned, username=username, logged_user=logged_user)
 
 @frontend_blueprint.route('/login', strict_slashes=False)
 def login_form():
@@ -202,16 +201,19 @@ def trainers_list_container():
         dic_nombre_usuario[user['profile_picture']] = user['profile_picture']
     return render_template('profiles/trainers_list_container.html', usuarios=usuarios, dic_nombre_usuario=dic_nombre_usuario)
 
-@frontend_blueprint.route('/modify_user_data/<user_id>', strict_slashes=False)
-def modify_user_data(user_id):
+@frontend_blueprint.route('/modify_user_data/', strict_slashes=False)
+def modify_user_data():
+    user_id = session.get('user_id')
     user_data = requests.get(f'http://pokebuild-backend:5000/api/user_profile/{user_id}/').json()
     return render_template('profiles/edit_profile.html', user_data=user_data)
 
-@frontend_blueprint.route('/modify_build_form/<owner_id>', strict_slashes=False)
-def modify_build_form(owner_id):
+@frontend_blueprint.route('/modify_build_form/', strict_slashes=False)
+def modify_build_form():
+    owner_id = session.get('user_id')
     return render_template('builds/modify_build_form.html', build=get_user_builds(owner_id))
 
-@frontend_blueprint.route('/delete_build/<owner_id>', strict_slashes=False)
-def delete_build_form(owner_id):
+@frontend_blueprint.route('/delete_build/', strict_slashes=False)
+def delete_build_form():
+    owner_id = session.get('user_id')
     builds = get_user_builds(owner_id)
     return render_template('delete_build.html', builds=builds, owner_id=owner_id)
