@@ -28,18 +28,24 @@
         </div>
     </form>
 
-
-    <script> 
-        document.getElementById('mod_form').addEventListener('submit', function(event) {
+    <script>
+        document.getElementById('edit_profile_form').addEventListener('submit', function(event) {
             event.preventDefault();
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirm_password = document.getElementById('confirm-password').value;
             const profile_pic = document.getElementById('profile-pic').files[0];
-            console.log(profile_pic, confirm_password, password, email, name);
+            
+            console.log("Profile Data:");
+            console.log("Name:", name);
+            console.log("Email:", email);
+            console.log("Password:", password);
+            console.log("Confirm Password:", confirm_password);
+            console.log("Profile Picture:", profile_pic);
+
             if (password !== confirm_password) {
-                alert('Passwords do not match');
+                console.log('Passwords do not match');
                 return;
             }
 
@@ -48,25 +54,35 @@
             formData.append('email', email);
             formData.append('password', password);
             formData.append('profile_picture', profile_pic);
+
+            console.log("Form Data:");
             console.log(formData);
+
             fetch('/api/mod_user/{{ user_data.id }}', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
-             .then(data => {
+            .then(data => {
                 if (data.success) {
+                    console.log('Profile updated successfully');
                     window.location.href = '/user_profile/{{ user_data.id }}';
                 } else {
-                    alert(data.message);
+                    console.log('Failed to update profile:', data.message);
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
-    </script>
 
+        function cancelarEdicion() {
+            window.location.href = '/';
+        }
+    </script>
 </body>
 </html>
-            
+
               
         
 
