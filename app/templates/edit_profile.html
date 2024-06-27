@@ -6,149 +6,128 @@
     <title>Modify Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
 </head>
 <body>
 
-    <div class="container" id="modify_profile_container">
-        <h1>Edit Profile</h1>
-        <form action="/api/mod_user/{{ user_data.id }}" id="mod_form" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="username" value="{{ user_data.username }}" required>
-            </div>
+<div class="container" id="modify_profile_container">
+    <h1>Edit Profile</h1>
+    <form action="/api/mod_user/{{ user_data.id }}" id="mod_form" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="username" value="{{ user_data.username }}" required>
+        </div>
 
-            <br>
+        <br>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ user_data.email }}" required>
-            </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user_data.email }}" required>
+        </div>
 
-            <br>
+        <br>
 
-            <div class="form-group">
-                <label for="password">New Password</label>
-                <input type="password" id="password" name="password">
-            </div>
+        <div class="form-group">
+            <label for="password">New Password</label>
+            <input type="password" id="password" name="password">
+        </div>
 
-            <br>
+        <br>
 
-            <div class="form-group">
-                <label for="confirm-password">Confirm New Password</label>
-                <input type="password" id="confirm-password" name="confirm-password">
-            </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm New Password</label>
+            <input type="password" id="confirm-password" name="confirm-password">
+        </div>
 
-            <br>
+        <br>
 
-            <div class="form-group">
-                <label for="profile-pic">New Profile Picture</label>
-                <input type="file" id="profile-pic" name="profile_picture">
-            </div>
+        <div class="form-group">
+            <label for="profile-pic">New Profile Picture</label>
+            <input type="file" id="profile-pic" name="profile_picture">
+        </div>
 
-            <br>
-            <div id="errorMensaje"></div>
-            <div class="form-actions">
-                <button type="button" class="cancel" id="cancel_btn">Cancel</button>
-                <button type="submit" class="save" id="save-button">Save</button>
-            </div>
-        </form>
-    </div>
+        <br>
+        <div id="errorMensaje"></div>
+        <div class="form-actions">
+            <button type="button" class="cancel" id="cancel_btn">Cancel</button>
+            <button type="submit" class="save" id="save-button">Save</button>
+        </div>
+    </form>
+</div>
 
-    <script>
-        function validateEmail(email) {
+<script>
+    function validateEmail(email) {
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailPattern.test(email);
+    }
+
+    function validatePassword(password, confirmPassword) {
+        if (password !== confirmPassword) {
+            return { valid: false, message: 'The passwords do not match, please try again.' };
         }
-        function validatePassword(password) {
-        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        return passwordPattern.test(password);
+        if (password.length < 8) {
+            return { valid: false, message: 'The password should be at least 8 characters long.' };
         }
+        return { valid: true };
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const modForm = document.getElementById('mod_form');
-            const saveButton = document.getElementById('save-button');
+    document.addEventListener('DOMContentLoaded', function() {
+        const modForm = document.getElementById('mod_form');
 
-            modForm.addEventListener('submit', function(event) {
-                event.preventDefault();
+        modForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
 
-                const passwordValidation = validatePassword(password, confirmPassword);
-                if (!passwordValidation.valid) {
-                    $('#errorMensaje').text("The password is not valid, it should be at least 8 characters long");
-                    return;
-                }
+            const passwordValidation = validatePassword(password, confirmPassword);
+            if (!passwordValidation.valid) {
+                $('#errorMensaje').text(passwordValidation.message);
+                return;
+            }
 
-                if (!validateEmail(email)) {
-                console.log('Invalid email');
+            if (!validateEmail(email)) {
                 $('#errorMensaje').text('Correo electrónico inválido');
                 return;
-                }
+            }
 
-                if (password !== confirmPassword) {
-                    $('#errorMensaje').text("The passwords do not match, please try again.");
-                    return;
-                }
-                if(email == "" || name == "") {
-                    $('#errorMensaje').text("Please fill all the fields.");
-                    return;
-                }
-                
-
-                const formData = new FormData();
-                formData.append('username', name);
-                formData.append('email', email);
+            const formData = new FormData();
+            formData.append('username', name);
+            formData.append('email', email);
+            if (password) {  // Only append password if it's not empty
                 formData.append('password', password);
+            }
 
-                fetch('/api/mod_user/{{ user_data.id }}', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Profile updated successfully');
-                        window.location.href = '/';
-                    } else {
-                        alert(data.message || 'Failed to update profile');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    $('#errorMensaje').text("Email/Username already exists, please try again.");
-
-                });
+            fetch('/api/mod_user/{{ user_data.id }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Profile updated successfully');
+                    window.location.href = '/';
+                } else {
+                    alert(data.message || 'Failed to update profile');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                $('#errorMensaje').text("Email/Username already exists, please try again.");
             });
-
-            function validatePassword(password, confirmPassword) {
-                if (password !== confirmPassword) {
-                    
-                }
-                if (password.length < 8) {
-                    return { valid: false, message: 'Password should be at least 8 characters long' };
-                }
-
-                return { valid: true };
-            }
-
-            function cancel_btn() {
-                window.location.href = '/';
-            }
         });
-    </script>
+
+        document.getElementById('cancel_btn').addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    });
+</script>
 
 </body>
 </html>
-
-
-
-
