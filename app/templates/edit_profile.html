@@ -30,39 +30,49 @@
 
 
     <script> 
-        document.getElementById('mod_form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const confirm_password = document.getElementById('confirm-password').value;
-            const profile_pic = document.getElementById('profile-pic').files[0];
-            console.log(profile_pic, confirm_password, password, email, name);
-            if (password !== confirm_password) {
-                alert('Passwords do not match');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('username', name);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('profile_picture', profile_pic);
-            console.log(formData);
-            fetch('/api/mod_user/{{ user_data.id }}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-             .then(data => {
-                if (data.success) {
-                    window.location.href = '/user_profile/{{ user_data.id }}';
-                } else {
-                    alert(data.message);
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('edit_profile_form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirm_password = document.getElementById('confirm-password').value;
+                const profile_pic = document.getElementById('profile-pic').files[0];
+                
+                if (password !== confirm_password) {
+                    alert('Passwords do not match');
+                    return;
                 }
+
+                const formData = new FormData();
+                formData.append('username', name);
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('profile_picture', profile_pic);
+
+                console.log('Form Data:', formData);
+
+                fetch('/api/mod_user/{{ user_data.id }}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/user_profile/{{ user_data.id }}';
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to update profile. Please try again later.');
+                });
             });
         });
     </script>
 
 </body>
 </html>
+
