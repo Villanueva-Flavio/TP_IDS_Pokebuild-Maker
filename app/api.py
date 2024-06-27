@@ -265,6 +265,45 @@ def delete_pokemon(pokemon_id, owner_id):
         print(error_message)
         return {"error": error_message}, 500    
 
+#POST endpoint for modify an existing USER
+@api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'])
+def mod_user(user_id):
+    data_user = request.json  # Cambio: 'requests' a 'request'
+    username = data_user.get('username')
+    password = data_user.get('password')
+    email = data_user.get('email')
+    profile_picture = data_user.get('profile_picture')
+
+    if not username or not password or not email:
+        return jsonify({'error': 'Missing required fields (username, password, email)'})
+
+    try:
+        with engine.connect() as connection:
+            mod_user_query = """
+                UPDATE USER 
+                SET username = :username, 
+                    password = :password, 
+                    email = :email, 
+                    profile_picture = :profile_picture
+                WHERE id = :user_id
+            """
+            connection.execute(text(mod_user_query), {
+                'username': username,
+                'password': password,
+                'email': email,
+                'profile_picture': profile_picture,
+                'user_id': user_id
+            })
+
+        return jsonify({'message': f'User with ID {user_id} modified successfully'})
+
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 # POST endpoint for adding a new BUILD
 @api_blueprint.route(ADD_BUILD_ROUTE, methods=['POST'], strict_slashes=False)
 def add_build():
@@ -416,51 +455,45 @@ def logout():
 def get_build_by_user(owner_id):
     return get_data( USER_ID_BUILDS_QUERY + owner_id)
 
-
-@api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'], strict_slashes=False)
-def mod_user(user_id):
+#POST endpoint for delete user
+@api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'])
+def del_user(user_id):
     try:
-        username = request.form.get('username')
-        password = generate_password_hash(request.form.get('password'))
-        email = request.form.get('email')
-        profile_picture = request.files.get('profile_picture')
-
-        if not username or not password or not email:
-            return jsonify({'error': 'Missing required fields (username, password, email)'})
-
         with engine.connect() as connection:
-            connection.execute(text(MOD_USER_QUERY), {'username': username, 'password': password, 'email': email, 'profile_picture': profile_picture.read() if profile_picture else None, 'user_id': user_id})
-        return jsonify({'message': f'User with ID {user_id} modified successfully'})
+            del_user_query = "DELETE FROM USER WHERE id = :user_id"
+            connection.execute(text(del_user_query), {'user_id': user_id})
+        
+        return jsonify({'message': f'User with ID {user_id} deleted successfully'})
 
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         return jsonify({'error': error})
 
-#POST endpoint for delete user
-@api_blueprint.route(DEL_USER_ROUTE, methods=['POST'], strict_slashes=False)
-def del_user(user_id):
-    try:
-        with engine.connect() as connection:
-            connection.execute(DEL_USER_QUERY + user_id)
-        return jsonify({'message': f'User with ID {user_id} deleted successfully'})
-        
-    except SQLAlchemyError as e:
-        return jsonify({'error': str(e.__dict__['orig'])})
-
-# POST endpoint para eliminar una BUILD por su ID (primary key de la BUILD)
-@api_blueprint.route(DELETE_BUILD_ROUTE, methods=['POST'], strict_slashes=False)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+# POST endpoint para eliminar una BUILD por su ID (primary key)
+@api_blueprint.route('/api/delete_build/', methods=['POST'])
 def delete_build():
     data = request.json
     build_id = data.get('build_id')
+
     if not build_id:
         return jsonify({'error': 'build_id is required'})
 
     try:
-        with engine.connect() as connection:            
-            result = connection.execute(DELETE_BUILD_QUERY + build_id)
+        with engine.connect() as connection:
+            delete_build_query = """
+                DELETE FROM BUILDS 
+                WHERE id = :build_id
+            """
+            result = connection.execute(delete_build_query, {'build_id': build_id})
+            # Verifica si se eliminó una fila
             if result.rowcount == 0:
                 return jsonify({'error': f'Build with id {build_id} not found'})
+            
             return jsonify({'message': f'Build with id {build_id} deleted successfully'})
 
     except SQLAlchemyError as e:
-        return jsonify({'error': str(e.__dict__['orig'])})
+        error = str(e.__dict__['orig'])
+        return jsonify({'error': error})
