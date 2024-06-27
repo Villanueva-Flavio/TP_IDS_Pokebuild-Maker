@@ -14,10 +14,18 @@ def get_pokemon_id(build):
     ]
 
 def get_pokedex_id(pokemon_list, pokemons):
-    return [
-        '000' if pokemon_id == -1 or pokemon_id - 1 >= len(pokemons) else str(pokemons[pokemon_id - 1]['pokedex_id']).zfill(3)
-        for pokemon_id in pokemon_list
-    ]
+    pokedex_id_list = []
+
+    for pokemon_id in pokemon_list:
+        if pokemon_id == -1 or pokemon_id - 1 >= len(pokemons):
+            pokedex_id_list.append('000')
+        else:
+            for pokemon in pokemons:
+                if pokemon['id'] == pokemon_id:
+                    pokedex_id_list.append(str(pokemon['pokedex_id']).zfill(3))
+                    break
+
+    return pokedex_id_list
 
 def get_build_dict(builds, pokemons):
     build_dict = {}
@@ -168,6 +176,10 @@ def user_profile(user_id):
     user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
     pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
     user_pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
+
+    if isinstance(user_pokemons, dict):
+        user_pokemons = [user_pokemons]
+
     pokemons_owned = set()
     build_dict = {}
 
