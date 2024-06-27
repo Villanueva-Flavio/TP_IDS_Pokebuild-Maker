@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modify Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
 </head>
 <body>
 
@@ -57,17 +55,22 @@
 
     <script>
         function validateEmail(email) {
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailPattern.test(email);
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailPattern.test(email);
         }
-        function validatePassword(password) {
-        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        return passwordPattern.test(password);
+
+        function validatePassword(password, confirmPassword) {
+            if (password !== confirmPassword) {
+                return { valid: false, message: 'The passwords do not match, please try again.' };
+            }
+            if (password.length < 8) {
+                return { valid: false, message: 'The password should be at least 8 characters long.' };
+            }
+            return { valid: true };
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             const modForm = document.getElementById('mod_form');
-            const saveButton = document.getElementById('save-button');
 
             modForm.addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -79,25 +82,25 @@
 
                 const passwordValidation = validatePassword(password, confirmPassword);
                 if (!passwordValidation.valid) {
-                    $('#errorMensaje').text("The password is not valid, it should be at least 8 characters long");
+                    document.getElementById('errorMensaje').textContent = passwordValidation.message;
                     return;
                 }
 
                 if (!validateEmail(email)) {
-                console.log('Invalid email');
-                $('#errorMensaje').text('Correo electrónico inválido');
-                return;
+                    console.log('Invalid email');
+                    document.getElementById('errorMensaje').textContent = 'Invalid email address.';
+                    return;
                 }
 
                 if (password !== confirmPassword) {
-                    $('#errorMensaje').text("The passwords do not match, please try again.");
+                    document.getElementById('errorMensaje').textContent = "The passwords do not match, please try again.";
                     return;
                 }
-                if(email == "" || name == "") {
-                    $('#errorMensaje').text("Please fill all the fields.");
+
+                if (email == "" || name == "") {
+                    document.getElementById('errorMensaje').textContent = "Please fill in all fields.";
                     return;
                 }
-                
 
                 const formData = new FormData();
                 formData.append('username', name);
@@ -124,25 +127,13 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    $('#errorMensaje').text("Email/Username already exists, please try again.");
-
+                    document.getElementById('errorMensaje').textContent = "Email/Username already exists, please try again.";
                 });
             });
 
-            function validatePassword(password, confirmPassword) {
-                if (password !== confirmPassword) {
-                    
-                }
-                if (password.length < 8) {
-                    return { valid: false, message: 'Password should be at least 8 characters long' };
-                }
-
-                return { valid: true };
-            }
-
-            function cancel_btn() {
+            document.getElementById('cancel_btn').addEventListener('click', function() {
                 window.location.href = '/';
-            }
+            });
         });
     </script>
 
