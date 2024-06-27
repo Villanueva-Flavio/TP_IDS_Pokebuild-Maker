@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css') }}">
     <title>DELETE POKEMON</title>
 </head>
-<body id="delete_pokemon_body">
-    <form action="{{ url_for('frontend.delete_pokemon', owner_id=owner_id) }}" id="delete_pokemon" class="" method="post" data-owner-id="{{ owner_id }}">
-        <div id="remove_your_pokemon_text">REMOVE YOUR POKEMON:</div>
-        <br>
-        <label for="select_delete_pokemon" class="texto_delete_pokemon">SELECT YOUR POKEMON:</label>
-        <select name="select_delete_pokemon" id="select_delete_pokemon" class="texto_delete_pokemon">
-            {% for pokemon in pokemons %}
-                <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" class="texto_delete_pokemon botones_delete_cancel" id="DELETE_delete_pokemon_button">DELETE</button>
-        <button class="texto_delete_pokemon botones_delete_cancel" id="CANCEL_delete_pokemon_button" type="reset">CANCEL</button>
-    </form>
+<body>
+    <div id="delete_pokemon_container">
+        <form action="{{ url_for('frontend.delete_pokemon', owner_id=owner_id) }}" id="delete_pokemon" class="" method="post" data-owner-id="{{ owner_id }}">
+            <div class="tittle_remove_your_">REMOVE YOUR POKEMON:</div>
+            <br>
+            <label for="select_delete_pokemon" class="texto_delete_pokemon">SELECT YOUR POKEMON:</label>
+            <select name="select_delete_pokemon" id="select_delete_pokemon" class="texto_delete_pokemon select_delete">
+                {% for pokemon in pokemons %}
+                    <option value="{{ pokemon.id }}">{{ pokemon.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="texto_delete_pokemon botones_delete_cancel" id="DELETE_delete_pokemon_button">DELETE</button>
+            <button class="texto_delete_pokemon botones_delete_cancel" id="CANCEL_delete_pokemon_button" type="reset">CANCEL</button>
+        </form>
+    </div>
     <script src="{{ url_for('static', filename='js/delete_pokemon_by_id.js') }}"></script>
 </body>
 </html>

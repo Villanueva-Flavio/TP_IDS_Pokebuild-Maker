@@ -1,6 +1,8 @@
-#delete_pokemon_body{
+#delete_pokemon_container{
     border-radius: 5px;
-    border: 2px solid black;
+    border: 3px solid white;
+    background: #160033;
+    color: #28ffbd;
     width: 620px;
     height: 250px;
     padding-left: 50px;
@@ -11,24 +13,31 @@
     flex-wrap: wrap;
 }
 #delete_build_container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    border: 1px solid #ccc;
     border-radius: 5px;
+    border: 3px solid white;
+    background: #160033;
+    color: #28ffbd;
+    width: 620px;
+    height: 250px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 30px;
 }
 
-#select_delete_pokemon{ /*Donde va el nombre del pokemon*/
+.select_delete{ /*Donde va el nombre del pokemon*/
     width: 230px;
     text-align: center;
     margin-left: 20px;
+    background: #160033;
+    color: #28ffbd;
 }
+
 
 .texto_delete_pokemon{
     font-size: 30px;
     font-family: "Tiny5";
 }
-#remove_your_pokemon_text{
+.tittle_remove_your_{
     text-align: center;
     font-size: 40px;
     font-family: "Tiny5";
@@ -36,7 +45,15 @@
 }
 .botones_delete_cancel{
     margin-top: 30px;
+    color: #28ffbd;
+    border: 2px solid white;
+    background-color: #160033;
+    font-size: 37px;
 }
-#CANCEL_delete_pokemon_button{
-    margin-left: 30px;
+.botones_delete_cancel:hover{
+    background: linear-gradient(140deg, #160033, #5e00ff);
+    color: white;
+}
+#CANCEL_delete_pokemon_butto, #cancel_builds_btn{
+    margin-left: 28px;
 }

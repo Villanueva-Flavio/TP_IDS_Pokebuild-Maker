@@ -9,14 +9,16 @@
     color: white;
 }
 
-body{
+.body_build_form{
     margin: 5px;
     padding: 0;
     font-family: "Tiny5", sans-serif;
     font-weight: 400;
     font-style: normal;
-    background-color: #000000;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #5e00ff, #160033);
     color: #28ffbd;
+    overflow-x: hidden;
 }
 
 
@@ -24,11 +26,24 @@ h1{
     font-size: 50px;
     text-align: center;
 }
-
-#title{
+.btn:hover {
+    background: linear-gradient(140deg, #160033, #5e00ff);
+    color: white;
+}
+.title{
     margin-top: 3%;
-    font-size: 5em;
+    margin-left: 10%;
+    margin-right: 10%;
+    font-size: 4.5em;
     text-align: center;
+    background-color: #160033;
+    border: 2px solid white;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: baseline;
 }
 #builds_to_select{
     font-family: "Tiny5", sans-serif;
@@ -39,6 +54,9 @@ h1{
     width: 480px;
     transform: translateY(-15%);
     text-align: center;
+    background-color: #000000;
+    color: #28ffbd;
+    margin-left: 20px;
 }
 
 
@@ -51,6 +69,9 @@ h1{
     display:flex;
     justify-content: center;
     flex-wrap: wrap;
+    min-width: 750px;
+
+    
 }
 
 .container_build_name{
@@ -86,18 +107,20 @@ h1{
     height: 200px;
     width: 200px;
     margin-top: 15px;
-    box-shadow: 0 0 20px #5e00ff;
-    margin-right: 20px;
+    border: 2px solid white;
+
+    margin-left: 20px;
 }
 
 .pokemon_container{ 
     width: 800px;
     font-size: 2.5vh;
-    box-shadow: 0 0 30px #5e00ff;
     border: 2px solid white;
+    background-color: #160033;
     border-radius: 5px;
     text-align: center;
     margin: 20px;
+    
 }
 
 .datos_container {
@@ -107,11 +130,11 @@ h1{
 
 .info_container {
     margin: auto;
+    margin-left: 35px;
     width:  90%;
     display: flex;
-    justify-content: space-between;
-    justify-content: center;
     flex-wrap: wrap;
+    text-align:justify;
 }
 
 .info_container label{
@@ -136,6 +159,9 @@ select{
     font-size: 20px;
     height: 50px;
     width: 100px;
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .select2-container{

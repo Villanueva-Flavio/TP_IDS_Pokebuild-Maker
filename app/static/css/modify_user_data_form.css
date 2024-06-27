@@ -1,36 +1,34 @@
-#login_form{
+#edit_profile_form {
     background: #160033;
     border-radius: 5px;
     border: 3px solid white;
     font-family: "Tiny5", sans-serif;
     color: #28ffbd;
-    height: 400px;
+    height: 700px;
     width: 710px;
     padding: 20px;
 }
-#register_form{
-    background: #160033;
-    border-radius: 5px;
-    border: 3px solid white;
-    font-family: "Tiny5", sans-serif;
-    color: #28ffbd;
-    height: 690px;
-    width: 710px;
-    padding: 20px;
-}
-.tittle_login_register{
+
+.tittle_edit_profile {
     font-size: 40px;
     text-align: center;
     margin-top: 10px;
-    
 }
-.login_register_container_datos{
+
+
+.edit_profile_container_datos{
     margin-top: 25px;
     display: flex;
     flex-direction: column;
     font-size: 30px;
 }
-.login_register_input{
+
+.label_edit_profile{
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.edit_profile_input{
     font-family: "Tiny5", sans-serif;
     font-size: 30px;
     background: #160033;
@@ -39,7 +37,16 @@
     margin-right: 30px;
     padding-left: 10px;
 }
-.login_register_button{
+
+.buttons_container_edit_profile_form{
+    margin-top: 40px;
+    gap: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit_profile_button{
     font-family: "Tiny5", sans-serif;
     font-size: 45px;
     width: 300px;
@@ -47,24 +54,18 @@
     border: 2px solid white;
     background-color: #160033;
 }
-.login_register_button:hover {
+
+.edit_profile_button:hover {
     background: linear-gradient(140deg, #160033, #5e00ff);
     color: white;
-} 
-.label_login_register{
-    margin-left: 30px;
-    margin-top: 20px;
 }
-.buttons_container_login_register_form{
-    margin-top: 40px;
-    gap: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#errorMensaje{
-    color: red;
+
+.submit_photo_profile_input{
+    font-family: "Tiny5", sans-serif;
     font-size: 20px;
-    text-align: center;   
+    background: #160033;
+    color: white;
+    margin: 20px 30px 10px 25px;
+    padding-left: 10px;
 }
 

@@ -213,4 +213,5 @@ def modify_build_form(owner_id):
 
 @frontend_blueprint.route('/delete_build/<owner_id>', strict_slashes=False)
 def delete_build_form(owner_id):
-    return render_template('builds/delete_build.html', builds=get_user_builds(owner_id))
+    builds = get_user_builds(owner_id)
+    return render_template('delete_build.html', builds=builds, owner_id=owner_id)

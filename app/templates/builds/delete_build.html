@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search and Delete Builds</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/delete_forms.css')}}">
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Tiny5&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <div class="container" id="delete_build_container">
-        <h2>Search and Delete Builds</h2>
-        <select id="editable-select" class="builds_searchbar">
+        <div class="tittle_remove_your_">REMOVE YOUR BUILD:</div>
+        <label for="" class="texto_delete_pokemon">SELECT YOUR BUILD:</label>
+        <select id="editable-select" class="texto_delete_pokemon select_delete">
             {% for build in builds %}
-                <option id="{{ build.id }}">{{ build.build_name }}</option>
+                <option class="" id="{{ build.id }}">{{ build.build_name }}</option>
             {% endfor %}
         </select>
-        <button id="delete_builds_btn">Delete</button>
-        <button id="cancel_builds_btn">Cancel</button>
+        <br>
+        <button class="texto_delete_pokemon botones_delete_cancel" id="delete_builds_btn">Delete</button>
+        <button class="texto_delete_pokemon botones_delete_cancel" id="cancel_builds_btn">Cancel</button>
     </div>
 
     <script>
@@ -39,7 +43,7 @@
             .then(data => {
                 if (data.message) {
                     console.log('Build deleted successfully');
-                    window.location.href = '/'; 
+                    window.location.href = '/user_profile/{{ owner_id }}'; 
                 } else {
                     console.log('An error occurred: ' + (data.error || 'Unknown error'));
                 }
