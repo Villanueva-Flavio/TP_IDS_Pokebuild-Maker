@@ -35,6 +35,10 @@
         {% endfor %}
     </div>
 
+    <script>
+        const userId = "{{ user_id }}";
+    </script>
+
     <script src="{{ url_for('static', filename='js/build_details.js') }}"></script>
 </body>
 </html>
