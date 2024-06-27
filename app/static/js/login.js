@@ -1,32 +1,21 @@
-document.getElementById('login_form').addEventListener('submit', function(event) {
+$('#login_form').on('submit', function(event){
     event.preventDefault();
-    const email = document.getElementById('email_input').value;
-    const password = document.getElementById('password_input').value;
+    const email = $('#email_input').val();
+    const password = $('#password_input').val();
     if(email.trim() === '' || password.trim() === ''){
         console.log('Please fill all the fields');
         $('#errorMensaje').text('Por favor, rellene todos los campos');
         return;
     }
+
     fetch('/api/login/', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             email: email,
             password: password
         })
     })
     .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            console.log(data.error);
-            $('#errorMensaje').text('Correo electrónico o contraseña incorrecta');
-        } else {
-            console.log('User logged in');
-        }
-    });
+    .then(data => {(data.error)? $('#errorMensaje').text('Correo electrónico o contraseña incorrecta'): window.location.href = '/';});
 });
-function redirectToSignUp() {
-    window.location.href = '/register/';
-}

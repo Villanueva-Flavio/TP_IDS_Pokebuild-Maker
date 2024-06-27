@@ -1,13 +1,17 @@
+from flask import jsonify, Blueprint, request, session
 from sqlalchemy.exc import SQLAlchemyError
-from flask import jsonify, Blueprint, request
 from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
-import requests, mysql.connector, re
+from datetime import timedelta
+import mysql.connector, traceback, re
 from constants import *
 
 api_blueprint = Blueprint('api', __name__)
+api_blueprint.permanent_session_lifetime = timedelta(minutes=1)
+
 db_url = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 engine = create_engine(db_url)
+
 
 def reorder_nulls_to_end():
     try:
@@ -353,17 +357,32 @@ def register():
     
     try:
         with engine.connect() as connection:
-            result = connection.execute(CHECK_USER_QUERY, (username, email)).fetchone()
+            result = connection.execute(text(CHECK_USER_QUERY), {
+                'username': username,
+                'email': email
+            }).fetchone()
             if result and (result['username'] == username or result['email'] == email):
-                    return jsonify({'error': 'That username or email is already taken'}), 400
+                return jsonify({'error': 'That username or email is already taken'}), 400
             
             hashed_password = generate_password_hash(password)
-            connection.execute(ADD_USER_QUERY, (username, hashed_password, email, profile_picture))
+            connection.execute(text(ADD_USER_QUERY), {
+                'username': username,
+                'password': hashed_password,
+                'email': email,
+                'profile_picture': profile_picture
+            })
+            connection.commit()
+        
         return jsonify({"message": "User registered successfully"}), 201
 
     except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
-        return jsonify({'error': error}), 500
+        error_message = f"SQLAlchemy error: {str(e)}"
+        traceback.print_exc()  # Esto imprimirá el traceback en la consola del servidor
+        return jsonify({'error': error_message}), 500
+    except Exception as e:
+        error_message = f"Error: {str(e)}"
+        traceback.print_exc()  # Esto imprimirá el traceback en la consola del servidor
+        return jsonify({'error': error_message}), 500
 
 @api_blueprint.route(LOGIN, methods=['POST'], strict_slashes=False)
 def login():
@@ -375,17 +394,23 @@ def login():
 
     try:
         with engine.connect() as connection:
-            result = connection.execute(GET_USER_QUERY, (email))
+            query = text(GET_USER_QUERY)
+            result = connection.execute(query, {'email': email})
             user = result.fetchone()
-            if user is None:
+            if user is None or not check_password_hash(user[2], password):
                 return jsonify({'error': 'Invalid email or password'}), 401
-            stored_password = user['password']
-
-            return jsonify({'message': 'Login successful'}) if check_password_hash(stored_password, password) else jsonify({'error': 'Invalid email or password'}), 401
+            
+            session['user_id'] = user[0]
+            return jsonify({'message': 'Login successful'}), 200
 
     except SQLAlchemyError as e:
-        error = str(e.__dict__['orig'])
+        error = str(e)
         return jsonify({'error': error}), 500
+
+@api_blueprint.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    return jsonify({'message': 'Logged out successfully'}), 200
     
 @api_blueprint.route(USER_ID_BUILDS_ROUTE, methods=['GET'], strict_slashes=False)
 def get_build_by_user(owner_id):

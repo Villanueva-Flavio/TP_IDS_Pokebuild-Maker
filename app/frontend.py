@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, session
 import requests
 frontend_blueprint = Blueprint('frontend', __name__)
 
@@ -69,9 +69,11 @@ def get_user_builds(user_id):
 @frontend_blueprint.route('/')
 @frontend_blueprint.route('/home', strict_slashes=False)
 def index():
+    user_id = session.get('user_id')
     builds, pokemons = fetch_data()
     build_dict = get_build_dict(builds, pokemons)
-    return render_template('home.html', build_dict=build_dict)
+    
+    return render_template('home.html', build_dict=build_dict, user_id=user_id)
 
 @frontend_blueprint.route('/build_list_container', strict_slashes=False)
 def build_list_container():

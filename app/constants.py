@@ -32,7 +32,7 @@ MOD_USER_ROUTE = '/api/mod_user/<user_id>'
 DEL_USER_ROUTE = '/api/del_user/<user_id>'
 DELETE_BUILD_ROUTE = '/api/delete_build/'
 
-ADD_USER_QUERY = """INSERT INTO USER (username, password, email, profile_picture) VALUES (%s, %s, %s, %s)"""
+ADD_USER_QUERY = """INSERT INTO USER (username, password, email, profile_picture) VALUES (:username, :password, :email, :profile_picture)"""
 ADD_BUILD_QUERY = """INSERT INTO BUILDS (build_name, owner_id, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp) VALUES (:build_name, :owner_id, :pokemon_id_1, :pokemon_id_2, :pokemon_id_3, :pokemon_id_4, :pokemon_id_5, :pokemon_id_6, :timestamp)"""
 POST_POKEMON_QUERY = """INSERT INTO POKEMON (pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4, owner_id) VALUES (:pokedex_id, :level, :name, :ability_1, :ability_2, :ability_3, :ability_4, :owner_id)"""
 
@@ -47,11 +47,11 @@ USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_
 BUILDS_QUERY = "SELECT * FROM BUILDS ORDER BY RAND()"
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
 USER_ID_BUILDS_QUERY = "SELECT id, build_name, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp FROM BUILDS WHERE owner_id ="
-CHECK_USER_QUERY = """SELECT * FROM USER WHERE username = %s OR email = %s"""
-GET_USER_QUERY = """SELECT email, password FROM USER WHERE email = %s"""
+CHECK_USER_QUERY = "SELECT * FROM USER WHERE username = :username OR email = :email"
+GET_USER_QUERY = """SELECT * FROM USER WHERE email = :email"""
 USERS_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u;"
 USER_ID_QUERY = "SELECT u.id, u.username, u.profile_picture, (SELECT COUNT(*) FROM POKEMON p WHERE p.owner_id = u.id) AS pokemon_count, (SELECT COUNT(*) FROM BUILDS b WHERE b.owner_id = u.id) AS build_count FROM USER u WHERE id = "
 
 DELETE_POKEMON_QUERY = "DELETE FROM POKEMON WHERE id = :id AND owner_id = :owner_id"
-DELETE_BUILD_QUERY = "DELETE FROM BUILDS WHERE id = "
+DELETE_BUILD_QUERY = "DELETE FROM BUILDS WHERE id = '"
 DEL_USER_QUERY = "DELETE FROM USER WHERE id = "
