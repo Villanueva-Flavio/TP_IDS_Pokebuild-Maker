@@ -194,7 +194,7 @@ def add_pokemon():
                 'ability_4': pokemon_data.get('ability_4', None),
                 'owner_id': pokemon_data['owner_id']
             })
-
+            connection.commit()
         return jsonify({'message': 'Pokemon added successfully.'}), 200
 
     except SQLAlchemyError as e:
@@ -335,6 +335,7 @@ def add_build():
                 'pokemon_id_6': pokemon_id_6,
                 'timestamp': timestamp
             })
+            connection.commit()
         return jsonify({'Message': 'Build added successfully'})
     
     except SQLAlchemyError as e:

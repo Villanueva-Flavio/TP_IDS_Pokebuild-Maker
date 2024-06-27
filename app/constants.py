@@ -44,7 +44,7 @@ UPDATE_QUERY = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_
 POKEMONS_QUERY = "SELECT * FROM POKEMON"
 POKEMON_ID_QUERY = "SELECT * FROM POKEMON WHERE ID = "
 USER_ID_POKEMONS_QUERY= "SELECT id, pokedex_id, level, name, ability_1, ability_2, ability_3, ability_4 FROM POKEMON WHERE owner_id ="
-BUILDS_QUERY = "SELECT * FROM BUILDS ORDER BY RAND()"
+BUILDS_QUERY = "SELECT * FROM BUILDS"
 BUILD_ID_QUERY = "SELECT * FROM BUILDS WHERE ID = "
 USER_ID_BUILDS_QUERY = "SELECT id, build_name, pokemon_id_1, pokemon_id_2, pokemon_id_3, pokemon_id_4, pokemon_id_5, pokemon_id_6, timestamp FROM BUILDS WHERE owner_id ="
 CHECK_USER_QUERY = "SELECT * FROM USER WHERE username = :username OR email = :email"

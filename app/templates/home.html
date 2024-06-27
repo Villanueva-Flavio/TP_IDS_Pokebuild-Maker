@@ -15,6 +15,8 @@
         {% include 'pop_up_add.html' %}
     {% else %}
         {% include 'auth/login_register.html' %}
+        {% include 'auth/login_form.html' %}
+        {% include 'auth/register_form.html' %} <!-- opacity 0, agregar function desde js -->
         {% include 'botones_extra.html' %}
     {% endif %}
     {% include 'builds/build_list_container.html' %}
