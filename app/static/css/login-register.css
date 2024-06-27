@@ -1,25 +1,22 @@
 
 .button-container {
     display: flex;
-    position: sticky;
-    top: 2%;
-    margin-left: 80%;
-    width: 15vw;
-    z-index: 1;
+    flex-direction: column;
+    margin-left: 78%;
+    margin-top: 5%;
 }
 
 .pokemon-button {
-    padding: 8px 15px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #ffffff;
-    background: linear-gradient(145deg, #ff0000, #f08030);
-    border: 2px solid #000000;
-    border-radius: 8px;
-    text-shadow: 2px 2px #000000;
-    cursor: pointer;
-    transition: transform 0.1s ease-in-out;
-    margin-right: 10px
+    border: 0.3vh solid white;
+    background-color: #2f006f;
+    color: #28ffbd;
+    height: 15vh;
+    width: 20vw;
+    margin-top: 3vh;
+    font-size: 6.4vh;
+    font-family: "Tiny5", sans-serif;
+    box-shadow: 0 0 30px 5px #2f006f;
+    margin-right: 2vh;
 }
 
 .pokemon-button:active {
@@ -27,35 +24,26 @@
 }
 
 .pokemon-button:hover {
-    background: linear-gradient(145deg, #f08030, #ff0000);
+    background: linear-gradient(140deg, #160033, #5e00ff);
+    color: white;
 }
 
 .login-button {
-    background: linear-gradient(145deg, #ffcc00, #ff9900);
-    box-shadow: 0 0 10px 0.2em rgba(255, 255, 0, 0.5);
+    border: 2px solid white;
+    background-color: #2f006f;
+    color: white;    
+    box-shadow: 0 0 30px 5px #2f006f;
 }
 
 .register-button {
-    background: linear-gradient(145deg, #3399ff, #0073e6);
-    box-shadow: 0 0 10px 0.2em rgba(255, 255, 0, 0.5);
+    border: 2px solid white;
+    background-color: #2f006f;
+    color: white;    
+    box-shadow: 0 0 30px 5px #2f006f;
 }
 
 .save-button {
-    background: linear-gradient(145deg, #00cc00, #009900);
-}
-
-.cancel-button {
-    background: linear-gradient(145deg, #ff3333, #cc0000);
-}
-
-@media (max-aspect-ratio: 1/1) {
-    .button-container {
-        left: 0;
-        width: 35vw;
-        height: 5vh;
-        position: absolute;
-        margin-top: 2vh;
-        display: flex;
-        margin-left: 60%;
-    }
+    border: 2px solid white;
+    background-color: #160033;
+    color: #28ffbd;
 }

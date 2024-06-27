@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jacquard+12&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tiny5&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/botones_extra.css') }}">
+
+</head>
+<body>
+    <div id="botones_extra_container">
+        <button class="botones_extra">TRAINERS</button>
+        {% if user_id %}
+            <button class="botones_extra">MI PERFIL</button>
+        {% endif %}
+        <button class="botones_extra">GITHUB</BUTton>
+
+    </div>
+</body>
+</html>

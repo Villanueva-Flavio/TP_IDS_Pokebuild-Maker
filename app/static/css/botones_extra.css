@@ -1,0 +1,22 @@
+#botones_extra_container{
+    display: flex;
+    flex-direction: column;
+    margin-left: 78%;
+}
+.botones_extra{
+    border: 2px solid white;
+    background-color: #2f006f;
+    color: #28ffbd;
+    height: 15vh;
+    width: 20vw;
+    margin-top: 3vh;
+    font-size: 6.4vh;
+    font-family: "Tiny5", sans-serif;
+    box-shadow: 0 0 30px 5px #2f006f;
+    margin-right: 2vh;
+}
+
+.botones_extra:hover{
+    background: linear-gradient( #160033, #5e00ff);
+    color: white;
+}

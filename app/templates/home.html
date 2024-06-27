@@ -10,10 +10,12 @@
 </head>
 <body style="background-color: #101010; overflow: hidden;">
     {% if user_id %}
-        {% include 'pop_up_add.html' %}
         {% include 'auth/logout.html' %}
+        {% include 'botones_extra.html' %}
+        {% include 'pop_up_add.html' %}
     {% else %}
         {% include 'auth/login_register.html' %}
+        {% include 'botones_extra.html' %}
     {% endif %}
     {% include 'builds/build_list_container.html' %}
 </body>

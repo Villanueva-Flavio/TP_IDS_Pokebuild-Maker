@@ -8,12 +8,13 @@
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
-    height: 15vh;
-    width: 15vh;
+    height: 20vh;
+    width: 20vh;
     filter: grayscale(100%);
     position:sticky;
-    margin-left: 80%;
-    margin-top: 75vh;
+    margin-left: 83%;
+    margin-top: 3vh;
+
 }
 
 @keyframes shake {
