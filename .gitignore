@@ -33,3 +33,7 @@ app/.env
 >>>>>>> origin/API-modify
 >>>>>>> Frontend-formulario_modificar_pokemon
 __pycache__/
+
+./app/flask_session
+./app/flask_session/
+./app/flask_session/*
