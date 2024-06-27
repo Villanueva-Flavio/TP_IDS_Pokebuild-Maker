@@ -568,58 +568,30 @@ def add_user():
 @api_blueprint.route('/api/mod_user/<int:user_id>', methods=['POST'], strict_slashes=False)
 def mod_user(user_id):
     try:
-        
-        data = request.json
-        username = data.get('username')
-        email = data.get('email')
-        profile_picture = data.get('profile_picture')
+        username = request.form.get('username')
+        password = generate_password_hash(request.form.get('password'))
+        email = request.form.get('email')
+        profile_picture = request.files.get('profile_picture')
 
-        
-        if not username and not email:
-            return jsonify({'error': 'At least username or email must be provided'}), 400
+        if not username or not password or not email:
+            return jsonify({'error': 'Missing required fields (username, password, email)'}), 400
 
         with engine.connect() as connection:
-            
-            update_fields = []
-            parameters = {}
-
-            if username:
-                update_fields.append('username = :username')
-                parameters['username'] = username
-
-            if email:
-                
-                if not is_valid_email(email):
-                    return jsonify({'error': 'Invalid email format'}), 400
-                update_fields.append('email = :email')
-                parameters['email'] = email
-
-            
-            if profile_picture:
-                update_fields.append('profile_picture = :profile_picture')
-                parameters['profile_picture'] = profile_picture.read()  
-
-            
-            password = data.get('password')
-            if password:
-                hashed_password = generate_password_hash(password)
-                update_fields.append('password = :password')
-                parameters['password'] = hashed_password
-
-            
-            if not update_fields:
-                return jsonify({'error': 'No valid fields to update provided'}), 400
-
-        
-            update_query = f"""
-                UPDATE USER
-                SET {', '.join(update_fields)}
+            mod_user_query = """
+                UPDATE USER 
+                SET username = :username, 
+                    password = :password, 
+                    email = :email, 
+                    profile_picture = :profile_picture
                 WHERE id = :user_id
             """
-            parameters['user_id'] = user_id
-
-            
-            connection.execute(text(update_query), parameters)
+            connection.execute(text(mod_user_query), {
+                'username': username,
+                'password': password,
+                'email': email,
+                'profile_picture': profile_picture.read() if profile_picture else None,
+                'user_id': user_id
+            })
 
         return jsonify({'message': f'User with ID {user_id} modified successfully'})
 
@@ -629,6 +601,7 @@ def mod_user(user_id):
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 
      
 #POST endpoint for delete user
