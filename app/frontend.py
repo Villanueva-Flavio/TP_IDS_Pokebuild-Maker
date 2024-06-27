@@ -45,6 +45,10 @@ def get_build_dict(builds, pokemons):
 def get_user_builds(user_id):
     user_builds=requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
     builds_dict = []
+
+    if isinstance(user_builds, dict):
+        user_builds = [user_builds]
+
     for build in user_builds:
         build_row = {
             'id': build['id'],
@@ -174,6 +178,10 @@ def add_pokemon_form(owner_id):
 @frontend_blueprint.route('/user_profile/<user_id>', strict_slashes=False)
 def user_profile(user_id):
     user_builds = requests.get(f'http://pokebuild-backend:5000/api/builds_by_user/{user_id}').json()
+
+    if isinstance(user_builds, dict):
+        user_builds = [user_builds]
+
     pokemons = requests.get('http://pokebuild-backend:5000/api/pokemons/').json()
     user_pokemons = requests.get(f'http://pokebuild-backend:5000/api/pokemons_by_user/{user_id}').json()
 
