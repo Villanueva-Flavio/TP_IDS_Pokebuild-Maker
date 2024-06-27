@@ -13,14 +13,14 @@
         <form action="/api/mod_user/{{ user_data.id }}" id="mod_form" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="username" required>
+                <input type="text" id="name" name="username" value="{{ user_data.username }}" required>
             </div>
 
             <br>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" value="{{ user_data.email }}" required>
             </div>
 
             <br>
@@ -48,7 +48,7 @@
 
             <div class="form-actions">
                 <button type="button" class="cancel" onclick="cancelarEdicion()">Cancel</button>
-                <button type="submit" class="save">Save</button>
+                <button type="submit" class="save" id="save-button">Save</button>
             </div>
         </form>
     </div>
@@ -56,9 +56,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modForm = document.getElementById('mod_form');
+            const saveButton = document.getElementById('save-button');
 
             modForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+
                 const name = document.getElementById('name').value;
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
@@ -75,14 +77,20 @@
                 formData.append('email', email);
                 formData.append('password', password);
 
-                fetch('/api/mod_user/{{ user_id }}', {
+                fetch('/api/mod_user/{{ user_data.id }}', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
-                        window.location.href = '/user_profile/{{ user_id }}';
+                        alert('Profile updated successfully');
+                        window.location.href = '/user_profile/{{ user_data.id }}';
                     } else {
                         alert(data.message || 'Failed to update profile');
                     }
