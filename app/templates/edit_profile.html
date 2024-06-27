@@ -38,27 +38,25 @@
             const confirmPassword = document.getElementById('confirm-password').value;
             const profilePic = document.getElementById('profile-pic').files[0];
 
-            // Validar que las contraseñas coincidan
             if (password !== confirmPassword) {
                 alert('Passwords do not match');
                 return;
             }
 
-            // Generar hash de la contraseña utilizando bcryptjs
+            
             bcrypt.hash(password, 10, function(err, hashedPassword) {
                 if (err) {
                     console.error('Error hashing password:', err);
                     return;
                 }
 
-                // Crear objeto FormData y agregar datos
                 const formData = new FormData();
                 formData.append('username', name);
                 formData.append('email', email);
                 formData.append('password', hashedPassword); // Enviar la contraseña hasheada
                 formData.append('profile_picture', profilePic);
 
-                // Enviar datos al servidor
+                
                 fetch('/api/mod_user/{{ user_data.id }}', {
                     method: 'POST',
                     body: formData
