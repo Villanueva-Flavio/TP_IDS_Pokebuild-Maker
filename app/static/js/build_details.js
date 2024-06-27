@@ -22,5 +22,9 @@ document.querySelectorAll('.build-container').forEach(container => {
             div.style.backgroundImage = `url(${url})`;
             buildDetailsPokemons.appendChild(div);
         });
+         //es aqui masi q no me lo reconoce
+        container.addEventListener('click', function() {
+            window.location.href = `http://127.0.0.1:5000/modify_build_form/${userId}`;
+        });
     });
 });
