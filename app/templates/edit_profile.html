@@ -76,10 +76,17 @@
         modForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
+            console.log('Form submitted');
+
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
+
+            console.log('Name:', name);
+            console.log('Email:', email);
+            console.log('Password:', password);
+            console.log('Confirm Password:', confirmPassword);
 
             const passwordValidation = validatePassword(password, confirmPassword);
             if (!passwordValidation.valid) {
@@ -95,21 +102,25 @@
             const formData = new FormData();
             formData.append('username', name);
             formData.append('email', email);
-            if (password) {  // Only append password if it's not empty
+            if (password) {  
                 formData.append('password', password);
             }
+
+            console.log('FormData:', formData);
 
             fetch('/api/mod_user/{{ user_data.id }}', {
                 method: 'POST',
                 body: formData
             })
             .then(response => {
+                console.log('Response:', response);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Data:', data);
                 if (data.success) {
                     alert('Profile updated successfully');
                     window.location.href = '/';
@@ -131,3 +142,4 @@
 
 </body>
 </html>
+
