@@ -574,7 +574,7 @@ def mod_user(user_id):
         profile_picture = request.files.get('profile_picture')
 
         if not username or not password or not email:
-            return jsonify({'error': 'Missing required fields (username, password, email)'}), 400
+            return jsonify({'error': 'Missing required fields (username, password, email)'})
 
         with engine.connect() as connection:
             mod_user_query = """
@@ -597,12 +597,10 @@ def mod_user(user_id):
 
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
-        return jsonify({'error': error}), 500
+        return jsonify({'error': error})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
+        return jsonify({'error': str(e)})
      
 #POST endpoint for delete user
 @api_blueprint.route('/api/del_user/<int:user_id>', methods=['POST'], strict_slashes=False)
