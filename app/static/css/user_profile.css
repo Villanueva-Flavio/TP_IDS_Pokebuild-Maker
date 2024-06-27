@@ -4,6 +4,7 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 1%;
 }
 
 .user-info-item {
@@ -35,7 +36,7 @@
 }
 
 #container {
-    margin-top: 270px;
+    margin-top: 290px;
     margin-left: -20px;
     float: left;
 }

@@ -24,7 +24,7 @@
         <div class="user-info-item"><h2>POKEMONS</h2> </div>
     </div>
 
-    {% include 'build_list_container.html' %}
+    {% include 'builds/build_list_container.html' %}
     
     <div id="user-pokemons-container">
         {% for pokemon_id in pokemons_owned %}
@@ -34,9 +34,7 @@
         {% endfor %}
     </div>
 
-    <script>
-        const userId = "{{ user_id }}";
-    </script>
+    <script>const userId = "{{ user_id }}";</script>
 
     <script src="{{ url_for('static', filename='js/build_details.js') }}"></script>
 </body>

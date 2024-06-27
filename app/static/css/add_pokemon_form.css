@@ -9,7 +9,7 @@
     display: none;
 }
 
-.formulario{ /*Tamaño maximo de todo*/
+.formulario{
     width: 1600px;
     margin-left: 40px;
     margin-right: 40px;
@@ -30,7 +30,7 @@
     color: #28ffbd;
 }
 
-#contenedor_all_against {/*Hace que lo que esta dentro este en columnas*/
+#contenedor_all_against {
     flex-direction: column; 
     display: flex;
     padding: 10px;
@@ -44,7 +44,7 @@
     background: #160033;
 }
 
-#Submit{ /*caja donde esta el ADD A NEW POKEMON*/
+#Submit{
     width: 1592px;
     height: 77px;
     font-size: 50px; 
@@ -55,7 +55,7 @@
     background: #160033;
 
 }
-#usuario{ /*Le da el tamaño al cuadrado donde se pone el nombre, nivel y habilidades*/
+#usuario{
     width: 1005px;
     height: 365px;
     padding-top: 20px;
@@ -74,7 +74,7 @@
     margin-left: 48px;
 }
 
-#datos_pokemon_caja{ /*Caja de la derecha donde estan los datos de la especie del pokemon*/
+#datos_pokemon_caja{
     flex-direction:row; 
     display: flex;
     padding: 30px;
@@ -91,20 +91,20 @@
     background: #160033;
     transform: translateX(0.5%);
 }
-#imagen_poke_especie{ /*Espacio donde va la imagen del pokemon y la barra para poner la especie pokemon*/
+#imagen_poke_especie{
     display: flex;
     flex-direction: column;
     width: 300px;
     gap: 10px;
 }
-#tipos_datos_poke{ /*Espacio de donde van los 2 tipos del pokemon*/
+#tipos_datos_poke{
     display: flex;
     flex-direction: column;
     margin-left: 60px;
 }
 
 
-.fila { /*Para que las 4 abilities no esten tan juntas.*/
+.fila {
     margin-bottom: 10px;
 }
 .input_personalizado{
@@ -113,7 +113,7 @@
     color: #28ffbd;
     background-color: #160033;
 }
-.poke_name_especie{ /*Tamaño compartido de las cajas de input donde se pone el nombre del pokemon y el tipo*/
+.poke_name_especie{
     width: 300px;
     height: 35px;
     font-size: 33px;
@@ -122,7 +122,7 @@
     font-size: 40px;
     background-color: #160033;
 }
-#nombre_nivel{ /*Permite que el cuadrado de el nombre y el lv y abilities este al mismo nivel que el de los datos del pokemon*/
+#nombre_nivel{
     flex-direction:row;
     display: flex;
 }
@@ -132,13 +132,12 @@ h1{
     align-items: center;
     justify-content: center;
 }
-#poke_LVL{ /*input de nivel de pokemon*/
+#poke_LVL{
     width: 70px;
     padding-left: 15px;
 }
 
-.against{ /*Contenedores de los 2 against*/
-    
+.against{
     display: flex;
     flex-direction: row;
     height: 70px;
@@ -147,10 +146,10 @@ h1{
     margin-top: 5px;
 }
 
-.boton{ /*Los botones*/
+.boton{
     margin-left: 1335px;
 }
-.abilities_elegir{ /*Las habilidades 1 y 2*/
+.abilities_elegir{
     width: 440px;
     text-align: center;
     height: 50px;
@@ -160,23 +159,23 @@ h1{
     background-color: #160033;
 }
 
-.abilities_elegir_inferiores{ /*Las habilidades 3 y 4*/
+.abilities_elegir_inferiores{
     width: 440px;
     text-align: center;
     height: 50px;
     margin-top: 15px;
     
 }
-#level{/*label de LVL*/
+#level{
     margin-left: 278px;
 }
-#name{ /*Es el label de Name*/
+#name{
     margin-left: 45px;
     margin-top: 180px;
 }
 
 
-#abilities_texto{ /*Le cambia el tamaño a Abilities*/
+#abilities_texto{
     font-size:43px ;
     display: flex;
     margin-left: 230px;
@@ -188,21 +187,19 @@ h1{
     background-color: #160033;
 }
 
-#pokemon-image{ /*Imagen del pokemon*/
+#pokemon-image{
     width: 304px;
     height: 280px;
     border: 2px solid white
 }
-/*Estilos de los tipos*/
-.posibles_tipo{ /*Permite que los 2 posibles tipos del pokemon esten un toque separado*/
+
+.posibles_tipo{
     margin-top: 20px;
     transform: translateX(-11%);
 }
 
 .against_texto{
     margin-top: 25px;
-
-    
 }
 
 #bad_against_texto{
@@ -220,17 +217,17 @@ h1{
     margin-left: 5px;
 }
     
-.img-type{ /*Medidas de las imagenes de los tipos de los pokemon*/
+.img-type{
     width:94px;
     height:120px;
     margin-top: 20px;
 }
 
-.tipo_pokemon_Good_Against{ /*los tipos de pokemon de Good against*/
+.tipo_pokemon_Good_Against{
     margin-left: 20px;
     margin-top: 10px;
 }
-.tipo_pokemon_Bad_Against{ /*los tipos de pokemon de Bad against*/
+.tipo_pokemon_Bad_Against{
     margin-left: 20px;
     margin-bottom: 10px;
 }
@@ -240,7 +237,6 @@ h1{
     font-size: 20px;
     text-align: center;   
 }
-
 
 .caja{
     border-radius: 5px;
