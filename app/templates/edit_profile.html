@@ -88,7 +88,7 @@
 
                 if (!validateEmail(email)) {
                     console.log('Invalid email');
-                    document.getElementById('errorMensaje').textContent = 'Invalid email address.';
+                    document.getElementById('errorMensaje').textContent = 'Correo electrónico inválido';
                     return;
                 }
 
@@ -97,8 +97,8 @@
                     return;
                 }
 
-                if (email == "" || name == "") {
-                    document.getElementById('errorMensaje').textContent = "Please fill in all fields.";
+                if (email === "" || name === "") {
+                    document.getElementById('errorMensaje').textContent = "Please fill all the fields.";
                     return;
                 }
 
