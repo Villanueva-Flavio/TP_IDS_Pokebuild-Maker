@@ -38,7 +38,7 @@ POST_POKEMON_QUERY = """INSERT INTO POKEMON (pokedex_id, level, name, ability_1,
 
 MOD_BUILD_QUERY = """UPDATE BUILDS SET build_name = :build_name, owner_id = :owner_id, pokemon_id_1 = :pokemon_id_1, pokemon_id_2 = :pokemon_id_2, pokemon_id_3 = :pokemon_id_3, pokemon_id_4 = :pokemon_id_4, pokemon_id_5 = :pokemon_id_5, pokemon_id_6 = :pokemon_id_6, timestamp = :timestamp WHERE id = :build_id"""
 MOD_USER_QUERY = """UPDATE USER SET username = :username, password = :password, email = :email, profile_picture = :profile_picture WHERE id = :user_id"""
-MOD_POKEMON_QUERY = """UPDATE POKEMON SET name = :name, pokedex_id = :pokedex_id, level = :level, ability_1 = :ability_1, ability_2 = :ability_2, ability_3 = :ability_3, ability_4 = :ability_4, owner_id = :owner_id WHERE id = """
+MOD_POKEMON_QUERY = """UPDATE POKEMON SET name = :name, pokedex_id = :pokedex_id, level = :level, ability_1 = :ability_1, ability_2 = :ability_2, ability_3 = :ability_3, ability_4 = :ability_4, owner_id = :owner_id WHERE id = :pokemon_id"""
 UPDATE_QUERY = "UPDATE BUILDS SET pokemon_id_1 = %s, pokemon_id_2 = %s, pokemon_id_3 = %s, pokemon_id_4 = %s, pokemon_id_5 = %s, pokemon_id_6 = %s WHERE id = %s"
 
 POKEMONS_QUERY = "SELECT * FROM POKEMON"

@@ -206,24 +206,24 @@ def add_pokemon():
 def mod_pokemon(pokemon_id):
     data = request.json
     name = data.get('name')
-    pokedex_id = data.get('pokedex_id')
-    level = data.get('level')
+    pokedex_id = int(data.get('pokedex_id'))  # Ensure integer type
+    level = int(data.get('level'))            # Ensure integer type
     ability_1 = data.get('ability_1')
     ability_2 = data.get('ability_2', None)
     ability_3 = data.get('ability_3', None)
     ability_4 = data.get('ability_4', None)
-    owner_id = data.get('owner_id')
+    owner_id = int(data.get('owner_id'))      # Ensure integer type
 
     if not name or not pokedex_id or not level or not owner_id:
-        return jsonify({'error': 'All fields are required'})
+        return jsonify({'error': 'All fields are required'}), 400
     
-    abilities = [data.get('ability_1'), data.get('ability_2'), data.get('ability_3'), data.get('ability_4')]
+    abilities = [ability_1, ability_2, ability_3, ability_4]
     if all(ability in (None, '') for ability in abilities):
         return jsonify({'error': 'At least one ability is required'}), 400
     
     try:
         with engine.connect() as connection:
-            connection.execute((MOD_POKEMON_QUERY), {
+            connection.execute(text(MOD_POKEMON_QUERY), {
                 'name': name,
                 'pokedex_id': pokedex_id,
                 'level': level,
@@ -234,10 +234,12 @@ def mod_pokemon(pokemon_id):
                 'owner_id': owner_id,
                 'pokemon_id': pokemon_id
             })
+            connection.commit()
         return jsonify({'message': f'Pokemon with id: {pokemon_id} modified successfully'})
     except mysql.connector.Error as err:
         print(f"Error: {err}")
-
+        return jsonify({'error': 'An error occurred while modifying the Pokemon'}), 500
+    
 #DELETE endpoint for POKEMON by ID
 @api_blueprint.route(DELETE_USER_POKEMON, methods=['POST'], strict_slashes=False)
 def delete_pokemon(pokemon_id, owner_id):
