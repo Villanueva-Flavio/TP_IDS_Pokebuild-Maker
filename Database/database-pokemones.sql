@@ -4,9 +4,9 @@ USE pokebuildmaker;
 CREATE TABLE IF NOT EXISTS USER (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(20) NOT NULL,
-    password VARCHAR(50) NOT NULL,
+    password VARCHAR(300) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    profile_picture VARCHAR(255) NOT NULL
+    profile_picture VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS POKEMON (
