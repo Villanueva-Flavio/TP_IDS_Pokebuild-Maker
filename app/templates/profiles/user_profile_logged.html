@@ -11,9 +11,11 @@
 </head>
 <body style="background-color: #101010; overflow: hidden;">
     
-    <div id="user-info-container">
+    <div id="logged-user-info-container">
         <div class="user-info-item "><h2>ID: {{ user_id }}</h2></div>
         <div class="user-info-item"><h2>USERNAME: {{ username }}</h2> </div>
+        <div class="user-info-item boton" onclick="location.href='/'"><h2>HOME</h2> </div>
+        <div class="user-info-item boton" onclick="location.href='/trainers'"><h2>TRAINERS</h2> </div>
         <div class="user-info-item boton" onclick="location.href='/add_pokemon_form/'"><h2>AGREGAR POKEMON</h2> </div>
         <div class="user-info-item boton" onclick="location.href='/add_build_form/'"><h2>AGREGAR BUILD</h2> </div>
         <div class="user-info-item boton" onclick="location.href='/delete_pokemon_form'"><h2>DELETE POKEMON</h2> </div>

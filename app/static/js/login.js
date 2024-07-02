@@ -19,3 +19,7 @@ $('#login_form').on('submit', function(event){
     .then(response => response.json())
     .then(data => {(data.error)? $('#errorMensaje').text('Correo electrónico o contraseña incorrecta'): window.location.href = '/';});
 });
+
+function redirectToSignUp() {
+    window.location.href = '/register';
+}

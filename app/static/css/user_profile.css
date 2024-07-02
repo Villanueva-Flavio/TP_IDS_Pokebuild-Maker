@@ -1,10 +1,14 @@
-#user-info-container {
+.user-info-container,#logged-user-info-container {
     background: linear-gradient(to bottom, #5e00ff, #2f006f);
     padding: 10px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 1%;
+    max-height: 26vh;
+}
+#logged-user-info-container{
+    font-size: 0.85em;
 }
 
 .user-info-item {
